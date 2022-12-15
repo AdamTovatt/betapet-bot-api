@@ -1,0 +1,8 @@
+.vs/
+/Betapet/bin/*
+/Betapet/obj/*
+/betapet-bot-api/bin/*
+/betapet-bot-api/obj/*
+/BetapetBot/bin/*
+/BetapetBot/obj/*
+Properties/launchSettings.json
