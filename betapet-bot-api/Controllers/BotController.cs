@@ -12,7 +12,7 @@ namespace BetapetBotApi.Controllers
         public async Task<IActionResult> GetPrediction()
         {
             Bot bot = new Bot("DavidRdrgz", "gunnaral");
-            return new ApiResponse(bot.GetMessage());
+            return new ApiResponse(await bot.GetMessage());
         }
     }
 }

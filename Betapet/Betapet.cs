@@ -1,5 +1,6 @@
 ﻿using Betapet.Helpers;
 using Betapet.Models.Communication;
+using Betapet.Models.Communication.Responses;
 
 namespace Betapet
 {
@@ -9,12 +10,14 @@ namespace Betapet
         private string? username;
         private string? password;
 
+        private LoginResponse loginResponse;
+
         public BetapetManager()
         {
             api = new ApiHelper();
         }
 
-        public async Task<string> LoginAsync(string username, string password)
+        public async Task<RequestResponse> LoginAsync(string username, string password)
         {
             if (string.IsNullOrEmpty(username))
                 throw new Exception("Username is missing");
@@ -31,9 +34,12 @@ namespace Betapet
             {
                 this.username = username;
                 this.password = password;
+
+                this.loginResponse = LoginResponse.FromJson(await response.Content.ReadAsStringAsync());
+                return new RequestResponse(true, this.loginResponse);
             }
 
-            return await response.Content.ReadAsStringAsync();
+            return new RequestResponse(false);
         }
     }
 }

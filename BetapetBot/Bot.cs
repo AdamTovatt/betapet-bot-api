@@ -1,6 +1,7 @@
 ﻿using Betapet;
 using Betapet.Helpers;
 using Betapet.Models.Communication;
+using Betapet.Models.Communication.Responses;
 
 namespace BetapetBot
 {
@@ -21,8 +22,8 @@ namespace BetapetBot
 
         public async Task<string> GetMessage()
         {
-            string message = await betapet.LoginAsync(Username, Password);
-            return string.Format("{0} login result", message);
+            RequestResponse message = await betapet.LoginAsync(Username, Password);
+            return String.Format("authkey: {0}, userid: {1}", ((LoginResponse)message.InnerResponse).AuthKey, ((LoginResponse)message.InnerResponse).UserId);
         }
     }
 }
