@@ -1,0 +1,730 @@
+[
+  {
+    "status": "COMPLETE",
+    "method": "GET",
+    "protocolVersion": "HTTP/1.1",
+    "scheme": "https",
+    "host": "mobile-app-se.betapet.se",
+    "actualPort": 443,
+    "path": "/login.php",
+    "query": "username=DavidRdrgz&password=gunnaral&proto_ver=5",
+    "tunnel": false,
+    "keptAlive": false,
+    "webSocket": false,
+    "remoteAddress": "mobile-app-se.betapet.se/194.48.213.144",
+    "clientAddress": "198.18.72.253/198.18.72.253",
+    "times": {
+      "start": "2022-12-15T22:06:39.653+01:00",
+      "requestBegin": "2022-12-15T22:06:39.665+01:00",
+      "requestComplete": "2022-12-15T22:06:39.668+01:00",
+      "responseBegin": "2022-12-15T22:06:40.312+01:00",
+      "end": "2022-12-15T22:06:40.342+01:00"
+    },
+    "durations": {
+      "dns": 10,
+      "connect": 7,
+      "ssl": 549
+    },
+    "totalSize": "655",
+    "ssl": {
+      "protocol": "TLSv1.2",
+      "cipherSuite": "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
+    },
+    "request": {
+      "sizes": {
+        "body": "0",
+        "headers": 270
+      },
+      "mimeType": null,
+      "charset": null,
+      "contentEncoding": null,
+      "header": {
+        "firstLine": "GET /login.php?username=DavidRdrgz&password=gunnaral&proto_ver=5 HTTP/1.1",
+        "headers": [
+          {
+            "name": "Host",
+            "value": "mobile-app-se.betapet.se"
+          },
+          {
+            "name": "Accept",
+            "value": "*/*"
+          },
+          {
+            "name": "Accept-Language",
+            "value": "sv-SE,sv;q=0.9"
+          },
+          {
+            "name": "Connection",
+            "value": "keep-alive"
+          },
+          {
+            "name": "Accept-Encoding",
+            "value": "gzip, deflate, br"
+          },
+          {
+            "name": "User-Agent",
+            "value": "Betapet/1.71 CFNetwork/1399 Darwin/22.1.0"
+          }
+        ]
+      }
+    },
+    "response": {
+      "sizes": {
+        "body": "93",
+        "headers": 292
+      },
+      "mimeType": "text/html",
+      "charset": "iso-8859-1",
+      "contentEncoding": "gzip",
+      "header": {
+        "firstLine": "HTTP/1.1 200 OK",
+        "headers": [
+          {
+            "name": "Date",
+            "value": "Thu, 15 Dec 2022 21:06:39 GMT"
+          },
+          {
+            "name": "Server",
+            "value": "Apache/2.4.7 (Ubuntu)"
+          },
+          {
+            "name": "X-Powered-By",
+            "value": "PHP/5.5.9-1ubuntu4.19"
+          },
+          {
+            "name": "Vary",
+            "value": "Accept-Encoding"
+          },
+          {
+            "name": "Content-Encoding",
+            "value": "gzip"
+          },
+          {
+            "name": "Content-Length",
+            "value": "93"
+          },
+          {
+            "name": "Keep-Alive",
+            "value": "timeout=5, max=100"
+          },
+          {
+            "name": "Connection",
+            "value": "Keep-Alive"
+          },
+          {
+            "name": "Content-Type",
+            "value": "text/html; charset=iso-8859-1"
+          }
+        ]
+      },
+      "body": {
+        "encoding": "base64",
+        "encoded": "H4sIAAAAAAAAAw3IOw6AIAwA0Lt0duBToXobCiUanYAOxnh3Gd97oUnXe8AOo6nAAtqlnWU6InlPc5KO45JnFjG6YmqOdbOVQ2KUEMzKSdBlSxG+H2ZC4vNQAAAA"
+      }
+    }
+  },
+  {
+    "status": "COMPLETE",
+    "method": "GET",
+    "protocolVersion": "HTTP/1.1",
+    "scheme": "https",
+    "host": "mobile-app-se.betapet.se",
+    "actualPort": 443,
+    "path": "/login.php",
+    "query": "username=DavidRdrgz&password=gunnaral&proto_ver=5",
+    "tunnel": false,
+    "keptAlive": false,
+    "webSocket": false,
+    "remoteAddress": "mobile-app-se.betapet.se/194.48.213.144",
+    "clientAddress": "198.18.72.253/198.18.72.253",
+    "times": {
+      "start": "2022-12-15T22:06:41.462+01:00",
+      "requestBegin": "2022-12-15T22:06:41.470+01:00",
+      "requestComplete": "2022-12-15T22:06:41.472+01:00",
+      "responseBegin": "2022-12-15T22:06:41.484+01:00",
+      "end": "2022-12-15T22:06:41.532+01:00"
+    },
+    "durations": {
+      "dns": 4,
+      "connect": 15,
+      "ssl": 73
+    },
+    "totalSize": "655",
+    "ssl": {
+      "protocol": "TLSv1.2",
+      "cipherSuite": "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
+    },
+    "request": {
+      "sizes": {
+        "body": "0",
+        "headers": 270
+      },
+      "mimeType": null,
+      "charset": null,
+      "contentEncoding": null,
+      "header": {
+        "firstLine": "GET /login.php?username=DavidRdrgz&password=gunnaral&proto_ver=5 HTTP/1.1",
+        "headers": [
+          {
+            "name": "Host",
+            "value": "mobile-app-se.betapet.se"
+          },
+          {
+            "name": "Accept",
+            "value": "*/*"
+          },
+          {
+            "name": "Accept-Language",
+            "value": "sv-SE,sv;q=0.9"
+          },
+          {
+            "name": "Connection",
+            "value": "keep-alive"
+          },
+          {
+            "name": "Accept-Encoding",
+            "value": "gzip, deflate, br"
+          },
+          {
+            "name": "User-Agent",
+            "value": "Betapet/1.71 CFNetwork/1399 Darwin/22.1.0"
+          }
+        ]
+      }
+    },
+    "response": {
+      "sizes": {
+        "body": "93",
+        "headers": 292
+      },
+      "mimeType": "text/html",
+      "charset": "iso-8859-1",
+      "contentEncoding": "gzip",
+      "header": {
+        "firstLine": "HTTP/1.1 200 OK",
+        "headers": [
+          {
+            "name": "Date",
+            "value": "Thu, 15 Dec 2022 21:06:40 GMT"
+          },
+          {
+            "name": "Server",
+            "value": "Apache/2.4.7 (Ubuntu)"
+          },
+          {
+            "name": "X-Powered-By",
+            "value": "PHP/5.5.9-1ubuntu4.19"
+          },
+          {
+            "name": "Vary",
+            "value": "Accept-Encoding"
+          },
+          {
+            "name": "Content-Encoding",
+            "value": "gzip"
+          },
+          {
+            "name": "Content-Length",
+            "value": "93"
+          },
+          {
+            "name": "Keep-Alive",
+            "value": "timeout=5, max=100"
+          },
+          {
+            "name": "Connection",
+            "value": "Keep-Alive"
+          },
+          {
+            "name": "Content-Type",
+            "value": "text/html; charset=iso-8859-1"
+          }
+        ]
+      },
+      "body": {
+        "encoding": "base64",
+        "encoded": "H4sIAAAAAAAAAw3IOw6AIAwA0Lt0duBToXobCiUanYAOxnh3Gd97oUnXe8AOo6nAAtqlnWU6InlPc5KO45JnFjG6YmqOdbOVQ2KUEMzKSdBlSxG+H2ZC4vNQAAAA"
+      }
+    }
+  },
+  {
+    "status": "COMPLETE",
+    "method": "GET",
+    "protocolVersion": "HTTP/1.1",
+    "scheme": "https",
+    "host": "mobile-app-se.betapet.se",
+    "actualPort": 443,
+    "path": "/friends.php",
+    "query": "action=get&&userid=748338&authkey=8b42d0fc7f91fb6ab4e6605bae42c187&proto_ver=5&device_type=2",
+    "tunnel": false,
+    "keptAlive": true,
+    "webSocket": false,
+    "remoteAddress": "mobile-app-se.betapet.se/194.48.213.144",
+    "clientAddress": "198.18.72.253/198.18.72.253",
+    "times": {
+      "start": "2022-12-15T22:06:41.887+01:00",
+      "requestBegin": "2022-12-15T22:06:41.902+01:00",
+      "requestComplete": "2022-12-15T22:06:41.907+01:00",
+      "responseBegin": "2022-12-15T22:06:41.935+01:00",
+      "end": "2022-12-15T22:06:41.953+01:00"
+    },
+    "durations": {},
+    "totalSize": "790",
+    "ssl": {
+      "protocol": "TLSv1.2",
+      "cipherSuite": "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
+    },
+    "request": {
+      "sizes": {
+        "body": "0",
+        "headers": 315
+      },
+      "mimeType": null,
+      "charset": null,
+      "contentEncoding": null,
+      "header": {
+        "firstLine": "GET /friends.php?action=get&&userid=748338&authkey=8b42d0fc7f91fb6ab4e6605bae42c187&proto_ver=5&device_type=2 HTTP/1.1",
+        "headers": [
+          {
+            "name": "Host",
+            "value": "mobile-app-se.betapet.se"
+          },
+          {
+            "name": "Accept",
+            "value": "*/*"
+          },
+          {
+            "name": "Accept-Language",
+            "value": "sv-SE,sv;q=0.9"
+          },
+          {
+            "name": "Connection",
+            "value": "keep-alive"
+          },
+          {
+            "name": "Accept-Encoding",
+            "value": "gzip, deflate, br"
+          },
+          {
+            "name": "User-Agent",
+            "value": "Betapet/1.71 CFNetwork/1399 Darwin/22.1.0"
+          }
+        ]
+      }
+    },
+    "response": {
+      "sizes": {
+        "body": "183",
+        "headers": 292
+      },
+      "mimeType": "text/html",
+      "charset": "iso-8859-1",
+      "contentEncoding": "gzip",
+      "header": {
+        "firstLine": "HTTP/1.1 200 OK",
+        "headers": [
+          {
+            "name": "Date",
+            "value": "Thu, 15 Dec 2022 21:06:41 GMT"
+          },
+          {
+            "name": "Server",
+            "value": "Apache/2.4.7 (Ubuntu)"
+          },
+          {
+            "name": "X-Powered-By",
+            "value": "PHP/5.5.9-1ubuntu4.19"
+          },
+          {
+            "name": "Vary",
+            "value": "Accept-Encoding"
+          },
+          {
+            "name": "Content-Encoding",
+            "value": "gzip"
+          },
+          {
+            "name": "Content-Length",
+            "value": "183"
+          },
+          {
+            "name": "Keep-Alive",
+            "value": "timeout=5, max=99"
+          },
+          {
+            "name": "Connection",
+            "value": "Keep-Alive"
+          },
+          {
+            "name": "Content-Type",
+            "value": "text/html; charset=iso-8859-1"
+          }
+        ]
+      },
+      "body": {
+        "encoding": "base64",
+        "encoded": "H4sIAAAAAAAAAz2PwQ7CIBBE/4WzByo1DX6HNzVkW1ZsgmAAW43x393F1tu+mcxM9vgWoxV70SmtulZsxBWC9UhKhlTiRAoMA+Zs/ORJVZKUADc0lzHlQsrKHlYEx/lG6x2Bw2AxEW/ZmaAAg/wD9Xjkgl/WxwHKGIMp+OS6w+khJbb9i7xETnBcrRpNPMdQd2qsjjf8gU3xjnYZsQnmsNyOVjL/oAh6qoqVxOf8BdLZRugGAQAA"
+      }
+    }
+  },
+  {
+    "status": "COMPLETE",
+    "method": "GET",
+    "protocolVersion": "HTTP/1.1",
+    "scheme": "https",
+    "host": "mobile-app-se.betapet.se",
+    "actualPort": 443,
+    "path": "/matchmake.php",
+    "query": "type=gameanduserlist&device_id=FF1912DED13658C431A222B5A7EA1D6DC6569E2C1A11E185FF81E7823C896B46&userid=748338&authkey=8b42d0fc7f91fb6ab4e6605bae42c187&proto_ver=5&device_type=2",
+    "tunnel": false,
+    "keptAlive": true,
+    "webSocket": false,
+    "remoteAddress": "mobile-app-se.betapet.se/194.48.213.144",
+    "clientAddress": "198.18.72.253/198.18.72.253",
+    "times": {
+      "start": "2022-12-15T22:06:41.920+01:00",
+      "requestBegin": "2022-12-15T22:06:41.929+01:00",
+      "requestComplete": "2022-12-15T22:06:41.932+01:00",
+      "responseBegin": "2022-12-15T22:06:41.968+01:00",
+      "end": "2022-12-15T22:06:41.996+01:00"
+    },
+    "durations": {},
+    "totalSize": "1005",
+    "ssl": {
+      "protocol": "TLSv1.2",
+      "cipherSuite": "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
+    },
+    "request": {
+      "sizes": {
+        "body": "0",
+        "headers": 401
+      },
+      "mimeType": null,
+      "charset": null,
+      "contentEncoding": null,
+      "header": {
+        "firstLine": "GET /matchmake.php?type=gameanduserlist&device_id=FF1912DED13658C431A222B5A7EA1D6DC6569E2C1A11E185FF81E7823C896B46&userid=748338&authkey=8b42d0fc7f91fb6ab4e6605bae42c187&proto_ver=5&device_type=2 HTTP/1.1",
+        "headers": [
+          {
+            "name": "Host",
+            "value": "mobile-app-se.betapet.se"
+          },
+          {
+            "name": "Accept",
+            "value": "*/*"
+          },
+          {
+            "name": "Accept-Language",
+            "value": "sv-SE,sv;q=0.9"
+          },
+          {
+            "name": "Connection",
+            "value": "keep-alive"
+          },
+          {
+            "name": "Accept-Encoding",
+            "value": "gzip, deflate, br"
+          },
+          {
+            "name": "User-Agent",
+            "value": "Betapet/1.71 CFNetwork/1399 Darwin/22.1.0"
+          }
+        ]
+      }
+    },
+    "response": {
+      "sizes": {
+        "body": "312",
+        "headers": 292
+      },
+      "mimeType": "text/html",
+      "charset": "iso-8859-1",
+      "contentEncoding": "gzip",
+      "header": {
+        "firstLine": "HTTP/1.1 200 OK",
+        "headers": [
+          {
+            "name": "Date",
+            "value": "Thu, 15 Dec 2022 21:06:41 GMT"
+          },
+          {
+            "name": "Server",
+            "value": "Apache/2.4.7 (Ubuntu)"
+          },
+          {
+            "name": "X-Powered-By",
+            "value": "PHP/5.5.9-1ubuntu4.19"
+          },
+          {
+            "name": "Vary",
+            "value": "Accept-Encoding"
+          },
+          {
+            "name": "Content-Encoding",
+            "value": "gzip"
+          },
+          {
+            "name": "Content-Length",
+            "value": "312"
+          },
+          {
+            "name": "Keep-Alive",
+            "value": "timeout=5, max=99"
+          },
+          {
+            "name": "Connection",
+            "value": "Keep-Alive"
+          },
+          {
+            "name": "Content-Type",
+            "value": "text/html; charset=iso-8859-1"
+          }
+        ]
+      },
+      "body": {
+        "encoding": "base64",
+        "encoded": "H4sIAAAAAAAAA01Qy27CMBD8lz0jwJhHyKmHfgHXUkVuvBgLx45sJylF/Ht3DVS9eWa8M6O5QbYdQi22OyFktV6KGRjVYYL643MGQ8LIzxtYDTXs1pWUFczgrLx2dAbvarT6oKP5IVa1LabUuNGRIpfEeLJqTjam/Pr7Ip0q3CHoaM2A5dywo9hXfOlCq7INnpgVJxr0GiPrBLBTljM0O8aXxSmGLvXK+jfD+rwNHbuOKis+XP4BauSQWxD7L6rJ+P3oyVFXrhpJ8Ia4fSUJTqXPRpSj0r90pQo98j6bAtTkn3HPJUHILaEvsgoM5QruNG46h56Wp28hGIdN79S16aNtqdeqIp2q5qZLlP/YX/DE2Y7c+6RcQjIdIg9xzrmvj4vjYpqm+YjtRc39APf7L5pq9B7fAQAA"
+      }
+    }
+  },
+  {
+    "status": "COMPLETE",
+    "method": "GET",
+    "protocolVersion": "HTTP/1.1",
+    "scheme": "https",
+    "host": "mobile-app-se.betapet.se",
+    "actualPort": 443,
+    "path": "/friends.php",
+    "query": "action=get&&userid=748338&authkey=8b42d0fc7f91fb6ab4e6605bae42c187&proto_ver=5&device_type=2",
+    "tunnel": false,
+    "keptAlive": false,
+    "webSocket": false,
+    "remoteAddress": "mobile-app-se.betapet.se/194.48.213.144",
+    "clientAddress": "198.18.72.253/198.18.72.253",
+    "times": {
+      "start": "2022-12-15T22:06:42.405+01:00",
+      "requestBegin": "2022-12-15T22:06:42.415+01:00",
+      "requestComplete": "2022-12-15T22:06:42.417+01:00",
+      "responseBegin": "2022-12-15T22:06:42.438+01:00",
+      "end": "2022-12-15T22:06:42.449+01:00"
+    },
+    "durations": {
+      "dns": 17,
+      "connect": 18,
+      "ssl": 69
+    },
+    "totalSize": "791",
+    "ssl": {
+      "protocol": "TLSv1.2",
+      "cipherSuite": "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
+    },
+    "request": {
+      "sizes": {
+        "body": "0",
+        "headers": 315
+      },
+      "mimeType": null,
+      "charset": null,
+      "contentEncoding": null,
+      "header": {
+        "firstLine": "GET /friends.php?action=get&&userid=748338&authkey=8b42d0fc7f91fb6ab4e6605bae42c187&proto_ver=5&device_type=2 HTTP/1.1",
+        "headers": [
+          {
+            "name": "Host",
+            "value": "mobile-app-se.betapet.se"
+          },
+          {
+            "name": "Accept",
+            "value": "*/*"
+          },
+          {
+            "name": "Accept-Language",
+            "value": "sv-SE,sv;q=0.9"
+          },
+          {
+            "name": "Connection",
+            "value": "keep-alive"
+          },
+          {
+            "name": "Accept-Encoding",
+            "value": "gzip, deflate, br"
+          },
+          {
+            "name": "User-Agent",
+            "value": "Betapet/1.71 CFNetwork/1399 Darwin/22.1.0"
+          }
+        ]
+      }
+    },
+    "response": {
+      "sizes": {
+        "body": "183",
+        "headers": 293
+      },
+      "mimeType": "text/html",
+      "charset": "iso-8859-1",
+      "contentEncoding": "gzip",
+      "header": {
+        "firstLine": "HTTP/1.1 200 OK",
+        "headers": [
+          {
+            "name": "Date",
+            "value": "Thu, 15 Dec 2022 21:06:41 GMT"
+          },
+          {
+            "name": "Server",
+            "value": "Apache/2.4.7 (Ubuntu)"
+          },
+          {
+            "name": "X-Powered-By",
+            "value": "PHP/5.5.9-1ubuntu4.19"
+          },
+          {
+            "name": "Vary",
+            "value": "Accept-Encoding"
+          },
+          {
+            "name": "Content-Encoding",
+            "value": "gzip"
+          },
+          {
+            "name": "Content-Length",
+            "value": "183"
+          },
+          {
+            "name": "Keep-Alive",
+            "value": "timeout=5, max=100"
+          },
+          {
+            "name": "Connection",
+            "value": "Keep-Alive"
+          },
+          {
+            "name": "Content-Type",
+            "value": "text/html; charset=iso-8859-1"
+          }
+        ]
+      },
+      "body": {
+        "encoding": "base64",
+        "encoded": "H4sIAAAAAAAAAz2PwQ7CIBBE/4WzByo1DX6HNzVkW1ZsgmAAW43x393F1tu+mcxM9vgWoxV70SmtulZsxBWC9UhKhlTiRAoMA+Zs/ORJVZKUADc0lzHlQsrKHlYEx/lG6x2Bw2AxEW/ZmaAAg/wD9Xjkgl/WxwHKGIMp+OS6w+khJbb9i7xETnBcrRpNPMdQd2qsjjf8gU3xjnYZsQnmsNyOVjL/oAh6qoqVxOf8BdLZRugGAQAA"
+      }
+    }
+  },
+  {
+    "status": "COMPLETE",
+    "method": "GET",
+    "protocolVersion": "HTTP/1.1",
+    "scheme": "https",
+    "host": "mobile-app-se.betapet.se",
+    "actualPort": 443,
+    "path": "/matchmake.php",
+    "query": "type=vsfind&userid=748338&authkey=8b42d0fc7f91fb6ab4e6605bae42c187&proto_ver=5&device_type=2",
+    "tunnel": false,
+    "keptAlive": false,
+    "webSocket": false,
+    "remoteAddress": "mobile-app-se.betapet.se/194.48.213.144",
+    "clientAddress": "198.18.72.253/198.18.72.253",
+    "times": {
+      "start": "2022-12-15T22:06:42.422+01:00",
+      "requestBegin": "2022-12-15T22:06:42.433+01:00",
+      "requestComplete": "2022-12-15T22:06:42.436+01:00",
+      "responseBegin": "2022-12-15T22:06:42.452+01:00",
+      "end": "2022-12-15T22:06:42.462+01:00"
+    },
+    "durations": {
+      "dns": 9,
+      "connect": 9,
+      "ssl": 94
+    },
+    "totalSize": "563",
+    "ssl": {
+      "protocol": "TLSv1.2",
+      "cipherSuite": "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
+    },
+    "request": {
+      "sizes": {
+        "body": "0",
+        "headers": 317
+      },
+      "mimeType": null,
+      "charset": null,
+      "contentEncoding": null,
+      "header": {
+        "firstLine": "GET /matchmake.php?type=vsfind&userid=748338&authkey=8b42d0fc7f91fb6ab4e6605bae42c187&proto_ver=5&device_type=2 HTTP/1.1",
+        "headers": [
+          {
+            "name": "Host",
+            "value": "mobile-app-se.betapet.se"
+          },
+          {
+            "name": "Accept",
+            "value": "*/*"
+          },
+          {
+            "name": "Accept-Language",
+            "value": "sv-SE,sv;q=0.9"
+          },
+          {
+            "name": "Connection",
+            "value": "keep-alive"
+          },
+          {
+            "name": "Accept-Encoding",
+            "value": "gzip, deflate, br"
+          },
+          {
+            "name": "User-Agent",
+            "value": "Betapet/1.71 CFNetwork/1399 Darwin/22.1.0"
+          }
+        ]
+      }
+    },
+    "response": {
+      "sizes": {
+        "body": "2",
+        "headers": 244
+      },
+      "mimeType": "text/html",
+      "charset": "iso-8859-1",
+      "contentEncoding": null,
+      "header": {
+        "firstLine": "HTTP/1.1 200 OK",
+        "headers": [
+          {
+            "name": "Date",
+            "value": "Thu, 15 Dec 2022 21:06:41 GMT"
+          },
+          {
+            "name": "Server",
+            "value": "Apache/2.4.7 (Ubuntu)"
+          },
+          {
+            "name": "X-Powered-By",
+            "value": "PHP/5.5.9-1ubuntu4.19"
+          },
+          {
+            "name": "Content-Length",
+            "value": "2"
+          },
+          {
+            "name": "Keep-Alive",
+            "value": "timeout=5, max=100"
+          },
+          {
+            "name": "Connection",
+            "value": "Keep-Alive"
+          },
+          {
+            "name": "Content-Type",
+            "value": "text/html; charset=iso-8859-1"
+          }
+        ]
+      },
+      "body": {
+        "text": "[]",
+        "charset": "iso-8859-1"
+      }
+    }
+  }
+]

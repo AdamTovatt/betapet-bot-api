@@ -1,0 +1,370 @@
+[
+  {
+    "status": "COMPLETE",
+    "method": "GET",
+    "protocolVersion": "HTTP/1.1",
+    "scheme": "https",
+    "host": "mobile-app-se.betapet.se",
+    "actualPort": 443,
+    "path": "/matchmake.php",
+    "query": "type=vsfind&userid=748338&authkey=8b42d0fc7f91fb6ab4e6605bae42c187&proto_ver=5&device_type=2",
+    "tunnel": false,
+    "keptAlive": false,
+    "webSocket": false,
+    "remoteAddress": "mobile-app-se.betapet.se/194.48.213.144",
+    "clientAddress": "198.18.72.253/198.18.72.253",
+    "times": {
+      "start": "2022-12-16T12:31:22.385+01:00",
+      "requestBegin": "2022-12-16T12:31:22.394+01:00",
+      "requestComplete": "2022-12-16T12:31:22.396+01:00",
+      "responseBegin": "2022-12-16T12:31:22.413+01:00",
+      "end": "2022-12-16T12:31:22.423+01:00"
+    },
+    "durations": {
+      "dns": 2,
+      "connect": 6,
+      "ssl": 72
+    },
+    "totalSize": "808",
+    "ssl": {
+      "protocol": "TLSv1.2",
+      "cipherSuite": "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
+    },
+    "request": {
+      "sizes": {
+        "body": "0",
+        "headers": 562
+      },
+      "mimeType": null,
+      "charset": null,
+      "contentEncoding": null,
+      "header": {
+        "firstLine": "GET /matchmake.php?type=vsfind&userid=748338&authkey=8b42d0fc7f91fb6ab4e6605bae42c187&proto_ver=5&device_type=2 HTTP/1.1",
+        "headers": [
+          {
+            "name": "Host",
+            "value": "mobile-app-se.betapet.se"
+          },
+          {
+            "name": "Accept",
+            "value": "*/*"
+          },
+          {
+            "name": "Cookie",
+            "value": "_ga=GA1.2.1823387544.1671187464; _gid=GA1.2.1618274031.1671187464; __gads=ID=aa1d0262064c02b8:T=1671187464:S=ALNI_MYC2X6g_awWYmTsvK4fBTxkIvGHlA; __gpi=UID=00000b936d149238:T=1671187464:RT=1671187464:S=ALNI_MY_qxarexy0lOgbHSCNsHueN6iqFw"
+          },
+          {
+            "name": "User-Agent",
+            "value": "Betapet/1.71 CFNetwork/1399 Darwin/22.1.0"
+          },
+          {
+            "name": "Accept-Language",
+            "value": "sv-SE,sv;q=0.9"
+          },
+          {
+            "name": "Accept-Encoding",
+            "value": "gzip, deflate, br"
+          },
+          {
+            "name": "Connection",
+            "value": "keep-alive"
+          }
+        ]
+      }
+    },
+    "response": {
+      "sizes": {
+        "body": "2",
+        "headers": 244
+      },
+      "mimeType": "text/html",
+      "charset": "iso-8859-1",
+      "contentEncoding": null,
+      "header": {
+        "firstLine": "HTTP/1.1 200 OK",
+        "headers": [
+          {
+            "name": "Date",
+            "value": "Fri, 16 Dec 2022 11:31:22 GMT"
+          },
+          {
+            "name": "Server",
+            "value": "Apache/2.4.7 (Ubuntu)"
+          },
+          {
+            "name": "X-Powered-By",
+            "value": "PHP/5.5.9-1ubuntu4.19"
+          },
+          {
+            "name": "Content-Length",
+            "value": "2"
+          },
+          {
+            "name": "Keep-Alive",
+            "value": "timeout=5, max=100"
+          },
+          {
+            "name": "Connection",
+            "value": "Keep-Alive"
+          },
+          {
+            "name": "Content-Type",
+            "value": "text/html; charset=iso-8859-1"
+          }
+        ]
+      },
+      "body": {
+        "text": "[]",
+        "charset": "iso-8859-1"
+      }
+    }
+  },
+  {
+    "status": "COMPLETE",
+    "method": "GET",
+    "protocolVersion": "HTTP/1.1",
+    "scheme": "https",
+    "host": "mobile-app-se.betapet.se",
+    "actualPort": 443,
+    "path": "/user_find.php",
+    "query": "handle=BotKiller&userid=748338&authkey=8b42d0fc7f91fb6ab4e6605bae42c187&proto_ver=5&device_type=2",
+    "tunnel": false,
+    "keptAlive": false,
+    "webSocket": false,
+    "remoteAddress": "mobile-app-se.betapet.se/194.48.213.144",
+    "clientAddress": "198.18.72.253/198.18.72.253",
+    "times": {
+      "start": "2022-12-16T12:31:38.849+01:00",
+      "requestBegin": "2022-12-16T12:31:38.874+01:00",
+      "requestComplete": "2022-12-16T12:31:38.878+01:00",
+      "responseBegin": "2022-12-16T12:31:38.892+01:00",
+      "end": "2022-12-16T12:31:38.911+01:00"
+    },
+    "durations": {
+      "dns": 4,
+      "connect": 15,
+      "ssl": 70
+    },
+    "totalSize": "1038",
+    "ssl": {
+      "protocol": "TLSv1.2",
+      "cipherSuite": "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
+    },
+    "request": {
+      "sizes": {
+        "body": "0",
+        "headers": 567
+      },
+      "mimeType": null,
+      "charset": null,
+      "contentEncoding": null,
+      "header": {
+        "firstLine": "GET /user_find.php?handle=BotKiller&userid=748338&authkey=8b42d0fc7f91fb6ab4e6605bae42c187&proto_ver=5&device_type=2 HTTP/1.1",
+        "headers": [
+          {
+            "name": "Host",
+            "value": "mobile-app-se.betapet.se"
+          },
+          {
+            "name": "Accept",
+            "value": "*/*"
+          },
+          {
+            "name": "Cookie",
+            "value": "_ga=GA1.2.1823387544.1671187464; _gid=GA1.2.1618274031.1671187464; __gads=ID=aa1d0262064c02b8:T=1671187464:S=ALNI_MYC2X6g_awWYmTsvK4fBTxkIvGHlA; __gpi=UID=00000b936d149238:T=1671187464:RT=1671187464:S=ALNI_MY_qxarexy0lOgbHSCNsHueN6iqFw"
+          },
+          {
+            "name": "User-Agent",
+            "value": "Betapet/1.71 CFNetwork/1399 Darwin/22.1.0"
+          },
+          {
+            "name": "Accept-Language",
+            "value": "sv-SE,sv;q=0.9"
+          },
+          {
+            "name": "Accept-Encoding",
+            "value": "gzip, deflate, br"
+          },
+          {
+            "name": "Connection",
+            "value": "keep-alive"
+          }
+        ]
+      }
+    },
+    "response": {
+      "sizes": {
+        "body": "178",
+        "headers": 293
+      },
+      "mimeType": "text/html",
+      "charset": "iso-8859-1",
+      "contentEncoding": "gzip",
+      "header": {
+        "firstLine": "HTTP/1.1 200 OK",
+        "headers": [
+          {
+            "name": "Date",
+            "value": "Fri, 16 Dec 2022 11:31:38 GMT"
+          },
+          {
+            "name": "Server",
+            "value": "Apache/2.4.7 (Ubuntu)"
+          },
+          {
+            "name": "X-Powered-By",
+            "value": "PHP/5.5.9-1ubuntu4.19"
+          },
+          {
+            "name": "Vary",
+            "value": "Accept-Encoding"
+          },
+          {
+            "name": "Content-Encoding",
+            "value": "gzip"
+          },
+          {
+            "name": "Content-Length",
+            "value": "178"
+          },
+          {
+            "name": "Keep-Alive",
+            "value": "timeout=5, max=100"
+          },
+          {
+            "name": "Connection",
+            "value": "Keep-Alive"
+          },
+          {
+            "name": "Content-Type",
+            "value": "text/html; charset=iso-8859-1"
+          }
+        ]
+      },
+      "body": {
+        "encoding": "base64",
+        "encoded": "H4sIAAAAAAAAAz2OSw7CMAwF75I1i1QFRFkiseIKSJVpTIgwMUpCi4S4Ozb97DzvJWN/THBmb3bVut5szcrcIDpCSQ5cToEIk4TQdZhzSz1JUVtJIjywvYaUiyQzE8wIXhVV0zQCHqMTjbA2PRRQsAuIh1AF41/iDkrg2BZ8q+54x3R+WXvV85JU0avLWjUMHCcX8X+5ji7xE90CMMxvvCzJ03wRD4/w/QEoYvHPBQEAAA=="
+      }
+    }
+  },
+  {
+    "status": "COMPLETE",
+    "method": "GET",
+    "protocolVersion": "HTTP/1.1",
+    "scheme": "https",
+    "host": "mobile-app-se.betapet.se",
+    "actualPort": 443,
+    "path": "/matchmake.php",
+    "query": "type=vsrequest&req_userid=814356&board_type=2&dict=2&userid=748338&authkey=8b42d0fc7f91fb6ab4e6605bae42c187&proto_ver=5&device_type=2",
+    "tunnel": false,
+    "keptAlive": false,
+    "webSocket": false,
+    "remoteAddress": "mobile-app-se.betapet.se/194.48.213.144",
+    "clientAddress": "198.18.72.253/198.18.72.253",
+    "times": {
+      "start": "2022-12-16T12:31:54.273+01:00",
+      "requestBegin": "2022-12-16T12:31:54.301+01:00",
+      "requestComplete": "2022-12-16T12:31:54.307+01:00",
+      "responseBegin": "2022-12-16T12:31:54.358+01:00",
+      "end": "2022-12-16T12:31:54.384+01:00"
+    },
+    "durations": {
+      "dns": 5,
+      "connect": 16,
+      "ssl": 70
+    },
+    "totalSize": "882",
+    "ssl": {
+      "protocol": "TLSv1.2",
+      "cipherSuite": "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
+    },
+    "request": {
+      "sizes": {
+        "body": "0",
+        "headers": 603
+      },
+      "mimeType": null,
+      "charset": null,
+      "contentEncoding": null,
+      "header": {
+        "firstLine": "GET /matchmake.php?type=vsrequest&req_userid=814356&board_type=2&dict=2&userid=748338&authkey=8b42d0fc7f91fb6ab4e6605bae42c187&proto_ver=5&device_type=2 HTTP/1.1",
+        "headers": [
+          {
+            "name": "Host",
+            "value": "mobile-app-se.betapet.se"
+          },
+          {
+            "name": "Accept",
+            "value": "*/*"
+          },
+          {
+            "name": "Cookie",
+            "value": "_ga=GA1.2.1823387544.1671187464; _gid=GA1.2.1618274031.1671187464; __gads=ID=aa1d0262064c02b8:T=1671187464:S=ALNI_MYC2X6g_awWYmTsvK4fBTxkIvGHlA; __gpi=UID=00000b936d149238:T=1671187464:RT=1671187464:S=ALNI_MY_qxarexy0lOgbHSCNsHueN6iqFw"
+          },
+          {
+            "name": "User-Agent",
+            "value": "Betapet/1.71 CFNetwork/1399 Darwin/22.1.0"
+          },
+          {
+            "name": "Accept-Language",
+            "value": "sv-SE,sv;q=0.9"
+          },
+          {
+            "name": "Accept-Encoding",
+            "value": "gzip, deflate, br"
+          },
+          {
+            "name": "Connection",
+            "value": "keep-alive"
+          }
+        ]
+      }
+    },
+    "response": {
+      "sizes": {
+        "body": "34",
+        "headers": 245
+      },
+      "mimeType": "text/html",
+      "charset": "iso-8859-1",
+      "contentEncoding": null,
+      "header": {
+        "firstLine": "HTTP/1.1 200 OK",
+        "headers": [
+          {
+            "name": "Date",
+            "value": "Fri, 16 Dec 2022 11:31:54 GMT"
+          },
+          {
+            "name": "Server",
+            "value": "Apache/2.4.7 (Ubuntu)"
+          },
+          {
+            "name": "X-Powered-By",
+            "value": "PHP/5.5.9-1ubuntu4.19"
+          },
+          {
+            "name": "Content-Length",
+            "value": "34"
+          },
+          {
+            "name": "Keep-Alive",
+            "value": "timeout=5, max=100"
+          },
+          {
+            "name": "Connection",
+            "value": "Keep-Alive"
+          },
+          {
+            "name": "Content-Type",
+            "value": "text/html; charset=iso-8859-1"
+          }
+        ]
+      },
+      "body": {
+        "text": "{\"result\":\"true\",\"code\":\"created\"}",
+        "charset": "iso-8859-1"
+      }
+    }
+  }
+]
