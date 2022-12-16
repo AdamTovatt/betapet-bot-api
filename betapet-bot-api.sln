@@ -9,12 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Betapet", "Betapet\Betapet.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BetapetBot", "BetapetBot\BetapetBot.csproj", "{F41168CE-FF5F-464F-9BA7-E21C1C8AA2EC}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ExampleRequests", "ExampleRequests", "{D11A418F-736E-4B4B-BB46-BC6EEFC3E244}"
-	ProjectSection(SolutionItems) = preProject
-		..\login.chlsj = ..\login.chlsj
-		..\createGame.chlsj = ..\createGame.chlsj
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

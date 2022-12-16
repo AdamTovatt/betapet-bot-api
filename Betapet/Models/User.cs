@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Betapet.Models
 {
-    public class GameUser
+    public class User
     {
         [JsonProperty("id")]
         public int Id { get; set; }

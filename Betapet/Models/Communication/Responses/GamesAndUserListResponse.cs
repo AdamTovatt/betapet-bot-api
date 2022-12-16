@@ -13,7 +13,7 @@ namespace Betapet.Models.Communication.Responses
         public int Time { get; set; }
 
         [JsonProperty("users")]
-        public List<GameUser> Users { get; set; }
+        public List<User> Users { get; set; }
 
         public static GamesAndUserListResponse FromJson(string json)
         {
