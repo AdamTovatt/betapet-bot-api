@@ -12,7 +12,7 @@ namespace Betapet.Models.Communication
         public bool Success { get; set; }
         public BetapetResponse? InnerResponse { get; set; }
 
-        public RequestResponse(bool success, BetapetResponse innerResponse)
+        public RequestResponse(BetapetResponse innerResponse, bool success = true)
         {
             Success = success;
             InnerResponse = innerResponse;

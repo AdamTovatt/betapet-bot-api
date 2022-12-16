@@ -5,7 +5,5 @@ namespace Betapet.Models.Communication.Responses
 {
     public class BetapetResponse
     {
-        [JsonProperty("result")]
-        public bool Result { get; set; }
     }
 }

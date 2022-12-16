@@ -15,6 +15,9 @@ namespace Betapet.Models.Communication.Responses
         [JsonProperty("authkey")]
         public string? AuthKey { get; set; }
 
+        [JsonProperty("result")]
+        public bool Result { get; set; }
+
         public static LoginResponse FromJson(string json)
         {
             LoginResponse response = JsonConvert.DeserializeObject<LoginResponse>(json);

@@ -2,28 +2,24 @@
 using Betapet.Helpers;
 using Betapet.Models.Communication;
 using Betapet.Models.Communication.Responses;
+using Microsoft.VisualBasic;
 
 namespace BetapetBot
 {
     public class Bot
     {
-        public string Username { get; private set; }
-        public string Password { get; private set; }
-
         BetapetManager betapet;
 
-        public Bot(string username, string password)
+        public Bot(string username, string password, string deviceId)
         {
-            Username = username;
-            Password = password;
-
-            betapet = new BetapetManager();
+            betapet = new BetapetManager(username, password, deviceId);
         }
 
         public async Task<string> GetMessage()
         {
-            RequestResponse message = await betapet.LoginAsync(Username, Password);
+            RequestResponse message = await betapet.LoginAsync();
             RequestResponse response = await betapet.GetFriends();
+            RequestResponse games = await betapet.GetGameAndUserList();
             return string.Format("authkey: {0}, userid: {1}", ((LoginResponse)message.InnerResponse).AuthKey, ((LoginResponse)message.InnerResponse).UserId);
         }
     }
