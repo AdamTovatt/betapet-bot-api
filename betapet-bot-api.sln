@@ -3,11 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32901.215
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "betapet-bot-api", "betapet-bot-api\betapet-bot-api.csproj", "{8DF63B0D-CC1E-40CC-857A-21731FEA7BAA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "betapet-bot-api", "betapet-bot-api\betapet-bot-api.csproj", "{8DF63B0D-CC1E-40CC-857A-21731FEA7BAA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Betapet", "Betapet\Betapet.csproj", "{B384F17E-7240-4A17-9341-922CA6414FA7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Betapet", "Betapet\Betapet.csproj", "{B384F17E-7240-4A17-9341-922CA6414FA7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetapetBot", "BetapetBot\BetapetBot.csproj", "{F41168CE-FF5F-464F-9BA7-E21C1C8AA2EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BetapetBot", "BetapetBot\BetapetBot.csproj", "{F41168CE-FF5F-464F-9BA7-E21C1C8AA2EC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ExampleRequests", "ExampleRequests", "{D11A418F-736E-4B4B-BB46-BC6EEFC3E244}"
+	ProjectSection(SolutionItems) = preProject
+		..\login.chlsj = ..\login.chlsj
+		..\createGame.chlsj = ..\createGame.chlsj
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
