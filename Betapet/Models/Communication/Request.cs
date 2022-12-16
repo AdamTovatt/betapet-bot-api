@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using Betapet.Models.Communication.Responses;
+using System.Collections.ObjectModel;
 using System.Text;
 
 namespace Betapet.Models.Communication
@@ -59,6 +60,23 @@ namespace Betapet.Models.Communication
                 AddParameter("device_type", "2");
         }
 
+        public Request(string path, LoginResponse loginResponse)
+        {
+            Host = defaultHost;
+            Path = path;
+            Method = HttpMethod.Get;
+            Headers = new List<RequestHeader>();
+            Parameters = new List<QueryParameter>();
+
+            if (loginResponse == null)
+                throw new Exception("LoginResponse is null but an attempt to use it was made");
+
+            AddParameter("proto_ver", "5");
+            AddParameter("device_type", "2");
+            AddParameter("userid", loginResponse.UserId);
+            AddParameter("authkey", loginResponse.AuthKey);
+        }
+
         public void AddParameter(QueryParameter paramter)
         {
             Parameters.Add(paramter);
@@ -75,11 +93,11 @@ namespace Betapet.Models.Communication
             stringBuilder.Append(Host);
             stringBuilder.Append(Path);
 
-            if(Parameters != null && Parameters.Count > 0)
+            if (Parameters != null && Parameters.Count > 0)
             {
                 stringBuilder.Append("?");
 
-                foreach(QueryParameter parameter in Parameters)
+                foreach (QueryParameter parameter in Parameters)
                 {
                     stringBuilder.Append(parameter.Name);
                     stringBuilder.Append("=");

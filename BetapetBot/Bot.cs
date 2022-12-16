@@ -23,7 +23,8 @@ namespace BetapetBot
         public async Task<string> GetMessage()
         {
             RequestResponse message = await betapet.LoginAsync(Username, Password);
-            return String.Format("authkey: {0}, userid: {1}", ((LoginResponse)message.InnerResponse).AuthKey, ((LoginResponse)message.InnerResponse).UserId);
+            RequestResponse response = await betapet.GetFriends();
+            return string.Format("authkey: {0}, userid: {1}", ((LoginResponse)message.InnerResponse).AuthKey, ((LoginResponse)message.InnerResponse).UserId);
         }
     }
 }
