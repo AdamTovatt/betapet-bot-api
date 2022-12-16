@@ -44,5 +44,10 @@ namespace Betapet.Models
 
         [JsonProperty("bingos")]
         public int Bingos { get; set; }
+
+        public override string ToString()
+        {
+            return Handle;
+        }
     }
 }
