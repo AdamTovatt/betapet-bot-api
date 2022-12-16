@@ -1,9 +1,12 @@
 ﻿using System.Collections.ObjectModel;
+using System.Text;
 
 namespace Betapet.Models.Communication
 {
     public class Request
     {
+        private const string defaultHost = "mobile-app-se.betapet.se";
+
         private static readonly List<RequestHeader> _defaultHeaders = new()
         {
             new RequestHeader("Host", "mobile-app-se.betapet.se"),
@@ -40,9 +43,20 @@ namespace Betapet.Models.Communication
             Method = method;
             Headers = new List<RequestHeader>();
             Parameters = new List<QueryParameter>();
+        }
 
-            foreach (RequestHeader header in DefaultHeaders)
-                Headers.Add(header);
+        public Request(string path, bool includeProtocolVersion = true, bool includeDeviceType = true)
+        {
+            Host = defaultHost;
+            Path = path;
+            Method = HttpMethod.Get;
+            Headers = new List<RequestHeader>();
+            Parameters = new List<QueryParameter>();
+
+            if (includeProtocolVersion)
+                AddParameter("proto_ver", "5");
+            if (includeDeviceType)
+                AddParameter("device_type", "2");
         }
 
         public void AddParameter(QueryParameter paramter)
@@ -53,6 +67,30 @@ namespace Betapet.Models.Communication
         public void AddParameter(string name, string value)
         {
             Parameters.Add(new QueryParameter(name, value));
+        }
+
+        public Uri GetUri()
+        {
+            StringBuilder stringBuilder = new StringBuilder("https://");
+            stringBuilder.Append(Host);
+            stringBuilder.Append(Path);
+
+            if(Parameters != null && Parameters.Count > 0)
+            {
+                stringBuilder.Append("?");
+
+                foreach(QueryParameter parameter in Parameters)
+                {
+                    stringBuilder.Append(parameter.Name);
+                    stringBuilder.Append("=");
+                    stringBuilder.Append(parameter.Value);
+                    stringBuilder.Append("&");
+                }
+
+                stringBuilder.Remove(stringBuilder.Length - 1, 1);
+            }
+
+            return new Uri(stringBuilder.ToString());
         }
     }
 }

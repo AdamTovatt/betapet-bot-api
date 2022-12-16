@@ -10,16 +10,32 @@ namespace Betapet.Helpers
 {
     public class ApiHelper
     {
-        private HttpClient httpClient = new HttpClient();
+        private HttpClient httpClient;
 
         public ApiHelper()
         {
+            HttpClientHandler handler = new HttpClientHandler()
+            {
+                AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
+            };
 
+            httpClient = new HttpClient(handler);
+
+            foreach (RequestHeader header in Request.DefaultHeaders)
+            {
+                httpClient.DefaultRequestHeaders.Add(header.Name, header.Value);
+            }
         }
 
-        public HttpResponseMessage GetRequestResponse(Request request)
+        public async Task<HttpResponseMessage> GetResponseAsync(Request request)
         {
-           
+            HttpRequestMessage httpRequest = new HttpRequestMessage()
+            {
+                Method = request.Method,
+                RequestUri = request.GetUri(),
+            };
+
+            return await httpClient.SendAsync(httpRequest);
         }
     }
 }

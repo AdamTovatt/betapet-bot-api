@@ -11,7 +11,7 @@ namespace BetapetBotApi.Controllers
         [HttpGet("prediction")]
         public async Task<IActionResult> GetPrediction()
         {
-            Bot bot = new Bot("Orvar", "pastry_boy2");
+            Bot bot = new Bot("DavidRdrgz", "gunnaral");
             return new ApiResponse(bot.GetMessage());
         }
     }
