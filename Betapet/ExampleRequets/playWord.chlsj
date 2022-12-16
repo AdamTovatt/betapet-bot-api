@@ -1,0 +1,219 @@
+[{
+	"status": "COMPLETE",
+	"method": "GET",
+	"protocolVersion": "HTTP/1.1",
+	"scheme": "https",
+	"host": "mobile-app-se.betapet.se",
+	"actualPort": 443,
+	"path": "/play.php",
+	"query": "type=gamedata&gameid=16307358&userid=748338&authkey=8b42d0fc7f91fb6ab4e6605bae42c187&proto_ver=5&device_type=2",
+	"tunnel": false,
+	"keptAlive": false,
+	"webSocket": false,
+	"remoteAddress": "mobile-app-se.betapet.se/194.48.213.144",
+	"clientAddress": "198.18.72.253/198.18.72.253",
+	"times": {
+		"start": "2022-12-16T13:16:34.891+01:00",
+		"requestBegin": "2022-12-16T13:16:34.899+01:00",
+		"requestComplete": "2022-12-16T13:16:34.901+01:00",
+		"responseBegin": "2022-12-16T13:16:34.924+01:00",
+		"end": "2022-12-16T13:16:34.934+01:00"
+	},
+	"durations": {
+		"dns": 60,
+		"connect": 20,
+		"ssl": 79
+	},
+	"totalSize": "1185",
+	"ssl": {
+		"protocol": "TLSv1.2",
+		"cipherSuite": "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
+	},
+	"request": {
+		"sizes": {
+			"body": "0",
+			"headers": 575
+		},
+		"mimeType": null,
+		"charset": null,
+		"contentEncoding": null,
+		"header": {
+			"firstLine": "GET /play.php?type=gamedata&gameid=16307358&userid=748338&authkey=8b42d0fc7f91fb6ab4e6605bae42c187&proto_ver=5&device_type=2 HTTP/1.1",
+			"headers": [{
+				"name": "Host",
+				"value": "mobile-app-se.betapet.se"
+			}, {
+				"name": "Accept",
+				"value": "*/*"
+			}, {
+				"name": "Cookie",
+				"value": "_ga=GA1.2.1823387544.1671187464; _gid=GA1.2.1618274031.1671187464; __gads=ID=aa1d0262064c02b8:T=1671187464:S=ALNI_MYC2X6g_awWYmTsvK4fBTxkIvGHlA; __gpi=UID=00000b936d149238:T=1671187464:RT=1671187464:S=ALNI_MY_qxarexy0lOgbHSCNsHueN6iqFw"
+			}, {
+				"name": "User-Agent",
+				"value": "Betapet/1.71 CFNetwork/1399 Darwin/22.1.0"
+			}, {
+				"name": "Accept-Language",
+				"value": "sv-SE,sv;q=0.9"
+			}, {
+				"name": "Accept-Encoding",
+				"value": "gzip, deflate, br"
+			}, {
+				"name": "Connection",
+				"value": "keep-alive"
+			}]
+		}
+	},
+	"response": {
+		"sizes": {
+			"body": "317",
+			"headers": 293
+		},
+		"mimeType": "text/html",
+		"charset": "iso-8859-1",
+		"contentEncoding": "gzip",
+		"header": {
+			"firstLine": "HTTP/1.1 200 OK",
+			"headers": [{
+				"name": "Date",
+				"value": "Fri, 16 Dec 2022 12:16:34 GMT"
+			}, {
+				"name": "Server",
+				"value": "Apache/2.4.7 (Ubuntu)"
+			}, {
+				"name": "X-Powered-By",
+				"value": "PHP/5.5.9-1ubuntu4.19"
+			}, {
+				"name": "Vary",
+				"value": "Accept-Encoding"
+			}, {
+				"name": "Content-Encoding",
+				"value": "gzip"
+			}, {
+				"name": "Content-Length",
+				"value": "317"
+			}, {
+				"name": "Keep-Alive",
+				"value": "timeout=5, max=100"
+			}, {
+				"name": "Connection",
+				"value": "Keep-Alive"
+			}, {
+				"name": "Content-Type",
+				"value": "text/html; charset=iso-8859-1"
+			}]
+		},
+		"body": {
+			"encoding": "base64",
+			"encoded": "H4sIAAAAAAAAA+VS3W6DIBh9lYXrLhEQNd7tdhfbxbarZSFUqSWhYgDXmKbvPv5cq026B5hB4Dvf+f7COYGOHbhoQQ1ggbMSkwpsgLFMW2rFgTscZQg9QreKB4hqjGpUOMpWMd1SOw2B4oBBsolr2vQ2AUelWynMbLLGim9hp5V5v0pgeXcWu7Kj8Z3+1m+ZZQ7ICUEkfu7MCQzXy+78mIQ/MrFfYYtxMFwjP+HzkaJShsQsLvyF9yb2OvNN3UVXq55XEy0Gpkp3/2RoO+o+vb5kxtJmz/7Q5WicCKPsPk/BCuIu8wpjL+096739+v7y9vH07FXVKD0rzKdP163oO2WS4YOSsktw3lzlrWCOSbFKcyf2y80kJDdU8p2HKh8bkYHrhvdz/R0Tck5hjmygjRqT8/wDUAOUuLUDAAA="
+		}
+	}
+}, {
+	"status": "COMPLETE",
+	"method": "GET",
+	"protocolVersion": "HTTP/1.1",
+	"scheme": "https",
+	"host": "mobile-app-se.betapet.se",
+	"actualPort": 443,
+	"path": "/play.php",
+	"query": "type=word&gameid=16307358&word=O,8,7,T,7,7,N,10,7,A,9,7&turn=0&userid=748338&authkey=8b42d0fc7f91fb6ab4e6605bae42c187&proto_ver=5&device_type=2",
+	"tunnel": false,
+	"keptAlive": false,
+	"webSocket": false,
+	"remoteAddress": "mobile-app-se.betapet.se/194.48.213.144",
+	"clientAddress": "198.18.72.253/198.18.72.253",
+	"times": {
+		"start": "2022-12-16T13:17:11.226+01:00",
+		"requestBegin": "2022-12-16T13:17:11.251+01:00",
+		"requestComplete": "2022-12-16T13:17:11.256+01:00",
+		"responseBegin": "2022-12-16T13:17:11.279+01:00",
+		"end": "2022-12-16T13:17:11.302+01:00"
+	},
+	"durations": {
+		"dns": 3,
+		"connect": 14,
+		"ssl": 69
+	},
+	"totalSize": "1307",
+	"ssl": {
+		"protocol": "TLSv1.2",
+		"cipherSuite": "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
+	},
+	"request": {
+		"sizes": {
+			"body": "0",
+			"headers": 608
+		},
+		"mimeType": null,
+		"charset": null,
+		"contentEncoding": null,
+		"header": {
+			"firstLine": "GET /play.php?type=word&gameid=16307358&word=O,8,7,T,7,7,N,10,7,A,9,7&turn=0&userid=748338&authkey=8b42d0fc7f91fb6ab4e6605bae42c187&proto_ver=5&device_type=2 HTTP/1.1",
+			"headers": [{
+				"name": "Host",
+				"value": "mobile-app-se.betapet.se"
+			}, {
+				"name": "Accept",
+				"value": "*/*"
+			}, {
+				"name": "Cookie",
+				"value": "_ga=GA1.2.1823387544.1671187464; _gid=GA1.2.1618274031.1671187464; __gads=ID=aa1d0262064c02b8:T=1671187464:S=ALNI_MYC2X6g_awWYmTsvK4fBTxkIvGHlA; __gpi=UID=00000b936d149238:T=1671187464:RT=1671187464:S=ALNI_MY_qxarexy0lOgbHSCNsHueN6iqFw"
+			}, {
+				"name": "User-Agent",
+				"value": "Betapet/1.71 CFNetwork/1399 Darwin/22.1.0"
+			}, {
+				"name": "Accept-Language",
+				"value": "sv-SE,sv;q=0.9"
+			}, {
+				"name": "Accept-Encoding",
+				"value": "gzip, deflate, br"
+			}, {
+				"name": "Connection",
+				"value": "keep-alive"
+			}]
+		}
+	},
+	"response": {
+		"sizes": {
+			"body": "406",
+			"headers": 293
+		},
+		"mimeType": "text/html",
+		"charset": "iso-8859-1",
+		"contentEncoding": "gzip",
+		"header": {
+			"firstLine": "HTTP/1.1 200 OK",
+			"headers": [{
+				"name": "Date",
+				"value": "Fri, 16 Dec 2022 12:17:11 GMT"
+			}, {
+				"name": "Server",
+				"value": "Apache/2.4.7 (Ubuntu)"
+			}, {
+				"name": "X-Powered-By",
+				"value": "PHP/5.5.9-1ubuntu4.19"
+			}, {
+				"name": "Vary",
+				"value": "Accept-Encoding"
+			}, {
+				"name": "Content-Encoding",
+				"value": "gzip"
+			}, {
+				"name": "Content-Length",
+				"value": "406"
+			}, {
+				"name": "Keep-Alive",
+				"value": "timeout=5, max=100"
+			}, {
+				"name": "Connection",
+				"value": "Keep-Alive"
+			}, {
+				"name": "Content-Type",
+				"value": "text/html; charset=iso-8859-1"
+			}]
+		},
+		"body": {
+			"encoding": "base64",
+			"encoded": "H4sIAAAAAAAAA8VTwW6DMAz9lSqnTeqkJiFQcdt10rZDu9NURRmENloKKAmrqqr/PieElbaTetsQhDz72Y7h+YCMtJ12KEfOdBJNUdGUEtCuMSUgp7S0AJeL5TNAWZcAKqGtp67FVipvwCmdZZTNwWadMI47tfVJyIyQBwx3OsEkpyQnKVA+GmFK7vZtoICh1WIvDS9qFw2+uFZ2gKJw6ku5PUA6gr9VoTnOcowHlnfj/lSusxH09UvhBBgSxgjrL3gnDIftaQU/ZeHpmdTfYenjcNj2/GgfXjEqZojM5evjS+Sfea9ix5mv6p6d6uLMFx2dNcwbs/6HptMT/8+adp2p4w/XwjpebMQNXXYWRNjL7v0QUBB3lswp9dLeiKD+xdtTnAZbNCYozIvU54f9zH9vVa8bG4GPitLO0HE6SjzHCWXpKM+N2FUcR65l5U1zMgwob6UpZD3Ur4TSQwq7Ey0vmu7H6WfL8kqZMF5ejpM7TNr7wXVpDAcaDf1WmE/4QAiHrjGmYU3CytDq+A0cSNSxUgQAAA=="
+		}
+	}
+}]

@@ -15,6 +15,9 @@ namespace Betapet.Models.Communication.Responses
         [JsonProperty("users")]
         public List<User> Users { get; set; }
 
+        [JsonProperty("games")]
+        public List<Game> Games { get; set; }
+
         public static GamesAndUserListResponse FromJson(string json)
         {
             return JsonConvert.DeserializeObject<GamesAndUserListResponse>(json);

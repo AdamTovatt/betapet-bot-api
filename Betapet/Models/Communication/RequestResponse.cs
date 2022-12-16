@@ -20,7 +20,7 @@ namespace Betapet.Models.Communication
 
         public RequestResponse(bool success)
         {
-            this.Success = success;
+            Success = success;
         }
     }
 }
