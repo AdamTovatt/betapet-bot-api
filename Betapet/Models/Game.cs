@@ -75,9 +75,25 @@ namespace Betapet.Models
         public Board Board { get { if (_board == null) _board = new Board(BoardData); return _board; } }
         private Board _board { get; set; }
 
+        public bool OurTurn { get { if (ourTurn == null) CheckOurTurn(); return (bool)ourTurn; } }
+        private bool? ourTurn;
+
         public static Game FromJson(string json)
         {
             return JsonConvert.DeserializeObject<Game>(json);
+        }
+
+        private void CheckOurTurn()
+        {
+            if (UserList == null || UserList.Count < 2)
+                throw new Exception("Invalid user list in game");
+
+            int ourIndex = 0;
+
+            if (UserList[0].Hand == null)
+                ourIndex = 1;
+
+            ourTurn = Active == ourIndex;
         }
     }
 }

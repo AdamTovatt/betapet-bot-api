@@ -16,6 +16,8 @@ namespace Betapet.Models.InGame
         public TileType Type { get; set; }
         public int NumericValue { get; set; }
         public string StringValue { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
 
         public Tile(TileType type, int numericValue)
         {
@@ -27,6 +29,14 @@ namespace Betapet.Models.InGame
         {
             Type = TileType.Letter;
             StringValue = letter;
+        }
+
+        public Tile(string letter, int x, int y)
+        {
+            X = x;
+            Y = y;
+            StringValue = letter;
+            Type = TileType.Letter;
         }
 
         public static Tile FromCharacter(char character)

@@ -1,6 +1,7 @@
 ﻿using Betapet.Helpers;
 using Betapet.Models.Communication;
 using Betapet.Models.Communication.Responses;
+using Betapet.Models.InGame;
 
 namespace Betapet
 {
@@ -117,6 +118,29 @@ namespace Betapet
             }
 
             return new RequestResponse(false);
+        }
+
+        /// <summary>
+        /// Method for playing a move
+        /// </summary>
+        /// <param name="move"></param>
+        /// <returns></returns>
+        public async Task<RequestResponse> PlayMove(Move move)
+        {
+            await VerifyLoginAsync();
+
+            if (loginResponse == null)
+                throw new Exception("Not logged in when attempting to play move");
+
+            Request request = new Request("/play.php", loginResponse);
+            request.AddParameter("type", "word");
+            request.AddParameter("gameid", move.GameId.ToString());
+            request.AddParameter("word", move.ToString());
+
+            HttpResponseMessage response = await api.GetResponseAsync(request);
+
+            PlayMoveResponse playMoveResponse = PlayMoveResponse.FromJson(await response.Content.ReadAsStringAsync());
+            return new RequestResponse(playMoveResponse, playMoveResponse.Result);
         }
     }
 }

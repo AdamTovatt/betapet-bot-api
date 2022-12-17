@@ -20,8 +20,12 @@ namespace BetapetBot
             RequestResponse response = await betapet.GetFriends();
             RequestResponse games = await betapet.GetGameAndUserList();
             Board board = ((GamesAndUserListResponse)games.InnerResponse).Games[0].Board;
-            
-            
+
+            Move move = new Move(((GamesAndUserListResponse)games.InnerResponse).Games[0].Id);
+            move.AddTile(new Tile("S", 2, 4));
+
+            RequestResponse playResponse = await betapet.PlayMove(move);
+
             return string.Format("authkey: {0}, userid: {1}", ((LoginResponse)message.InnerResponse).AuthKey, ((LoginResponse)message.InnerResponse).UserId);
         }
     }

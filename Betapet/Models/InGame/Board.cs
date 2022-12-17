@@ -18,7 +18,11 @@ namespace Betapet.Models.InGame
             {
                 for (int x = 0; x < 15; x++)
                 {
-                    tiles[x, y] = Tile.FromCharacter(boardData[x + y * 15]);
+                    Tile tile = Tile.FromCharacter(boardData[x + y * 15]);
+                    tile.X = x;
+                    tile.Y = y;
+
+                    tiles[x, y] = tile;
                 }
             }
         }
