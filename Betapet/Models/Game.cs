@@ -176,7 +176,7 @@ namespace Betapet.Models
 
         public MoveEvaluation EvaluateMove(Move move)
         {
-            
+            return null;
         }
     }
 }

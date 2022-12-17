@@ -137,19 +137,20 @@ namespace Betapet.Helpers
 
             foreach(Tile tile in tilesToCheckFor)
             {
-                if (!letterCount.ContainsKey(tile.StringValue))
-                    letterCount.Add(tile.StringValue, 1);
+                if (!letterCount.ContainsKey(tile.StringValue.ToUpper()))
+                    letterCount.Add(tile.StringValue.ToUpper(), 1);
                 else
-                    letterCount[tile.StringValue] += 1;
+                    letterCount[tile.StringValue.ToUpper()] += 1;
             }
 
             foreach(Tile tile in tiles)
             {
-                if (letterCount.ContainsKey(tile.StringValue))
-                    letterCount[tile.StringValue] -= 1;
+                if (letterCount.ContainsKey(tile.StringValue.ToUpper()))
+                    letterCount[tile.StringValue.ToUpper()] -= 1;
 
-                if (letterCount[tile.StringValue] == 0)
+                if (letterCount.TryGetValue(tile.StringValue.ToUpper(), out int value) && value == 0)
                 {
+                    letterCount.Remove(tile.StringValue.ToUpper());
                     if(letterCount.Values.All(x => x == 0))
                     {
                         return true;
