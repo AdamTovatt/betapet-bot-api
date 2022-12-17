@@ -20,25 +20,22 @@ namespace BetapetBotApi.Managers
             ConnectionString = ConnectionStringHelper.GetConnectionStringFromUrl(EnvironmentHelper.GetEnvironmentVariable("DATABASE_URL"));
         }
 
-        public async Task<User> GetUserByEmailAsync(string email)
+        public async Task<List<string>> GetWordsInLexiconAsync()
         {
-            User result = null;
+            List<string> result = new List<string>();
 
-            const string query = "SELECT id, name, email, password, created_date, role FROM site_user WHERE email = @email";
+            const string query = "SELECT word FROM lexicon";
 
             using (NpgsqlConnection connection = new NpgsqlConnection(ConnectionString))
             using (NpgsqlCommand command = new NpgsqlCommand(query, connection))
             {
                 await connection.OpenAsync();
 
-                command.Parameters.Add("@email", NpgsqlDbType.Varchar).Value = email.ToLower();
-
                 using (NpgsqlDataReader reader = await command.ExecuteReaderAsync())
                 {
                     while (await reader.ReadAsync())
                     {
-                        result = User.FromReader(reader);
-                        return result;
+                        result.Add(reader["word"] as string);
                     }
                 }
             }
