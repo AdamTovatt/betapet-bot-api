@@ -1,7 +1,9 @@
 ﻿using Betapet.Helpers;
+using Betapet.Models;
 using Betapet.Models.Communication;
 using Betapet.Models.Communication.Responses;
 using Betapet.Models.InGame;
+using System.Text;
 
 namespace Betapet
 {
@@ -125,7 +127,7 @@ namespace Betapet
         /// </summary>
         /// <param name="move"></param>
         /// <returns></returns>
-        public async Task<RequestResponse> PlayMove(Move move)
+        public async Task<RequestResponse> PlayMove(Move move, Game game)
         {
             await VerifyLoginAsync();
 
@@ -134,9 +136,9 @@ namespace Betapet
 
             Request request = new Request("/play.php", loginResponse);
             request.AddParameter("type", "word");
-            request.AddParameter("gameid", move.GameId.ToString());
+            request.AddParameter("gameid", game.Id.ToString());
             request.AddParameter("word", move.ToString());
-            request.AddParameter("turn", move.Turn.ToString());
+            request.AddParameter("turn", game.Turn.ToString());
 
             HttpResponseMessage response = await api.GetResponseAsync(request);
 
@@ -151,7 +153,7 @@ namespace Betapet
         /// <param name="message">The message that should be sent</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public async Task<RequestResponse> SendChatMessage(int gameId, string message)
+        public async Task<RequestResponse> SendChatMessage(Game game, string message)
         {
             await VerifyLoginAsync();
 
@@ -160,7 +162,7 @@ namespace Betapet
 
             Request request = new Request("/chat.php", loginResponse);
             request.AddParameter("type", "set");
-            request.AddParameter("gameid", gameId.ToString());
+            request.AddParameter("gameid", game.Id.ToString());
             request.AddParameter("msg", message);
 
             HttpResponseMessage response = await api.GetResponseAsync(request);
@@ -174,7 +176,7 @@ namespace Betapet
         /// <param name="gameId">The game for which the chat messages should be fetched</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public async Task<RequestResponse> GetChatMessages(int gameId)
+        public async Task<RequestResponse> GetChatMessages(Game game)
         {
             await VerifyLoginAsync();
 
@@ -183,12 +185,42 @@ namespace Betapet
 
             Request request = new Request("/chat.php", loginResponse);
             request.AddParameter("type", "get");
-            request.AddParameter("gameid", gameId.ToString());
+            request.AddParameter("gameid", game.Id.ToString());
             request.AddParameter("timestamp", "1");
 
             HttpResponseMessage response = await api.GetResponseAsync(request);
 
             return new RequestResponse(GetChatResponse.FromJson(await response.Content.ReadAsStringAsync()));
+        }
+
+        /// <summary>
+        /// Method for swapping tiles
+        /// </summary>
+        /// <param name="game">The game in which the tiles should be swapped</param>
+        /// <param name="tiles">The tiles to swap</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public async Task<RequestResponse> SwapTiles(Game game, List<Tile> tiles)
+        {
+            await VerifyLoginAsync();
+
+            if (loginResponse == null)
+                throw new Exception("Not logged in when attempting to swap tiles");
+
+            StringBuilder tileString = new StringBuilder();
+
+            foreach(Tile tile in tiles)
+            {
+                tileString.Append(tile.StringValue);
+            }
+
+            Request request = new Request("/play.php", loginResponse);
+            request.AddParameter("type", "swap");
+            request.AddParameter("gameid", game.Id.ToString());
+            request.AddParameter("turn", game.Turn.ToString());
+            request.AddParameter("tiles", tileString.ToString());
+
+            return new RequestResponse(true);
         }
     }
 }

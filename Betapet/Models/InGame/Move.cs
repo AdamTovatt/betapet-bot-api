@@ -8,14 +8,10 @@ namespace Betapet.Models.InGame
 {
     public class Move
     {
-        public int GameId { get; set; }
-        public int Turn { get; set; }
         public List<Tile> Tiles { get; set; }
         
-        public Move(int gameId, int turn)
+        public Move()
         {
-            GameId = gameId;
-            Turn = turn;
             Tiles = new List<Tile>();
         }
 
