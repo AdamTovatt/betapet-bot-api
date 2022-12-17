@@ -213,7 +213,9 @@ namespace Betapet
             request.AddParameter("turn", game.Turn.ToString());
             request.AddParameter("tiles", tiles.ToTileString());
 
-            return new RequestResponse(true);
+            HttpResponseMessage response = await api.GetResponseAsync(request);
+
+            return new RequestResponse(SwapTilesResponse.FromJson(await response.Content.ReadAsStringAsync()));
         }
     }
 }

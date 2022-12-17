@@ -73,14 +73,26 @@ namespace Betapet.Models
         [JsonProperty("mark")]
         public List<string> Mark { get; set; }
 
+        /// <summary>
+        /// The tiles that have been played to the board
+        /// </summary>
         public List<Tile> PlayedTiles { get { return Board.LetterTilesOnBoard; } }
 
+        /// <summary>
+        /// Our currently available tiles to place
+        /// </summary>
         public List<Tile> Hand { get { if (_hand == null) _hand = GetHand(); return _hand; } }
         private List<Tile> _hand;
 
+        /// <summary>
+        /// The board
+        /// </summary>
         public Board Board { get { if (_board == null) _board = new Board(BoardData); return _board; } }
         private Board _board { get; set; }
 
+        /// <summary>
+        /// Tells wether or not it's our turn to play
+        /// </summary>
         public bool OurTurn { get { if (_ourTurn == null) CheckOurTurn(); return (bool)_ourTurn; } }
         private bool? _ourTurn;
 
