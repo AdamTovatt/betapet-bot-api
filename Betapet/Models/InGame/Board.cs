@@ -8,6 +8,19 @@ namespace Betapet.Models.InGame
 {
     public class Board
     {
-        List<Board> boards;
+        Tile[,] tiles;
+
+        public Board(string boardData)
+        {
+            tiles = new Tile[15, 15];
+
+            for (int y = 0; y < 15; y++)
+            {
+                for (int x = 0; x < 15; x++)
+                {
+                    tiles[x, y] = Tile.FromCharacter(boardData[x + y * 15]);
+                }
+            }
+        }
     }
 }

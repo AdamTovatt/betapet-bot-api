@@ -72,6 +72,9 @@ namespace Betapet.Models
         [JsonProperty("mark")]
         public List<string> Mark { get; set; }
 
+        public Board Board { get { if (_board == null) _board = new Board(BoardData); return _board; } }
+        private Board _board { get; set; }
+
         public static Game FromJson(string json)
         {
             return JsonConvert.DeserializeObject<Game>(json);

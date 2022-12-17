@@ -26,5 +26,10 @@ namespace Betapet.Models.InGame
 
         [JsonProperty("hand_cnt")]
         public int HandCount { get; set; }
+
+        public override string ToString()
+        {
+            return Id.ToString();
+        }
     }
 }

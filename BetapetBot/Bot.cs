@@ -1,6 +1,7 @@
 ﻿using Betapet;
 using Betapet.Models.Communication;
 using Betapet.Models.Communication.Responses;
+using Betapet.Models.InGame;
 
 namespace BetapetBot
 {
@@ -18,6 +19,7 @@ namespace BetapetBot
             RequestResponse message = await betapet.LoginAsync();
             RequestResponse response = await betapet.GetFriends();
             RequestResponse games = await betapet.GetGameAndUserList();
+            Board board = ((GamesAndUserListResponse)games.InnerResponse).Games[0].Board;
             
             
             return string.Format("authkey: {0}, userid: {1}", ((LoginResponse)message.InnerResponse).AuthKey, ((LoginResponse)message.InnerResponse).UserId);
