@@ -26,6 +26,7 @@ namespace Betapet.Models.InGame
         public Tile(string letter)
         {
             Type = TileType.Letter;
+            StringValue = letter;
         }
 
         public static Tile FromCharacter(char character)
