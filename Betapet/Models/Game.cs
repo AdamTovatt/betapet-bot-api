@@ -75,6 +75,12 @@ namespace Betapet.Models
         public List<string> Mark { get; set; }
 
         /// <summary>
+        /// A list of all tiles that can be used. That is the tiles currently in our hand + the tiles on the board
+        /// </summary>
+        public List<Tile> UseableTiles { get { if (_useableTiles == null) _useableTiles = Hand.AddTiles(PlayedTiles); return _useableTiles; } }
+        private List<Tile> _useableTiles;
+
+        /// <summary>
         /// The tiles that have been played to the board
         /// </summary>
         public List<Tile> PlayedTiles { get { return Board.LetterTilesOnBoard; } }
@@ -166,6 +172,11 @@ namespace Betapet.Models
             tiles.AddTile(" ", 2);
 
             return tiles;
+        }
+
+        public MoveEvaluation EvaluateMove(Move move)
+        {
+            
         }
     }
 }

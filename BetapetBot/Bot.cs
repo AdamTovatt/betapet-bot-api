@@ -33,6 +33,12 @@ namespace BetapetBot
             RequestResponse playResponse = await betapet.PlayMove(move);
             */
 
+            Move move = new Move();
+            move.AddTile("M", 6, 5);
+            move.AddTile("Å", 6, 6);
+
+            
+
             //SendChatResponse chatResponse = (SendChatResponse)(await betapet.SendChatMessage(game.Id, "du är noob")).InnerResponse;
             RequestResponse getChatResponse = await betapet.GetChatMessages(game);
 

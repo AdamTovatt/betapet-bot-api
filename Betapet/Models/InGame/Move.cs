@@ -20,6 +20,11 @@ namespace Betapet.Models.InGame
             Tiles.Add(tile);
         }
 
+        public void AddTile(string letter, int x, int y)
+        {
+            Tiles.Add(new Tile(letter, x, y));
+        }
+
         public override string ToString()
         {
             StringBuilder stringBuilder = new StringBuilder();

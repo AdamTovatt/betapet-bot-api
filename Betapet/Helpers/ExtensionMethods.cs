@@ -124,5 +124,43 @@ namespace Betapet.Helpers
 
             return tiles;
         }
+
+        /// <summary>
+        /// Returns wether or not a list of tiles contains all the tiles in another list of tiles
+        /// </summary>
+        /// <param name="tiles">The list to use as base</param>
+        /// <param name="tilesToCheckFor">The list of tiles to check for</param>
+        /// <returns>If the base list contains all tiles needed to create the list to check for</returns>
+        public static bool ContainsTiles(this List<Tile> tiles, List<Tile> tilesToCheckFor)
+        {
+            Dictionary<string, int> letterCount = new Dictionary<string, int>();
+
+            foreach(Tile tile in tilesToCheckFor)
+            {
+                if (!letterCount.ContainsKey(tile.StringValue))
+                    letterCount.Add(tile.StringValue, 1);
+                else
+                    letterCount[tile.StringValue] += 1;
+            }
+
+            foreach(Tile tile in tiles)
+            {
+                if (letterCount.ContainsKey(tile.StringValue))
+                    letterCount[tile.StringValue] -= 1;
+
+                if (letterCount[tile.StringValue] == 0)
+                {
+                    if(letterCount.Values.All(x => x == 0))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            if (letterCount.Values.All(x => x == 0))
+                return true;
+
+            return false;
+        }
     }
 }
