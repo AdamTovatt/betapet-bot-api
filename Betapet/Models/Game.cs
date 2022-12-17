@@ -105,6 +105,12 @@ namespace Betapet.Models
         private Board _board { get; set; }
 
         /// <summary>
+        /// The original board, free from any placed tiles
+        /// </summary>
+        public Board OriginalBoard { get { if (_originalBoard == null) _originalBoard = new Board(OriginalBoardData); return _originalBoard; } }
+        public Board _originalBoard;
+
+        /// <summary>
         /// Tells wether or not it's our turn to play
         /// </summary>
         public bool OurTurn { get { if (_ourTurn == null) CheckOurTurn(); return (bool)_ourTurn; } }
@@ -176,7 +182,52 @@ namespace Betapet.Models
 
         public MoveEvaluation EvaluateMove(Move move)
         {
-            return null;
+            if (move.Tiles.Count == 0)
+                return MoveEvaluation.ImpossibleMove;
+
+            if (!UseableTiles.ContainsTiles(move.Tiles))
+                return MoveEvaluation.ImpossibleMove;
+
+            foreach(Tile tile in move.Tiles)
+            {
+                if (Board.Tiles[tile.X, tile.Y].Type == TileType.Letter)
+                    return MoveEvaluation.ImpossibleMove;
+            }
+
+            List<List<Tile>> words = new List<List<Tile>>();
+
+            Direction moveDirection = Direction.None;
+            
+            if(move.Tiles.Count > 1)
+            {
+                moveDirection = move.Tiles[0].X > move.Tiles[1].X ? Direction.Horizontal : Direction.Vertical;
+            }
+
+            foreach (Tile tile in move.Tiles)
+            {
+                words.Add(Board.ScanForTiles(move, tile, moveDirection == Direction.Horizontal ? Direction.Vertical : Direction.Horizontal));
+            }
+
+            words.Add(Board.ScanForTiles(move, move.Tiles[0], moveDirection));
+
+            UniqueTileCollection multiplyTiles = new UniqueTileCollection();
+            int movePoints = 0;
+
+            foreach (List<Tile> word in words)
+            {
+                foreach (Tile tile in word)
+                {
+                    movePoints += tile.PointValue * Board.GetPositionLetterMultiplier(tile.X, tile.Y);
+
+                    if (Board.GetPositionWordMultiplier(tile.X, tile.Y) > 1)
+                        multiplyTiles.AddTile(Board.Tiles[tile.X, tile.Y]);
+                }
+            }
+
+            foreach (Tile tile in multiplyTiles.Tiles)
+                movePoints *= tile.NumericValue;
+
+            return new MoveEvaluation(true, movePoints);
         }
     }
 }

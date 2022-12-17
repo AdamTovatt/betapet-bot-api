@@ -19,5 +19,12 @@ namespace Betapet.Models.InGame
             Points = points;
         }
 
+        public override string ToString()
+        {
+            if (!Possible)
+                return "Impossible move";
+            else
+                return "Would yield: " + Points.ToString();
+        }
     }
 }

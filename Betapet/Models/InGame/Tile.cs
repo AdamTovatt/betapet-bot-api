@@ -74,6 +74,11 @@ namespace Betapet.Models.InGame
             else
                 return StringValue;
         }
+
+        public string GetHash()
+        {
+            return string.Format("{0},{1}:{2}", X, Y, StringValue);
+        }
     }
 
     public static class PointLookup
