@@ -10,6 +10,11 @@ namespace Betapet.Helpers
 {
     public static class ExtensionMethods
     {
+        /// <summary>
+        /// Will convert a string to a list of tiles by taking all the characters and converting them separately to a tile each
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns>A list of tiles</returns>
         public static List<Tile> ToListOfTiles(this string value)
         {
             List<Tile> result = new List<Tile>();
@@ -22,6 +27,11 @@ namespace Betapet.Helpers
             return result;
         }
 
+        /// <summary>
+        /// Will convert a list of tiles to a string with the tile letters
+        /// </summary>
+        /// <param name="tiles"></param>
+        /// <returns>A tile string that could look like follows: LETTERS</returns>
         public static string ToTileString(this List<Tile> tiles)
         {
             StringBuilder tileString = new StringBuilder();
@@ -34,6 +44,12 @@ namespace Betapet.Helpers
             return tileString.ToString();
         }
 
+        /// <summary>
+        /// Will add a tile to a list of tiles, modifying the list in the process
+        /// </summary>
+        /// <param name="tiles"></param>
+        /// <param name="tile">The tile to add. Will add a copy of this tile! Will not add the actual reference to the tile provided but will instead copy it</param>
+        /// <param name="count">The amount of tiles of the specified tile to add</param>
         public static void AddTile(this List<Tile> tiles, Tile tile, int count)
         {
             for (int i = 0; i < count; i++)
@@ -42,6 +58,12 @@ namespace Betapet.Helpers
             }
         }
 
+        /// <summary>
+        /// Will add a tile to a list of tiles, modifying the list in the process
+        /// </summary>
+        /// <param name="tiles"></param>
+        /// <param name="tile">The tile to add</param>
+        /// <param name="count">The amount of tiles of the specified tile to add</param>
         public static void AddTile(this List<Tile> tiles, string tile, int count)
         {
             for (int i = 0; i < count; i++)
@@ -50,6 +72,31 @@ namespace Betapet.Helpers
             }
         }
 
+        /// <summary>
+        /// Adds a list of tiles to another list of tiles. Will return a completely new list of the resulting tiles, leaving both original lists untouched.
+        /// </summary>
+        /// <param name="tiles">The list of tiles to add to, will be unchanged</param>
+        /// <param name="tilesToAdd">The list of tiles to add, will be unchanged</param>
+        /// <returns>A new list of tiles</returns>
+        public static List<Tile> AddTiles(this List<Tile> tiles, List<Tile> tilesToAdd)
+        {
+            List<Tile> result = new List<Tile>();
+
+            foreach(Tile tile in tiles)
+                result.AddTile(tile, 1);
+
+            foreach (Tile tile in tilesToAdd)
+                result.AddTile(tile, 1);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Will remove a tile from a list, modifying the list in the process
+        /// </summary>
+        /// <param name="tiles"></param>
+        /// <param name="tile"></param>
+        /// <returns>A modified list without the specified tile</returns>
         public static List<Tile> RemoveTile(this List<Tile> tiles, Tile tile)
         {
             int removeIndex = tiles.FindIndex(x => x.StringValue == tile.StringValue);
@@ -62,6 +109,12 @@ namespace Betapet.Helpers
             return tiles;
         }
 
+        /// <summary>
+        /// Will remove a list of tiles from another list of tiles, modifying the original list in the process
+        /// </summary>
+        /// <param name="tiles"></param>
+        /// <param name="tilesToRemove">The tiles to remove</param>
+        /// <returns>A modified list</returns>
         public static List<Tile> RemoveTiles(this List<Tile> tiles, List<Tile> tilesToRemove)
         {
             foreach (Tile tile in tilesToRemove)
