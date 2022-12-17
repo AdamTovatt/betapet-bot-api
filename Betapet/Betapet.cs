@@ -136,11 +136,59 @@ namespace Betapet
             request.AddParameter("type", "word");
             request.AddParameter("gameid", move.GameId.ToString());
             request.AddParameter("word", move.ToString());
+            request.AddParameter("turn", move.Turn.ToString());
 
             HttpResponseMessage response = await api.GetResponseAsync(request);
 
             PlayMoveResponse playMoveResponse = PlayMoveResponse.FromJson(await response.Content.ReadAsStringAsync());
             return new RequestResponse(playMoveResponse, playMoveResponse.Result);
+        }
+
+        /// <summary>
+        /// Method for sending a chat message
+        /// </summary>
+        /// <param name="gameId">The id of the game the message should be sent in</param>
+        /// <param name="message">The message that should be sent</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public async Task<RequestResponse> SendChatMessage(int gameId, string message)
+        {
+            await VerifyLoginAsync();
+
+            if (loginResponse == null)
+                throw new Exception("Not logged in when attempting to send chat");
+
+            Request request = new Request("/chat.php", loginResponse);
+            request.AddParameter("type", "set");
+            request.AddParameter("gameid", gameId.ToString());
+            request.AddParameter("msg", message);
+
+            HttpResponseMessage response = await api.GetResponseAsync(request);
+
+            return new RequestResponse(SendChatResponse.FromJson(await response.Content.ReadAsStringAsync()));
+        }
+
+        /// <summary>
+        /// Method for getting all chat messages in a game
+        /// </summary>
+        /// <param name="gameId">The game for which the chat messages should be fetched</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public async Task<RequestResponse> GetChatMessages(int gameId)
+        {
+            await VerifyLoginAsync();
+
+            if (loginResponse == null)
+                throw new Exception("Not logged in when attempting to get chats");
+
+            Request request = new Request("/chat.php", loginResponse);
+            request.AddParameter("type", "get");
+            request.AddParameter("gameid", gameId.ToString());
+            request.AddParameter("timestamp", "1");
+
+            HttpResponseMessage response = await api.GetResponseAsync(request);
+
+            return new RequestResponse(GetChatResponse.FromJson(await response.Content.ReadAsStringAsync()));
         }
     }
 }
