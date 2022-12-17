@@ -8,11 +8,13 @@ namespace Betapet.Models.InGame
 {
     public class Board
     {
-        Tile[,] tiles;
+        public Tile[,] Tiles { get; set; }
+        public List<Tile> LetterTilesOnBoard { get; set; }
 
         public Board(string boardData)
         {
-            tiles = new Tile[15, 15];
+            Tiles = new Tile[15, 15];
+            LetterTilesOnBoard = new List<Tile>();
 
             for (int y = 0; y < 15; y++)
             {
@@ -22,7 +24,10 @@ namespace Betapet.Models.InGame
                     tile.X = x;
                     tile.Y = y;
 
-                    tiles[x, y] = tile;
+                    if(tile.Type == TileType.Letter)
+                        LetterTilesOnBoard.Add(tile);
+
+                    Tiles[x, y] = tile;
                 }
             }
         }

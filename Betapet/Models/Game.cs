@@ -1,4 +1,5 @@
-﻿using Betapet.Models.InGame;
+﻿using Betapet.Helpers;
+using Betapet.Models.InGame;
 using Newtonsoft.Json;
 using System.Text.Json.Serialization;
 
@@ -72,15 +73,25 @@ namespace Betapet.Models
         [JsonProperty("mark")]
         public List<string> Mark { get; set; }
 
+        public List<Tile> PlayedTiles { get { return Board.LetterTilesOnBoard; } }
+
+        public List<Tile> Hand { get { if (_hand == null) _hand = GetHand(); return _hand; } }
+        private List<Tile> _hand;
+
         public Board Board { get { if (_board == null) _board = new Board(BoardData); return _board; } }
         private Board _board { get; set; }
 
-        public bool OurTurn { get { if (ourTurn == null) CheckOurTurn(); return (bool)ourTurn; } }
-        private bool? ourTurn;
+        public bool OurTurn { get { if (_ourTurn == null) CheckOurTurn(); return (bool)_ourTurn; } }
+        private bool? _ourTurn;
 
         public static Game FromJson(string json)
         {
             return JsonConvert.DeserializeObject<Game>(json);
+        }
+
+        private List<Tile> GetHand()
+        {
+            return UserList.Where(x => x.Hand != null).First().Hand.ToListOfTiles();
         }
 
         private void CheckOurTurn()
@@ -93,7 +104,7 @@ namespace Betapet.Models
             if (UserList[0].Hand == null)
                 ourIndex = 1;
 
-            ourTurn = Active == ourIndex;
+            _ourTurn = Active == ourIndex;
         }
     }
 }

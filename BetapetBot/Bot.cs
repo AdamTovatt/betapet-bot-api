@@ -34,7 +34,7 @@ namespace BetapetBot
             */
 
             //SendChatResponse chatResponse = (SendChatResponse)(await betapet.SendChatMessage(game.Id, "du är noob")).InnerResponse;
-            RequestResponse getChatResponse = await betapet.GetChatMessages(game.Id);
+            RequestResponse getChatResponse = await betapet.GetChatMessages(game);
 
             return string.Format("authkey: {0}, userid: {1}", ((LoginResponse)message.InnerResponse).AuthKey, ((LoginResponse)message.InnerResponse).UserId);
         }

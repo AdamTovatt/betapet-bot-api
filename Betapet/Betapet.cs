@@ -205,20 +205,13 @@ namespace Betapet
             await VerifyLoginAsync();
 
             if (loginResponse == null)
-                throw new Exception("Not logged in when attempting to swap tiles");
-
-            StringBuilder tileString = new StringBuilder();
-
-            foreach(Tile tile in tiles)
-            {
-                tileString.Append(tile.StringValue);
-            }
+                throw new Exception("Not logged in when attempting to swap tiles");    
 
             Request request = new Request("/play.php", loginResponse);
             request.AddParameter("type", "swap");
             request.AddParameter("gameid", game.Id.ToString());
             request.AddParameter("turn", game.Turn.ToString());
-            request.AddParameter("tiles", tileString.ToString());
+            request.AddParameter("tiles", tiles.ToTileString());
 
             return new RequestResponse(true);
         }
