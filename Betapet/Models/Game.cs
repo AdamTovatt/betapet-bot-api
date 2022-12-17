@@ -1,6 +1,7 @@
 ﻿using Betapet.Helpers;
 using Betapet.Models.InGame;
 using Newtonsoft.Json;
+using Betapet.Helpers;
 using System.Text.Json.Serialization;
 
 namespace Betapet.Models
@@ -79,6 +80,13 @@ namespace Betapet.Models
         public List<Tile> PlayedTiles { get { return Board.LetterTilesOnBoard; } }
 
         /// <summary>
+        /// The tiles that are hidden from us. Either they are in the opponents hand or they are in the tiles stash.
+        /// We can't know unless the tiles left are 0, then we know that all the hidden tiles are in the opponents hand.
+        /// </summary>
+        public List<Tile> HiddenTiles { get { if (_hiddenTiles == null) _hiddenTiles = GetHiddenTiles(); return _hiddenTiles; } }
+        private List<Tile> _hiddenTiles;
+
+        /// <summary>
         /// Our currently available tiles to place
         /// </summary>
         public List<Tile> Hand { get { if (_hand == null) _hand = GetHand(); return _hand; } }
@@ -119,6 +127,11 @@ namespace Betapet.Models
             _ourTurn = Active == ourIndex;
         }
 
+        private List<Tile> GetHiddenTiles()
+        {
+            return GetStartingTiles().RemoveTiles(Hand).RemoveTiles(Board.LetterTilesOnBoard);
+        }
+
         private List<Tile> GetStartingTiles()
         {
             List<Tile> tiles = new List<Tile>();
@@ -150,7 +163,7 @@ namespace Betapet.Models
             tiles.AddTile("Å", 2);
             tiles.AddTile("Ä", 2);
             tiles.AddTile("Ö", 2);
-            tiles.AddTile(" ", 9);
+            tiles.AddTile(" ", 2);
 
             return tiles;
         }

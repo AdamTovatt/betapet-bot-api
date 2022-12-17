@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,7 +14,7 @@ namespace Betapet.Helpers
         {
             List<Tile> result = new List<Tile>();
 
-            foreach(char c in value)
+            foreach (char c in value)
             {
                 result.Add(Tile.FromCharacter(c));
             }
@@ -47,6 +48,28 @@ namespace Betapet.Helpers
             {
                 tiles.Add(new Tile(tile));
             }
+        }
+
+        public static List<Tile> RemoveTile(this List<Tile> tiles, Tile tile)
+        {
+            int removeIndex = tiles.FindIndex(x => x.StringValue == tile.StringValue);
+
+            if (removeIndex != -1)
+            {
+                tiles.RemoveAt(removeIndex);
+            }
+
+            return tiles;
+        }
+
+        public static List<Tile> RemoveTiles(this List<Tile> tiles, List<Tile> tilesToRemove)
+        {
+            foreach (Tile tile in tilesToRemove)
+            {
+                tiles.RemoveTile(tile);
+            }
+
+            return tiles;
         }
     }
 }
