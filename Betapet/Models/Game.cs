@@ -210,6 +210,9 @@ namespace Betapet.Models
 
             words.Add(Board.ScanForTiles(move, move.Tiles[0], moveDirection));
 
+            if(!words.Any(x => x.Count > 1))
+                return MoveEvaluation.ImpossibleMove;
+
             List<int> pointsPerWord = new List<int>(); 
             UniqueTileCollection multiplyTiles = new UniqueTileCollection();
 

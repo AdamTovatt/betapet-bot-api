@@ -7,4 +7,5 @@
 /BetapetBot/obj/*
 /BetapetTests/bin/*
 /BetapetTests/obj/*
+/betapet-bot-api/Properties/launchSettings.json
 Properties/launchSettings.json

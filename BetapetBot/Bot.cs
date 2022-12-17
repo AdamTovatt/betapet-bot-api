@@ -8,11 +8,17 @@ namespace BetapetBot
 {
     public class Bot
     {
-        BetapetManager betapet;
+        private BetapetManager betapet;
+        private Lexicon lexicon;
 
         public Bot(string username, string password, string deviceId)
         {
             betapet = new BetapetManager(username, password, deviceId);
+        }
+
+        public void AddLexicon(List<string> words)
+        {
+
         }
 
         public async Task<string> GetMessage()
