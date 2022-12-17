@@ -32,5 +32,21 @@ namespace Betapet.Helpers
 
             return tileString.ToString();
         }
+
+        public static void AddTile(this List<Tile> tiles, Tile tile, int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                tiles.Add(new Tile(tile.StringValue));
+            }
+        }
+
+        public static void AddTile(this List<Tile> tiles, string tile, int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                tiles.Add(new Tile(tile));
+            }
+        }
     }
 }

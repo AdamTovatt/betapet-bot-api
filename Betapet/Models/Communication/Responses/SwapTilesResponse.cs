@@ -21,6 +21,9 @@ namespace Betapet.Models.Communication.Responses
         [JsonProperty("tiles")]
         public string Tiles { get; set; }
 
+        [JsonProperty("code")]
+        public string Code { get; set; }
+
         public static SwapTilesResponse FromJson(string json)
         {
             return JsonConvert.DeserializeObject<SwapTilesResponse>(json);

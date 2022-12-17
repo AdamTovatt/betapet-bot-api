@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,6 +19,8 @@ namespace Betapet.Models.InGame
         public string StringValue { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
+        public int PointValue { get { if (_pointValue == -1 && !string.IsNullOrEmpty(StringValue)) _pointValue = PointLookup.GetPointValue(StringValue); return _pointValue; } }
+        private int _pointValue = -1;
 
         public Tile(TileType type, int numericValue)
         {
@@ -70,6 +73,49 @@ namespace Betapet.Models.InGame
                 return "(Empty)";
             else
                 return StringValue;
+        }
+    }
+
+    public static class PointLookup
+    {
+        private static Dictionary<string, int> lookup = new Dictionary<string, int>()
+        {
+            { "A", 1 },
+            { "B", 4 },
+            { "C", 8 },
+            { "D", 2 },
+            { "E", 1 },
+            { "F", 4 },
+            { "G", 2 },
+            { "H", 3 },
+            { "I", 2 },
+            { "J", 7 },
+            { "K", 3 },
+            { "L", 2 },
+            { "M", 3 },
+            { "N", 1 },
+            { "O", 2 },
+            { "P", 3 },
+            { "R", 1 },
+            { "S", 1 },
+            { "T", 1 },
+            { "U", 4 },
+            { "V", 3 },
+            { "X", 8 },
+            { "Y", 7 },
+            { "Z", 10 },
+            { "Å", 4 },
+            { "Ä", 4 },
+            { "Ö", 4 },
+            { " ", 0 },
+        };      
+
+        public static int GetPointValue(string letter)
+        {
+            if (!lookup.ContainsKey(letter))
+                return 0;
+
+            return lookup[letter];
         }
     }
 }

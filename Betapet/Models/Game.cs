@@ -118,5 +118,41 @@ namespace Betapet.Models
 
             _ourTurn = Active == ourIndex;
         }
+
+        private List<Tile> GetStartingTiles()
+        {
+            List<Tile> tiles = new List<Tile>();
+
+            tiles.AddTile("A", 9);
+            tiles.AddTile("B", 2);
+            tiles.AddTile("C", 1);
+            tiles.AddTile("D", 5);
+            tiles.AddTile("E", 8);
+            tiles.AddTile("F", 2);
+            tiles.AddTile("G", 3);
+            tiles.AddTile("H", 2);
+            tiles.AddTile("I", 5);
+            tiles.AddTile("J", 1);
+            tiles.AddTile("K", 3);
+            tiles.AddTile("L", 5);
+            tiles.AddTile("M", 3);
+            tiles.AddTile("N", 5);
+            tiles.AddTile("O", 5);
+            tiles.AddTile("P", 2);
+            tiles.AddTile("R", 7);
+            tiles.AddTile("S", 8);
+            tiles.AddTile("T", 8);
+            tiles.AddTile("U", 3);
+            tiles.AddTile("V", 2);
+            tiles.AddTile("X", 1);
+            tiles.AddTile("Y", 1);
+            tiles.AddTile("Z", 1);
+            tiles.AddTile("Å", 2);
+            tiles.AddTile("Ä", 2);
+            tiles.AddTile("Ö", 2);
+            tiles.AddTile(" ", 9);
+
+            return tiles;
+        }
     }
 }
