@@ -18,8 +18,8 @@ namespace BetapetBot
         public async Task<string> GetMessage()
         {
             RequestResponse message = await betapet.LoginAsync();
-            RequestResponse response = await betapet.GetFriends();
-            RequestResponse games = await betapet.GetGameAndUserList();
+            RequestResponse response = await betapet.GetFriendsAsync();
+            RequestResponse games = await betapet.GetGameAndUserListAsync();
             Board board = ((GamesAndUserListResponse)games.InnerResponse).Games[0].Board;
 
             Game game = ((GamesAndUserListResponse)games.InnerResponse).Games[0];
@@ -38,7 +38,7 @@ namespace BetapetBot
             move.AddTile("Å", 6, 6);
 
             //SendChatResponse chatResponse = (SendChatResponse)(await betapet.SendChatMessage(game.Id, "du är noob")).InnerResponse;
-            RequestResponse getChatResponse = await betapet.GetChatMessages(game);
+            RequestResponse getChatResponse = await betapet.GetChatMessagesAsync(game);
 
             return string.Format("authkey: {0}, userid: {1}", ((LoginResponse)message.InnerResponse).AuthKey, ((LoginResponse)message.InnerResponse).UserId);
         }

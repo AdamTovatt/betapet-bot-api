@@ -77,7 +77,7 @@ namespace Betapet
         /// Method for getting a list of friends of the current user
         /// </summary>
         /// <returns></returns>
-        public async Task<RequestResponse> GetFriends()
+        public async Task<RequestResponse> GetFriendsAsync()
         {
             await VerifyLoginAsync();
 
@@ -101,7 +101,7 @@ namespace Betapet
         /// Method for getting list of games that are currently active
         /// </summary>
         /// <returns></returns>
-        public async Task<RequestResponse> GetGameAndUserList()
+        public async Task<RequestResponse> GetGameAndUserListAsync()
         {
             await VerifyLoginAsync();
 
@@ -127,7 +127,7 @@ namespace Betapet
         /// </summary>
         /// <param name="move"></param>
         /// <returns></returns>
-        public async Task<RequestResponse> PlayMove(Move move, Game game)
+        public async Task<RequestResponse> PlayMoveAsync(Move move, Game game)
         {
             await VerifyLoginAsync();
 
@@ -153,7 +153,7 @@ namespace Betapet
         /// <param name="message">The message that should be sent</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public async Task<RequestResponse> SendChatMessage(Game game, string message)
+        public async Task<RequestResponse> SendChatMessageAsync(Game game, string message)
         {
             await VerifyLoginAsync();
 
@@ -176,7 +176,7 @@ namespace Betapet
         /// <param name="gameId">The game for which the chat messages should be fetched</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public async Task<RequestResponse> GetChatMessages(Game game)
+        public async Task<RequestResponse> GetChatMessagesAsync(Game game)
         {
             await VerifyLoginAsync();
 
@@ -200,7 +200,7 @@ namespace Betapet
         /// <param name="tiles">The tiles to swap</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public async Task<RequestResponse> SwapTiles(Game game, List<Tile> tiles)
+        public async Task<RequestResponse> SwapTilesAsync(Game game, List<Tile> tiles)
         {
             await VerifyLoginAsync();
 
