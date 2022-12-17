@@ -185,7 +185,7 @@ namespace Betapet.Models
             if (move.Tiles.Count == 0)
                 return MoveEvaluation.ImpossibleMove;
 
-            if (!UseableTiles.ContainsTiles(move.Tiles))
+            if (!Hand.ContainsTiles(move.Tiles))
                 return MoveEvaluation.ImpossibleMove;
 
             foreach(Tile tile in move.Tiles)
@@ -210,24 +210,28 @@ namespace Betapet.Models
 
             words.Add(Board.ScanForTiles(move, move.Tiles[0], moveDirection));
 
+            List<int> pointsPerWord = new List<int>(); 
             UniqueTileCollection multiplyTiles = new UniqueTileCollection();
-            int movePoints = 0;
 
             foreach (List<Tile> word in words)
             {
+                int wordPoints = 0;
                 foreach (Tile tile in word)
                 {
-                    movePoints += tile.PointValue * Board.GetPositionLetterMultiplier(tile.X, tile.Y);
+                    wordPoints += tile.PointValue * Board.GetPositionLetterMultiplier(tile.X, tile.Y);
 
                     if (Board.GetPositionWordMultiplier(tile.X, tile.Y) > 1)
                         multiplyTiles.AddTile(Board.Tiles[tile.X, tile.Y]);
                 }
+
+                foreach (Tile tile in multiplyTiles.Tiles)
+                    wordPoints *= tile.NumericValue;
+
+                pointsPerWord.Add(wordPoints);
+                multiplyTiles.Clear();
             }
 
-            foreach (Tile tile in multiplyTiles.Tiles)
-                movePoints *= tile.NumericValue;
-
-            return new MoveEvaluation(true, movePoints);
+            return new MoveEvaluation(true, pointsPerWord.Sum());
         }
     }
 }

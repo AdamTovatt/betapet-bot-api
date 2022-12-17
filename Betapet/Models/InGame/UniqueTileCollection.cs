@@ -25,5 +25,10 @@ namespace Betapet.Models.InGame
                 AddTile(tile);
             }
         }
+
+        public void Clear()
+        {
+            tiles.Clear();
+        }
     }
 }
