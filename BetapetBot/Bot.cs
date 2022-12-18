@@ -18,7 +18,7 @@ namespace BetapetBot
 
         public void AddLexicon(List<string> words)
         {
-
+            lexicon = new Lexicon(words);
         }
 
         public async Task<string> GetMessage()
