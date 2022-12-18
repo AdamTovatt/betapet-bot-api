@@ -1,0 +1,66 @@
+﻿DROP TABLE IF EXISTS lexicon CASCADE;
+
+CREATE TABLE lexicon (
+id SERIAL PRIMARY KEY,
+word VARCHAR(500) NOT NULL UNIQUE,
+letter_value INT NOT NULL,
+a SMALLINT NOT NULL,
+b SMALLINT NOT NULL,
+c SMALLINT NOT NULL,
+d SMALLINT NOT NULL,
+e SMALLINT NOT NULL,
+f SMALLINT NOT NULL,
+g SMALLINT NOT NULL,
+h SMALLINT NOT NULL,
+i SMALLINT NOT NULL,
+j SMALLINT NOT NULL,
+k SMALLINT NOT NULL,
+l SMALLINT NOT NULL,
+m SMALLINT NOT NULL,
+n SMALLINT NOT NULL,
+o SMALLINT NOT NULL,
+p SMALLINT NOT NULL,
+r SMALLINT NOT NULL,
+s SMALLINT NOT NULL,
+t SMALLINT NOT NULL,
+u SMALLINT NOT NULL,
+v SMALLINT NOT NULL,
+w SMALLINT NOT NULL,
+x SMALLINT NOT NULL,
+y SMALLINT NOT NULL,
+z SMALLINT NOT NULL,
+a1 SMALLINT NOT NULL,
+a2 SMALLINT NOT NULL,
+o2 SMALLINT NOT NULL,
+disabled boolean NOT NULL DEFAULT false
+);
+
+CREATE INDEX letter_value_index ON lexicon(letter_value);
+CREATE INDEX a_index ON lexicon(a);
+CREATE INDEX b_index ON lexicon(b);
+CREATE INDEX c_index ON lexicon(c);
+CREATE INDEX d_index ON lexicon(d);
+CREATE INDEX e_index ON lexicon(e);
+CREATE INDEX f_index ON lexicon(f);
+CREATE INDEX g_index ON lexicon(g);
+CREATE INDEX h_index ON lexicon(h);
+CREATE INDEX i_index ON lexicon(i);
+CREATE INDEX j_index ON lexicon(j);
+CREATE INDEX k_index ON lexicon(k);
+CREATE INDEX l_index ON lexicon(l);
+CREATE INDEX m_index ON lexicon(m);
+CREATE INDEX n_index ON lexicon(n);
+CREATE INDEX o_index ON lexicon(o);
+CREATE INDEX p_index ON lexicon(p);
+CREATE INDEX r_index ON lexicon(r);
+CREATE INDEX s_index ON lexicon(s);
+CREATE INDEX t_index ON lexicon(t);
+CREATE INDEX u_index ON lexicon(u);
+CREATE INDEX v_index ON lexicon(v);
+CREATE INDEX w_index ON lexicon(w);
+CREATE INDEX x_index ON lexicon(x);
+CREATE INDEX y_index ON lexicon(y);
+CREATE INDEX z_index ON lexicon(z);
+CREATE INDEX a1_index ON lexicon(a1);
+CREATE INDEX a2_index ON lexicon(a2);
+CREATE INDEX o2_index ON lexicon(o2);

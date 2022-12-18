@@ -11,14 +11,10 @@ namespace BetapetBot
         private BetapetManager betapet;
         private Lexicon lexicon;
 
-        public Bot(string username, string password, string deviceId)
+        public Bot(string username, string password, string deviceId, string connectionString)
         {
             betapet = new BetapetManager(username, password, deviceId);
-        }
-
-        public void AddLexicon(List<string> words)
-        {
-            lexicon = new Lexicon(words);
+            lexicon = new Lexicon(connectionString);
         }
 
         public async Task<string> GetMessage()
@@ -43,19 +39,7 @@ namespace BetapetBot
             move1.AddTile("M", 6, 5);
             move1.AddTile("Å", 6, 6);
 
-            //MoveEvaluation evaluation1 = game.EvaluateMove(move1);
-
-            Move move2 = new Move();
-            move2.AddTile("E", 10, 8);
-            move2.AddTile("L", 11, 8);  
-
-            //MoveEvaluation evaluation2 = game.EvaluateMove(move2);
-
-            Move move3 = new Move();
-            move3.AddTile("U", 10, 10);
-            move3.AddTile("F", 10, 11);
-
-            MoveEvaluation evaluation3 = game.EvaluateMove(move3);
+            MoveEvaluation evaluation1 = game.EvaluateMove(move1);
 
             //SendChatResponse chatResponse = (SendChatResponse)(await betapet.SendChatMessage(game.Id, "du är noob")).InnerResponse;
             RequestResponse getChatResponse = await betapet.GetChatMessagesAsync(game);
@@ -63,6 +47,11 @@ namespace BetapetBot
             //PlayMoveResponse playResponse = (PlayMoveResponse)(await betapet.PlayMoveAsync(move3, game)).InnerResponse;
 
             return string.Format("authkey: {0}, userid: {1}", ((LoginResponse)message.InnerResponse).AuthKey, ((LoginResponse)message.InnerResponse).UserId);
+        }
+
+        public async Task<List<string>> GetPossibleWords(string letters)
+        {
+            return await lexicon.GetPossibleWords(letters);
         }
     }
 }

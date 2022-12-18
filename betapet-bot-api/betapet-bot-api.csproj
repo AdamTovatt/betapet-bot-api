@@ -31,4 +31,8 @@
     <ProjectReference Include="..\BetapetBot\BetapetBot.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Managers\" />
+  </ItemGroup>
+
 </Project>
