@@ -38,7 +38,7 @@ namespace BetapetBot
         /// <param name="letters">The letters available to create a word</param>
         /// <param name="connection">The sql connection to use</param>
         /// <returns></returns>
-        public async Task<List<string>> GetPossibleWords(string letters, NpgsqlConnection connection)
+        public async Task<List<string>> GetPossibleWordsAsync(string letters, NpgsqlConnection connection)
         {
             List<string> result = new List<string>();
 
@@ -91,12 +91,11 @@ namespace BetapetBot
         /// </summary>
         /// <param name="letters">The letters available to create a word</param>
         /// <returns></returns>
-        public async Task<List<string>> GetPossibleWords(string letters)
+        public async Task<List<string>> GetPossibleWordsAsync(string letters)
         {
-            using (NpgsqlConnection connection = new NpgsqlConnection(ConnectionString))
+            using (NpgsqlConnection connection = await GetConnectionAsync())
             {
-                await connection.OpenAsync();
-                return await GetPossibleWords(letters, connection);
+                return await GetPossibleWordsAsync(letters, connection);
             }
         }
 
@@ -104,11 +103,31 @@ namespace BetapetBot
         /// Will return a connection that can be used to get possible words
         /// </summary>
         /// <returns></returns>
-        public async Task<NpgsqlConnection> GetConnection()
+        public async Task<NpgsqlConnection> GetConnectionAsync()
         {
             NpgsqlConnection connection = new NpgsqlConnection(ConnectionString);
             await connection.OpenAsync();
             return connection;
+        }
+
+        public async Task<bool> GetWordExistsAsync(string word, NpgsqlConnection connection)
+        {
+            const string query = "SELECT COUNT(word) FROM lexicon WHERE word = @word;";
+
+            using (NpgsqlCommand command = new NpgsqlCommand(query, connection))
+            {
+                command.Parameters.Add("@word", NpgsqlDbType.Varchar).Value = word;
+
+                return (long)await command.ExecuteScalarAsync() > 0;
+            }
+        }
+
+        public async Task<bool> GetWordExistsAsync(string word)
+        {
+            using (NpgsqlConnection connection = await GetConnectionAsync())
+            {
+                return await GetWordExistsAsync(word, connection);
+            }
         }
 
         private int GetLetterValue(string word)

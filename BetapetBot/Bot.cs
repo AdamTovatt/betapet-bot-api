@@ -43,7 +43,7 @@ namespace BetapetBot
             move1.AddTile("M", 6, 5);
             move1.AddTile("Å", 6, 6);
 
-            MoveEvaluation evaluation1 = game.EvaluateMove(move1);
+            MoveEvaluation evaluation1 = await EvaluateMoveAsync(move1, game);
 
             //SendChatResponse chatResponse = (SendChatResponse)(await betapet.SendChatMessage(game.Id, "du är noob")).InnerResponse;
             RequestResponse getChatResponse = await betapet.GetChatMessagesAsync(game);
@@ -55,18 +55,78 @@ namespace BetapetBot
 
         public async Task<List<string>> GetPossibleWords(string letters)
         {
-            return await lexicon.GetPossibleWords(letters);
+            return await lexicon.GetPossibleWordsAsync(letters);
         }
 
         public async Task GetPossibleWords(List<string> wordOfLetters)
         {
-            using (NpgsqlConnection connection = await lexicon.GetConnection())
+            using (NpgsqlConnection connection = await lexicon.GetConnectionAsync())
             {
                 foreach (string letters in wordOfLetters)
                 {
-                    await lexicon.GetPossibleWords(letters, connection);
+                    await lexicon.GetPossibleWordsAsync(letters, connection);
                 }
             }
+        }
+
+        public async Task<MoveEvaluation> EvaluateMoveAsync(Move move, Game game)
+        {
+            if (move.Tiles.Count == 0)
+                return MoveEvaluation.ImpossibleMove;
+
+            if (!game.Hand.ContainsTiles(move.Tiles))
+                return MoveEvaluation.ImpossibleMove;
+
+            foreach (Tile tile in move.Tiles)
+            {
+                if (game.Board.Tiles[tile.X, tile.Y].Type == TileType.Letter)
+                    return MoveEvaluation.ImpossibleMove;
+            }
+
+            List<List<Tile>> words = new List<List<Tile>>();
+
+            Direction moveDirection = Direction.None;
+
+            if (move.Tiles.Count > 1)
+            {
+                moveDirection = move.Tiles[0].X > move.Tiles[1].X ? Direction.Horizontal : Direction.Vertical;
+            }
+
+            foreach (Tile tile in move.Tiles)
+            {
+                words.Add(game.Board.ScanForTiles(move, tile, moveDirection == Direction.Horizontal ? Direction.Vertical : Direction.Horizontal));
+            }
+
+            words.Add(game.Board.ScanForTiles(move, move.Tiles[0], moveDirection));
+
+            if (!words.Any(x => x.Count > 1))
+                return MoveEvaluation.ImpossibleMove;
+
+            List<int> pointsPerWord = new List<int>();
+            UniqueTileCollection multiplyTiles = new UniqueTileCollection();
+
+            foreach (List<Tile> word in words)
+            {
+                if (!await lexicon.GetWordExistsAsync(word.ToTileString()))
+                    return MoveEvaluation.ImpossibleMove;
+
+                int wordPoints = 0;
+                foreach (Tile tile in word)
+                {
+                    wordPoints += tile.PointValue * game.Board.GetPositionLetterMultiplier(tile.X, tile.Y);
+
+                    if (game.Board.GetPositionWordMultiplier(tile.X, tile.Y) > 1)
+                        multiplyTiles.AddTile(game.Board.Tiles[tile.X, tile.Y]);
+                }
+
+                foreach (Tile tile in multiplyTiles.Tiles)
+                    wordPoints *= tile.NumericValue;
+
+                pointsPerWord.Add(wordPoints);
+                multiplyTiles.Clear();
+            }
+
+            return new MoveEvaluation(true, pointsPerWord.Sum());
         }
     }
 }

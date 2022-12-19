@@ -35,6 +35,7 @@ o2 SMALLINT NOT NULL,
 disabled boolean NOT NULL DEFAULT false
 );
 
+CREATE INDEX word_index ON lexicon(word);
 CREATE INDEX letter_value_index ON lexicon(letter_value);
 CREATE INDEX a_index ON lexicon(a);
 CREATE INDEX b_index ON lexicon(b);
