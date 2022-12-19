@@ -1,8 +1,10 @@
 ﻿using Betapet;
+using Betapet.Helpers;
 using Betapet.Models;
 using Betapet.Models.Communication;
 using Betapet.Models.Communication.Responses;
 using Betapet.Models.InGame;
+using Npgsql;
 
 namespace BetapetBot
 {
@@ -35,6 +37,8 @@ namespace BetapetBot
             RequestResponse playResponse = await betapet.PlayMove(move);
             */
 
+            List<string> possibleWords = await GetPossibleWords(game.Hand.ToTileString());
+
             Move move1 = new Move();
             move1.AddTile("M", 6, 5);
             move1.AddTile("Å", 6, 6);
@@ -52,6 +56,17 @@ namespace BetapetBot
         public async Task<List<string>> GetPossibleWords(string letters)
         {
             return await lexicon.GetPossibleWords(letters);
+        }
+
+        public async Task GetPossibleWords(List<string> wordOfLetters)
+        {
+            using (NpgsqlConnection connection = await lexicon.GetConnection())
+            {
+                foreach (string letters in wordOfLetters)
+                {
+                    await lexicon.GetPossibleWords(letters, connection);
+                }
+            }
         }
     }
 }

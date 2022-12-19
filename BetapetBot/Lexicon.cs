@@ -13,7 +13,7 @@ namespace BetapetBot
     public class Lexicon
     {
         private const string characters = "ABCDEFGHIJKLMNOPRSTUVWXYZÅÄÖ";
-        private static Dictionary<char, short> characterIndexes = new Dictionary<char, short>();
+        private static Dictionary<char, short> characterIndexes;
 
         public string ConnectionString { get; private set; }
 
@@ -21,12 +21,23 @@ namespace BetapetBot
         {
             ConnectionString = connectionString;
 
-            for (short i = 0; i < characters.Length; i++)
+            if (characterIndexes == null)
             {
-                characterIndexes.Add(characters[i], i);
+                characterIndexes = new Dictionary<char, short>();
+
+                for (short i = 0; i < characters.Length; i++)
+                {
+                    characterIndexes.Add(characters[i], i);
+                }
             }
         }
 
+        /// <summary>
+        /// Will return a list of all possible words when given a string of letters to look for
+        /// </summary>
+        /// <param name="letters">The letters available to create a word</param>
+        /// <param name="connection">The sql connection to use</param>
+        /// <returns></returns>
         public async Task<List<string>> GetPossibleWords(string letters, NpgsqlConnection connection)
         {
             List<string> result = new List<string>();
@@ -75,6 +86,11 @@ namespace BetapetBot
             return result;
         }
 
+        /// <summary>
+        /// Will return a list of all possible words when given a string of letters to look for
+        /// </summary>
+        /// <param name="letters">The letters available to create a word</param>
+        /// <returns></returns>
         public async Task<List<string>> GetPossibleWords(string letters)
         {
             using (NpgsqlConnection connection = new NpgsqlConnection(ConnectionString))
@@ -84,9 +100,15 @@ namespace BetapetBot
             }
         }
 
-        public NpgsqlConnection GetConnection()
+        /// <summary>
+        /// Will return a connection that can be used to get possible words
+        /// </summary>
+        /// <returns></returns>
+        public async Task<NpgsqlConnection> GetConnection()
         {
-            return new NpgsqlConnection(ConnectionString);
+            NpgsqlConnection connection = new NpgsqlConnection(ConnectionString);
+            await connection.OpenAsync();
+            return connection;
         }
 
         private int GetLetterValue(string word)
