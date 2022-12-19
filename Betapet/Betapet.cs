@@ -29,9 +29,9 @@ namespace Betapet
 
         private async Task VerifyLoginAsync()
         {
-            if(loginResponse == null)
+            if (loginResponse == null)
             {
-                if(!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
+                if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
                 {
                     RequestResponse loginResponse = await LoginAsync();
                     if (!loginResponse.Success)
@@ -64,7 +64,7 @@ namespace Betapet
 
             HttpResponseMessage response = await api.GetResponseAsync(request);
 
-            if(response.IsSuccessStatusCode)
+            if (response.IsSuccessStatusCode)
             {
                 loginResponse = LoginResponse.FromJson(await response.Content.ReadAsStringAsync());
                 return new RequestResponse(loginResponse);
@@ -89,7 +89,7 @@ namespace Betapet
 
             HttpResponseMessage response = await api.GetResponseAsync(request);
 
-            if(response.IsSuccessStatusCode)
+            if (response.IsSuccessStatusCode)
             {
                 return new RequestResponse(FriendsResponse.FromJson(await response.Content.ReadAsStringAsync()));
             }
@@ -114,7 +114,7 @@ namespace Betapet
 
             HttpResponseMessage response = await api.GetResponseAsync(request);
 
-            if(response.IsSuccessStatusCode)
+            if (response.IsSuccessStatusCode)
             {
                 return new RequestResponse(GamesAndUserListResponse.FromJson(await response.Content.ReadAsStringAsync()));
             }
@@ -133,6 +133,23 @@ namespace Betapet
 
             if (loginResponse == null)
                 throw new Exception("Not logged in when attempting to play move");
+
+            string tiles = game.Hand.ToTileString();
+            foreach (Tile tile in move.Tiles)
+            {
+                if (!tiles.Any(c => c == tile.StringValue[0]))
+                {
+                    tile.WildCard = true;
+                    int indexOfWildCard = tiles.IndexOf('.');
+
+                    if (indexOfWildCard == -1)
+                        throw new Exception("To many wild cards in move");
+
+                    tiles = tiles.Remove(indexOfWildCard, 1);
+                }
+                else
+                    tiles = tiles.Remove(tiles.IndexOf(tile.StringValue[0]), 1);
+            }
 
             Request request = new Request("/play.php", loginResponse);
             request.AddParameter("type", "word");
@@ -205,7 +222,7 @@ namespace Betapet
             await VerifyLoginAsync();
 
             if (loginResponse == null)
-                throw new Exception("Not logged in when attempting to swap tiles");    
+                throw new Exception("Not logged in when attempting to swap tiles");
 
             Request request = new Request("/play.php", loginResponse);
             request.AddParameter("type", "swap");

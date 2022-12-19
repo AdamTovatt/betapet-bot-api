@@ -32,7 +32,7 @@ namespace Betapet.Models.InGame
 
             foreach(Tile tile in Tiles)
             {
-                stringBuilder.Append(tile.StringValue);
+                stringBuilder.Append(tile.WildCard ? tile.StringValue.ToLower() : tile.StringValue);
                 stringBuilder.Append(',');
                 stringBuilder.Append(tile.X);
                 stringBuilder.Append(',');
