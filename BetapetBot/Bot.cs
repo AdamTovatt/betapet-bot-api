@@ -19,6 +19,38 @@ namespace BetapetBot
             lexicon = new Lexicon(connectionString);
         }
 
+        public async Task<List<string>> HandleAllMatches()
+        {
+            List<string> result = new List<string>();
+
+            RequestResponse loginResponse = await betapet.LoginAsync();
+            RequestResponse requestResponse = await betapet.GetGameAndUserListAsync();
+
+            GamesAndUserListResponse gameResponse = (GamesAndUserListResponse)requestResponse.InnerResponse;
+
+            foreach(Game game in gameResponse.Games)
+            {
+                if(game.OurTurn)
+                {
+                    List<WordLine> wordLines = GetWordLines(game);
+                    List<Move> moves = await GenerateMovesFromWordLinesAsync(game, wordLines);
+
+                    foreach (Move move in moves)
+                    {
+                        RequestResponse playRequestResponse = await betapet.PlayMoveAsync(move, game);
+                        if (playRequestResponse != null && playRequestResponse.Success)
+                            result.Add(string.Format("Played \"{0}\" for {1} points", move.Tiles.ToTileString(), move.Evaluation.Points));
+                    }
+                }
+                else
+                {
+                    result.Add("Not our turn in game: " + game.Id);
+                }
+            }
+
+            return result;
+        }
+
         public async Task<string> GetMessage()
         {
             RequestResponse message = await betapet.LoginAsync();
@@ -101,15 +133,14 @@ namespace BetapetBot
                                         moves.Add(move);
                                         worstScore = evaluation.Points;
                                     }
-                                    else if(moves.Count > 40)
+                                    else
                                     {
                                         for (int i = 0; i < moves.Count; i++)
                                         {
                                             if (moves[i].Evaluation.Points < evaluation.Points)
                                             {
-                                                moves.RemoveAt(i);
-                                                moves.Add(move);
-                                                worstScore = evaluation.Points;
+                                                worstScore = moves[i].Evaluation.Points;
+                                                moves.Insert(i, move);
                                                 break;
                                             }
                                         }

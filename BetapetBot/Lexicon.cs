@@ -56,7 +56,14 @@ namespace BetapetBot
                     if (checkedChars.Contains(currentLetter))
                         continue;
 
-                    letterCount[characterIndexes[currentLetter]] = GetLetterCount(letters, currentLetter);
+                    try
+                    {
+                        letterCount[characterIndexes[currentLetter]] = GetLetterCount(letters, currentLetter);
+                    }
+                    catch
+                    {
+                        throw;
+                    }
                 }
 
                 for (int i = 0; i < characters.Length - 3; i++)
@@ -89,13 +96,13 @@ namespace BetapetBot
         public async Task<List<string>> GetPossibleWordsAsync(string letters, NpgsqlConnection connection)
         {
             if (!letters.Contains('.'))
-                return await GetPossibleWordsWildCardHandledAsync(letters, connection);
+                return await GetPossibleWordsWildCardHandledAsync(letters.ToUpper(), connection);
             else
             {
                 HashSet<string> result = new HashSet<string>();
 
                 int wildCardCount = letters.Count(character => character == '.');
-                string withoutWildCards = letters.Replace(".", "");
+                string withoutWildCards = letters.Replace(".", "").ToUpper();
 
                 if(wildCardCount == 1)
                 {
