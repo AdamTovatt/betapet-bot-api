@@ -117,6 +117,15 @@ namespace Betapet.Models.InGame
             return Tiles[x, y];
         }
 
+        public bool TileIsLetter(Tile tile)
+        {
+            if (tile == null)
+                return false;
+            if (tile.Type == TileType.Letter)
+                return true;
+            return false;
+        }
+
         /// <summary>
         /// Will scan for tiles with a move
         /// </summary>

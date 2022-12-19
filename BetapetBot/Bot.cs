@@ -35,11 +35,29 @@ namespace BetapetBot
                     List<WordLine> wordLines = GetWordLines(game);
                     List<Move> moves = await GenerateMovesFromWordLinesAsync(game, wordLines);
 
+                    bool performedMove = false;
                     foreach (Move move in moves)
                     {
                         RequestResponse playRequestResponse = await betapet.PlayMoveAsync(move, game);
                         if (playRequestResponse != null && playRequestResponse.Success)
+                        {
                             result.Add(string.Format("Played \"{0}\" for {1} points", move.Tiles.ToTileString(), move.Evaluation.Points));
+                            performedMove = true;
+                            break;
+                        }
+                    }
+
+                    if(!performedMove)
+                    {
+                        SwapTilesResponse swapResponse = (SwapTilesResponse)(await betapet.SwapTilesAsync(game, game.Hand)).InnerResponse;
+                        if(swapResponse.SwapCount > 0)
+                        {
+                            result.Add("Swapped " + swapResponse.SwapCount.ToString() + " tiles");
+                        }
+                        else
+                        {
+                            result.Add("Tried to swap tiles but failed");
+                        }
                     }
                 }
                 else
@@ -58,6 +76,13 @@ namespace BetapetBot
             RequestResponse games = await betapet.GetGameAndUserListAsync();
 
             Game game = ((GamesAndUserListResponse)games.InnerResponse).Games[0];
+
+            List<string> words = await lexicon.GetPossibleWordsAsync("AIhäRDIGPTRKRZ");
+
+            Move move1 = new Move();
+            move1.AddTile("T", 1, 13);
+            move1.AddTile("A", 2, 13);
+            await EvaluateMoveAsync(move1, game, new List<Tile>() { new Tile("A") });
 
             if (game.OurTurn)
             {
@@ -122,7 +147,7 @@ namespace BetapetBot
                             Move move = CreateMoveFromPosition(new Position(shiftedX, shiftedY), candidateWord, wordLine.Direction);
                             if (move != null)
                             {
-                                MoveEvaluation evaluation = await EvaluateMoveAsync(move, game, connection);
+                                MoveEvaluation evaluation = await EvaluateMoveAsync(move, game, wordLine.Letters, connection);
 
                                 if (evaluation.Possible)
                                 {
@@ -284,11 +309,11 @@ namespace BetapetBot
                     Tile currentTile;
 
                     if (wordLine.Direction == Direction.Horizontal)
-                        currentTile = game.Board.Tiles[positionToCheck, wordLine.StartPosition.Y];
+                        currentTile = game.Board.GetTileAtPosition(positionToCheck, wordLine.StartPosition.Y);
                     else
-                        currentTile = game.Board.Tiles[wordLine.StartPosition.X, positionToCheck];
+                        currentTile = game.Board.GetTileAtPosition(wordLine.StartPosition.X, positionToCheck);
 
-                    if (currentTile.Type == TileType.Letter)
+                    if (currentTile != null && currentTile.Type == TileType.Letter)
                         wordLine.Letters.Add(currentTile);
                 }
             }
@@ -296,17 +321,20 @@ namespace BetapetBot
             return wordLines;
         }
 
-        public async Task<MoveEvaluation> EvaluateMoveAsync(Move move, Game game, NpgsqlConnection sqlConnection = null)
+        public async Task<MoveEvaluation> EvaluateMoveAsync(Move move, Game game, List<Tile> additionalTiles, NpgsqlConnection sqlConnection = null)
         {
             if (move.Tiles.Count == 0)
                 return MoveEvaluation.ImpossibleMove;
 
-            if (!game.Hand.ContainsTiles(move.Tiles))
+            if (!game.Hand.AddTiles(additionalTiles).ContainsTiles(move.Tiles))
+                return MoveEvaluation.ImpossibleMove;
+
+            if (move.Tiles.Any(tile => tile.X > 14 || tile.X < 0 || tile.Y > 14 || tile.Y < 0))
                 return MoveEvaluation.ImpossibleMove;
 
             foreach (Tile tile in move.Tiles)
             {
-                if (game.Board.Tiles[tile.X, tile.Y].Type == TileType.Letter)
+                if (game.Board.TileIsLetter(game.Board.GetTileAtPosition(tile.X, tile.Y)))
                     return MoveEvaluation.ImpossibleMove;
             }
 
