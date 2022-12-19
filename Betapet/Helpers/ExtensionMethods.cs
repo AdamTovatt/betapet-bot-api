@@ -161,6 +161,19 @@ namespace Betapet.Helpers
             if (letterCount.Values.All(x => x == 0))
                 return true;
 
+            int missingValues = 0;
+            
+            foreach(string key in letterCount.Keys)
+            {
+                missingValues += letterCount[key];
+            }
+
+            if (missingValues > 2)
+                return false;
+
+            if(tiles.Count(x => x.StringValue == ".") >= missingValues)
+                return true;
+
             return false;
         }
     }

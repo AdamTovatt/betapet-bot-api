@@ -19,6 +19,7 @@ namespace Betapet.Models.InGame
         public string StringValue { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
+        public bool WildCard { get; set; }
         public int PointValue { get { if (_pointValue == -1 && !string.IsNullOrEmpty(StringValue)) _pointValue = PointLookup.GetPointValue(StringValue); return _pointValue; } }
         private int _pointValue = -1;
 

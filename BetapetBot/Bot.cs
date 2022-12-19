@@ -27,7 +27,6 @@ namespace BetapetBot
 
             Game game = ((GamesAndUserListResponse)games.InnerResponse).Games[0];
 
-
             if (game.OurTurn)
             {
                 List<WordLine> wordLines = GetWordLines(game);
@@ -73,6 +72,7 @@ namespace BetapetBot
         public async Task<List<Move>> GenerateMovesFromWordLinesAsync(Game game, List<WordLine> wordLines)
         {
             List<Move> moves = new List<Move>();
+            int worstScore = 0;
 
             using (NpgsqlConnection connection = await lexicon.GetConnectionAsync())
             {
@@ -95,7 +95,30 @@ namespace BetapetBot
                                 if (evaluation.Possible)
                                 {
                                     move.Evaluation = evaluation;
-                                    moves.Add(move);
+
+                                    if (worstScore == 0)
+                                    {
+                                        moves.Add(move);
+                                        worstScore = evaluation.Points;
+                                    }
+                                    else if(moves.Count > 40)
+                                    {
+                                        for (int i = 0; i < moves.Count; i++)
+                                        {
+                                            if (moves[i].Evaluation.Points < evaluation.Points)
+                                            {
+                                                moves.RemoveAt(i);
+                                                moves.Add(move);
+                                                worstScore = evaluation.Points;
+                                                break;
+                                            }
+                                        }
+                                    }
+
+                                    if(moves.Count > 50)
+                                    {
+                                        moves.RemoveRange(41, 9);
+                                    }
                                 }
                             }
                         }
