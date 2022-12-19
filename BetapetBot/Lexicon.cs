@@ -32,13 +32,7 @@ namespace BetapetBot
             }
         }
 
-        /// <summary>
-        /// Will return a list of all possible words when given a string of letters to look for
-        /// </summary>
-        /// <param name="letters">The letters available to create a word</param>
-        /// <param name="connection">The sql connection to use</param>
-        /// <returns></returns>
-        public async Task<List<string>> GetPossibleWordsAsync(string letters, NpgsqlConnection connection)
+        private async Task<List<string>> GetPossibleWordsWildCardHandledAsync(string letters, NpgsqlConnection connection)
         {
             List<string> result = new List<string>();
 
@@ -62,7 +56,7 @@ namespace BetapetBot
                     if (checkedChars.Contains(currentLetter))
                         continue;
 
-                   letterCount[characterIndexes[currentLetter]] = GetLetterCount(letters, currentLetter);
+                    letterCount[characterIndexes[currentLetter]] = GetLetterCount(letters, currentLetter);
                 }
 
                 for (int i = 0; i < characters.Length - 3; i++)
@@ -84,6 +78,51 @@ namespace BetapetBot
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Will return a list of all possible words when given a string of letters to look for
+        /// </summary>
+        /// <param name="letters">The letters available to create a word</param>
+        /// <param name="connection">The sql connection to use</param>
+        /// <returns></returns>
+        public async Task<List<string>> GetPossibleWordsAsync(string letters, NpgsqlConnection connection)
+        {
+            if (!letters.Contains('.'))
+                return await GetPossibleWordsWildCardHandledAsync(letters, connection);
+            else
+            {
+                HashSet<string> result = new HashSet<string>();
+
+                int wildCardCount = letters.Count(character => character == '.');
+                string withoutWildCards = letters.Replace(".", "");
+
+                if(wildCardCount == 1)
+                {
+                    for (int i = 0; i < characters.Length; i++)
+                    {
+                        foreach(string possibleWord in await GetPossibleWordsWildCardHandledAsync(string.Format("{0}{1}", withoutWildCards, characters[i]), connection))
+                        {
+                            result.Add(possibleWord);
+                        }
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < characters.Length; i++)
+                    {
+                        for (int j = 0; j < characters.Length; j++)
+                        {
+                            foreach (string possibleWord in await GetPossibleWordsWildCardHandledAsync(string.Format("{0}{1}{2}", withoutWildCards, characters[i], characters[j]), connection))
+                            {
+                                result.Add(possibleWord);
+                            }
+                        }
+                    }
+                }
+
+                return result.ToList();
+            }
         }
 
         /// <summary>

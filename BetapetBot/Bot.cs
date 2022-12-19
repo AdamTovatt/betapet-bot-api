@@ -28,18 +28,22 @@ namespace BetapetBot
             Game game = ((GamesAndUserListResponse)games.InnerResponse).Games[0];
 
 
-            List<WordLine> wordLines = GetWordLines(game);
-
             if (game.OurTurn)
             {
+                List<WordLine> wordLines = GetWordLines(game);
+
                 List<Move> moves = await GenerateMovesFromWordLinesAsync(game, wordLines);
 
                 foreach (Move move in moves)
                 {
                     RequestResponse playRequestResponse = await betapet.PlayMoveAsync(move, game);
                     if (playRequestResponse != null && playRequestResponse.Success)
-                        break;
+                        return string.Format("Played \"{0}\" for {1} points. Server response: {2}", move.Tiles.ToTileString(), move.Evaluation.Points, ((PlayMoveResponse)playRequestResponse.InnerResponse).Code);
                 }
+            }
+            else
+            {
+                return "Not our turn";
             }
 
             //SendChatResponse chatResponse = (SendChatResponse)(await betapet.SendChatMessage(game.Id, "du är noob")).InnerResponse;

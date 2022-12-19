@@ -153,7 +153,7 @@ namespace Betapet.Models.InGame
             {
                 int verticalOffset = 1;
 
-                while(originTile.Y - verticalOffset > 0 && GetTile(originTile.X, originTile.Y - verticalOffset, move).Type == TileType.Letter) //check up
+                while (originTile.Y - verticalOffset > 0 && GetTile(originTile.X, originTile.Y - verticalOffset, move).Type == TileType.Letter) //check up
                 {
                     result.Insert(0, cachedTile);
                     verticalOffset++;
@@ -161,7 +161,7 @@ namespace Betapet.Models.InGame
 
                 verticalOffset = 1;
 
-                while(originTile.Y + verticalOffset > 0 && GetTile(originTile.X, originTile.Y + verticalOffset, move).Type == TileType.Letter) //check down
+                while (originTile.Y + verticalOffset > 0 && GetTile(originTile.X, originTile.Y + verticalOffset, move).Type == TileType.Letter) //check down
                 {
                     result.Add(cachedTile);
                     verticalOffset++;
@@ -184,7 +184,9 @@ namespace Betapet.Models.InGame
                 return cachedTile;
             }
 
-            cachedTile = Tiles[x, y];
+            cachedTile = GetTileAtPosition(x, y);
+            if (cachedTile == null)
+                cachedTile = new Tile(TileType.Empty, -1);
             return cachedTile;
         }
     }
