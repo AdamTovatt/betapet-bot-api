@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.SymbolStore;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -85,6 +86,35 @@ namespace Betapet.Models.InGame
             {
                 throw new Exception("Values for x and y need to be between 0 and 14! They are currently: x: " + x + " y: " + y);
             }
+        }
+
+        public bool GetHasConnectedTiles(Tile tile)
+        {
+            Tile offsetTile = GetTileAtPosition(tile.X + 1, tile.Y);
+            if (offsetTile != null && offsetTile.Type == TileType.Letter)
+                return true;
+
+            offsetTile = GetTileAtPosition(tile.X - 1, tile.Y);
+            if (offsetTile != null && offsetTile.Type == TileType.Letter)
+                return true;
+
+            offsetTile = GetTileAtPosition(tile.X, tile.Y + 1);
+            if (offsetTile != null && offsetTile.Type == TileType.Letter)
+                return true;
+
+            offsetTile = GetTileAtPosition(tile.X, tile.Y - 1);
+            if (offsetTile != null && offsetTile.Type == TileType.Letter)
+                return true;
+
+            return false;
+        }
+
+        public Tile GetTileAtPosition(int x, int y)
+        {
+            if (x > 14 || x < 0 || y > 14 || y < 0)
+                return null;
+
+            return Tiles[x, y];
         }
 
         /// <summary>

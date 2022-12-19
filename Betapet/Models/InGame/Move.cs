@@ -9,7 +9,8 @@ namespace Betapet.Models.InGame
     public class Move
     {
         public List<Tile> Tiles { get; set; }
-        
+        public MoveEvaluation Evaluation { get; set; }
+
         public Move()
         {
             Tiles = new List<Tile>();
