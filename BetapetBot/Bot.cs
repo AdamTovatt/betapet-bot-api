@@ -105,25 +105,28 @@ namespace BetapetBot
             List<int> pointsPerWord = new List<int>();
             UniqueTileCollection multiplyTiles = new UniqueTileCollection();
 
-            foreach (List<Tile> word in words)
+            using (NpgsqlConnection connection = await lexicon.GetConnectionAsync())
             {
-                if (!await lexicon.GetWordExistsAsync(word.ToTileString()))
-                    return MoveEvaluation.ImpossibleMove;
-
-                int wordPoints = 0;
-                foreach (Tile tile in word)
+                foreach (List<Tile> word in words)
                 {
-                    wordPoints += tile.PointValue * game.Board.GetPositionLetterMultiplier(tile.X, tile.Y);
+                    if (!await lexicon.GetWordExistsAsync(word.ToTileString(), connection))
+                        return MoveEvaluation.ImpossibleMove;
 
-                    if (game.Board.GetPositionWordMultiplier(tile.X, tile.Y) > 1)
-                        multiplyTiles.AddTile(game.Board.Tiles[tile.X, tile.Y]);
+                    int wordPoints = 0;
+                    foreach (Tile tile in word)
+                    {
+                        wordPoints += tile.PointValue * game.Board.GetPositionLetterMultiplier(tile.X, tile.Y);
+
+                        if (game.Board.GetPositionWordMultiplier(tile.X, tile.Y) > 1)
+                            multiplyTiles.AddTile(game.Board.Tiles[tile.X, tile.Y]);
+                    }
+
+                    foreach (Tile tile in multiplyTiles.Tiles)
+                        wordPoints *= tile.NumericValue;
+
+                    pointsPerWord.Add(wordPoints);
+                    multiplyTiles.Clear();
                 }
-
-                foreach (Tile tile in multiplyTiles.Tiles)
-                    wordPoints *= tile.NumericValue;
-
-                pointsPerWord.Add(wordPoints);
-                multiplyTiles.Clear();
             }
 
             return new MoveEvaluation(true, pointsPerWord.Sum());
