@@ -104,6 +104,11 @@ namespace Betapet.Models.InGame
             return TilesConnected[tile.X, tile.Y];
         }
 
+        public bool GetHasConnectedTiles(int x, int y)
+        {
+            return TilesConnected[x, y];
+        }
+
         private bool GetPositionIsConneted(int x, int y)
         {
             Tile offsetTile = GetTileAtPosition(x + 1, y);

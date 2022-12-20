@@ -29,9 +29,9 @@ namespace BetapetBot
 
             GamesAndUserListResponse gameResponse = (GamesAndUserListResponse)requestResponse.InnerResponse;
 
-            foreach(Game game in gameResponse.Games)
+            foreach (Game game in gameResponse.Games)
             {
-                if(game.OurTurn)
+                if (game.OurTurn)
                 {
                     List<WordLine> wordLines = GetWordLines(game);
                     List<Move> moves = await GenerateMovesFromWordLinesAsync(game, wordLines);
@@ -48,10 +48,10 @@ namespace BetapetBot
                         }
                     }
 
-                    if(!performedMove)
+                    if (!performedMove)
                     {
                         SwapTilesResponse swapResponse = (SwapTilesResponse)(await betapet.SwapTilesAsync(game, game.Hand)).InnerResponse;
-                        if(swapResponse.SwapCount > 0)
+                        if (swapResponse.SwapCount > 0)
                         {
                             result.Add("Swapped " + swapResponse.SwapCount.ToString() + " tiles");
                         }
@@ -148,7 +148,7 @@ namespace BetapetBot
                             int shiftedX = wordLine.StartPosition.X + (wordLine.Direction == Direction.Horizontal ? startPositionOffset : 0);
                             int shiftedY = wordLine.StartPosition.Y + (wordLine.Direction == Direction.Vertical ? startPositionOffset : 0);
 
-                            Move move = CreateMoveFromPosition(new Position(shiftedX, shiftedY), candidateWord, wordLine.Direction);
+                            Move move = CreateMoveFromPosition(new Position(shiftedX, shiftedY), candidateWord, wordLine.Direction, game.Board);
                             if (move != null)
                             {
                                 MoveEvaluation evaluation = await EvaluateMoveAsync(move, game, wordLine.Letters, connection);
@@ -175,7 +175,7 @@ namespace BetapetBot
                                         }
                                     }
 
-                                    if(moves.Count > 50)
+                                    if (moves.Count > 50)
                                     {
                                         moves.RemoveRange(41, 9);
                                     }
@@ -191,17 +191,20 @@ namespace BetapetBot
             return moves;
         }
 
-        private Move CreateMoveFromPosition(Position position, string word, Direction direction)
+        private Move CreateMoveFromPosition(Position position, string word, Direction direction, Board board)
         {
-            Move move = new Move();
-
-            if ((direction == Direction.Horizontal ? position.X : position.Y) + word.Length > 14)
+            if ((direction == Direction.Horizontal ? position.X : position.Y) + word.Length > 14 || position.X < 0 || position.Y < 0)
                 return null;
+
+            Move move = new Move();
 
             for (int offset = 0; offset < word.Length; offset++)
             {
                 int x = position.X + (direction == Direction.Horizontal ? offset : 0);
                 int y = position.Y + (direction == Direction.Vertical ? offset : 0);
+
+                if (!board.TilesConnected[x, y])
+                    return null;
 
                 move.AddTile(word[offset].ToString(), x, y);
             }
