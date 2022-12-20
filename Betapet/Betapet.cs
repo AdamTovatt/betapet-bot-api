@@ -134,23 +134,6 @@ namespace Betapet
             if (loginResponse == null)
                 throw new Exception("Not logged in when attempting to play move");
 
-            string tiles = game.Hand.ToTileString();
-            foreach (Tile tile in move.Tiles)
-            {
-                if (!tiles.Any(c => c == tile.StringValue[0]))
-                {
-                    tile.WildCard = true;
-                    int indexOfWildCard = tiles.IndexOf('.');
-
-                    if (indexOfWildCard == -1)
-                        throw new Exception("To many wild cards in move");
-
-                    tiles = tiles.Remove(indexOfWildCard, 1);
-                }
-                else
-                    tiles = tiles.Remove(tiles.IndexOf(tile.StringValue[0]), 1);
-            }
-
             Request request = new Request("/play.php", loginResponse);
             request.AddParameter("type", "word");
             request.AddParameter("gameid", game.Id.ToString());

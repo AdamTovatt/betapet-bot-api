@@ -34,7 +34,7 @@ namespace BetapetBot
                 if (game.OurTurn)
                 {
                     List<WordLine> wordLines = GetWordLines(game);
-                    List<Move> moves = await GenerateMovesFromWordLinesAsync(game, wordLines);
+                    List<Move> moves = await CheckForWildcards(game, await GenerateMovesFromWordLinesAsync(game, wordLines));
 
                     bool performedMove = false;
                     foreach (Move move in moves)
@@ -130,11 +130,48 @@ namespace BetapetBot
             }
         }
 
+        public async Task<List<Move>> CheckForWildcards(Game game, List<Move> moves)
+        {
+            List<Move> result = new List<Move>();
+
+            string tiles = game.Hand.ToTileString();
+            foreach (Move move in moves)
+            {
+                Move checkResult = await CheckForWildCards(tiles, move);
+                if (checkResult != null)
+                    result.Add(checkResult);
+            }
+
+            return result;
+        }
+
+        private async Task<Move> CheckForWildCards(string tiles, Move move)
+        {
+            foreach (Tile tile in move.Tiles)
+            {
+                if (!tiles.Any(c => c == tile.StringValue[0]))
+                {
+                    tile.WildCard = true;
+                    int indexOfWildCard = tiles.IndexOf('.');
+
+                    if (indexOfWildCard == -1)
+                        return null;
+
+                    tiles = tiles.Remove(indexOfWildCard, 1);
+                }
+                else
+                    tiles = tiles.Remove(tiles.IndexOf(tile.StringValue[0]), 1);
+            }
+
+            return move;
+        }
+
         public async Task<List<Move>> GenerateMovesFromWordLinesAsync(Game game, List<WordLine> wordLines)
         {
             List<Move> moves = new List<Move>();
             int worstScore = 0;
 
+            string hand = game.Hand.ToTileString();
             using (NpgsqlConnection connection = await lexicon.GetConnectionAsync())
             {
                 foreach (WordLine wordLine in wordLines)
@@ -148,7 +185,7 @@ namespace BetapetBot
                             int shiftedX = wordLine.StartPosition.X + (wordLine.Direction == Direction.Horizontal ? startPositionOffset : 0);
                             int shiftedY = wordLine.StartPosition.Y + (wordLine.Direction == Direction.Vertical ? startPositionOffset : 0);
 
-                            Move move = CreateMoveFromPosition(new Position(shiftedX, shiftedY), candidateWord, wordLine.Direction, game.Board);
+                            Move move = CreateMoveFromPosition(new Position(shiftedX, shiftedY), candidateWord, wordLine, game.Board, hand);
                             if (move != null)
                             {
                                 MoveEvaluation evaluation = await EvaluateMoveAsync(move, game, wordLine.Letters, connection);
@@ -191,21 +228,45 @@ namespace BetapetBot
             return moves;
         }
 
-        private Move CreateMoveFromPosition(Position position, string word, Direction direction, Board board)
+        private Move CreateMoveFromPosition(Position position, string word, WordLine wordLine, Board board, string hand)
         {
-            if ((direction == Direction.Horizontal ? position.X : position.Y) + word.Length > 14 || position.X < 0 || position.Y < 0)
+            if ((wordLine.Direction == Direction.Horizontal ? position.X : position.Y) + word.Length > 14 || position.X < 0 || position.Y < 0)
                 return null;
 
+            List<char> missingHandLettes = null;
+            for (int i = 0; i < word.Length; i++)
+            {
+                if (hand.Contains(word[i]))
+                    hand.Remove(hand.IndexOf(word[i]), 1);
+                else
+                {
+                    if (missingHandLettes == null)
+                        missingHandLettes = new List<char>();
+
+                    missingHandLettes.Add(word[i]);
+                }
+            }
+
             Move move = new Move();
+            bool hasMissingHandLetters = missingHandLettes != null && missingHandLettes.Count > 0;
 
             for (int offset = 0; offset < word.Length; offset++)
             {
-                int x = position.X + (direction == Direction.Horizontal ? offset : 0);
-                int y = position.Y + (direction == Direction.Vertical ? offset : 0);
+                int x = position.X + (wordLine.Direction == Direction.Horizontal ? offset : 0);
+                int y = position.Y + (wordLine.Direction == Direction.Vertical ? offset : 0);
 
                 if (!board.TilesConnected[x, y])
                     return null;
 
+                if (hasMissingHandLetters && missingHandLettes.Contains(word[offset]))
+                {
+                    if (!wordLine.Letters.Any(tile => tile.StringValue == word[offset].ToString() && tile.X == x && tile.Y == y))
+                        return null;
+                    else
+                    {
+                        string g = "";
+                    }
+                }
                 move.AddTile(word[offset].ToString(), x, y);
             }
 
