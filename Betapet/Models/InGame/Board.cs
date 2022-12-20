@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.SymbolStore;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,6 +17,7 @@ namespace Betapet.Models.InGame
     {
         public Tile[,] Tiles { get; set; }
         public List<Tile> LetterTilesOnBoard { get; set; }
+        public bool[,] TilesConnected { get; set; }
 
         /// <summary>
         /// Constructor for board, will create a board from a board data string
@@ -24,6 +26,7 @@ namespace Betapet.Models.InGame
         public Board(string boardData)
         {
             Tiles = new Tile[15, 15];
+            TilesConnected = new bool[15, 15];
             LetterTilesOnBoard = new List<Tile>();
 
             for (int y = 0; y < 15; y++)
@@ -38,6 +41,14 @@ namespace Betapet.Models.InGame
                         LetterTilesOnBoard.Add(tile);
 
                     Tiles[x, y] = tile;
+                }
+            }
+
+            for (int y = 0; y < 15; y++)
+            {
+                for (int x = 0; x < 15; x++)
+                {
+                    TilesConnected[x, y] = GetPositionIsConneted(x, y);
                 }
             }
         }
@@ -90,19 +101,24 @@ namespace Betapet.Models.InGame
 
         public bool GetHasConnectedTiles(Tile tile)
         {
-            Tile offsetTile = GetTileAtPosition(tile.X + 1, tile.Y);
+            return TilesConnected[tile.X, tile.Y];
+        }
+
+        private bool GetPositionIsConneted(int x, int y)
+        {
+            Tile offsetTile = GetTileAtPosition(x + 1, y);
             if (offsetTile != null && offsetTile.Type == TileType.Letter)
                 return true;
 
-            offsetTile = GetTileAtPosition(tile.X - 1, tile.Y);
+            offsetTile = GetTileAtPosition(x - 1, y);
             if (offsetTile != null && offsetTile.Type == TileType.Letter)
                 return true;
 
-            offsetTile = GetTileAtPosition(tile.X, tile.Y + 1);
+            offsetTile = GetTileAtPosition(x, y + 1);
             if (offsetTile != null && offsetTile.Type == TileType.Letter)
                 return true;
 
-            offsetTile = GetTileAtPosition(tile.X, tile.Y - 1);
+            offsetTile = GetTileAtPosition(x, y - 1);
             if (offsetTile != null && offsetTile.Type == TileType.Letter)
                 return true;
 

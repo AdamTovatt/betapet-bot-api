@@ -8,10 +8,12 @@ namespace Betapet.Models.InGame
 {
     public class MoveEvaluation
     {
+        private static MoveEvaluation impossibleMove = new MoveEvaluation(false, 0);
+
         public bool Possible { get; set; }
         public int Points { get; set; }
 
-        public static MoveEvaluation ImpossibleMove { get { return new MoveEvaluation(false, 0); } }
+        public static MoveEvaluation ImpossibleMove { get { return impossibleMove; } }
 
         public MoveEvaluation(bool possible, int points)
         {

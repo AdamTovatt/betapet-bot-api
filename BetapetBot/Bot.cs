@@ -5,6 +5,7 @@ using Betapet.Models.Communication;
 using Betapet.Models.Communication.Responses;
 using Betapet.Models.InGame;
 using Npgsql;
+using System.Diagnostics;
 
 namespace BetapetBot
 {
@@ -86,9 +87,12 @@ namespace BetapetBot
 
             if (game.OurTurn)
             {
+                Stopwatch stopwatch = Stopwatch.StartNew();
                 List<WordLine> wordLines = GetWordLines(game);
 
                 List<Move> moves = await GenerateMovesFromWordLinesAsync(game, wordLines);
+                stopwatch.Stop();
+                return stopwatch.ElapsedMilliseconds.ToString();
 
                 foreach (Move move in moves)
                 {
@@ -338,7 +342,7 @@ namespace BetapetBot
                     return MoveEvaluation.ImpossibleMove;
             }
 
-            if (!move.Tiles.Any(t => game.Board.GetHasConnectedTiles(t)))
+            if (!move.IsConnected(game.Board))
                 return MoveEvaluation.ImpossibleMove;
 
             List<List<Tile>> words = new List<List<Tile>>();

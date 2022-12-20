@@ -16,6 +16,17 @@ namespace Betapet.Models.InGame
             Tiles = new List<Tile>();
         }
 
+        public bool IsConnected(Board board)
+        {
+            int tilesLength = Tiles.Count;
+            for (int i = 0; i < tilesLength; i++)
+            {
+                if (board.GetHasConnectedTiles(Tiles[tilesLength - i - 1]))
+                    return true;
+            }
+            return false;
+        }
+
         public void AddTile(Tile tile)
         {
             Tiles.Add(tile);
