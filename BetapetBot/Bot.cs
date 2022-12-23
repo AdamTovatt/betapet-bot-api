@@ -31,7 +31,7 @@ namespace BetapetBot
 
             foreach (Game game in gameResponse.Games)
             {
-                if (game.OurTurn)
+                if (game.OurTurn && !game.Finished)
                 {
                     List<WordLine> wordLines = GetWordLines(game);
                     List<Move> moves = await CheckForWildcards(game, await GenerateMovesFromWordLinesAsync(game, wordLines));
@@ -50,6 +50,8 @@ namespace BetapetBot
 
                     if (!performedMove)
                     {
+                        result.Add("Cannot find move");
+                        /*
                         SwapTilesResponse swapResponse = (SwapTilesResponse)(await betapet.SwapTilesAsync(game, game.Hand)).InnerResponse;
                         if (swapResponse.SwapCount > 0)
                         {
@@ -59,6 +61,7 @@ namespace BetapetBot
                         {
                             result.Add("Tried to swap tiles but failed");
                         }
+                        */
                     }
                 }
                 else

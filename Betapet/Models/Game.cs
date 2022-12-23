@@ -75,6 +75,11 @@ namespace Betapet.Models
         public List<string> Mark { get; set; }
 
         /// <summary>
+        /// If the game has been finished or not
+        /// </summary>
+        public bool Finished { get { return BoardData == null; } }
+
+        /// <summary>
         /// A list of all tiles that can be used. That is the tiles currently in our hand + the tiles on the board
         /// </summary>
         public List<Tile> UseableTiles { get { if (_useableTiles == null) _useableTiles = Hand.AddTiles(PlayedTiles); return _useableTiles; } }

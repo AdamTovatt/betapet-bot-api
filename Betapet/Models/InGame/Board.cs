@@ -29,26 +29,29 @@ namespace Betapet.Models.InGame
             TilesConnected = new bool[15, 15];
             LetterTilesOnBoard = new List<Tile>();
 
-            for (int y = 0; y < 15; y++)
+            if (boardData != null)
             {
-                for (int x = 0; x < 15; x++)
+                for (int y = 0; y < 15; y++)
                 {
-                    Tile tile = Tile.FromCharacter(boardData[x + y * 15]);
-                    tile.X = x;
-                    tile.Y = y;
+                    for (int x = 0; x < 15; x++)
+                    {
+                        Tile tile = Tile.FromCharacter(boardData[x + y * 15]);
+                        tile.X = x;
+                        tile.Y = y;
 
-                    if (tile.Type == TileType.Letter)
-                        LetterTilesOnBoard.Add(tile);
+                        if (tile.Type == TileType.Letter)
+                            LetterTilesOnBoard.Add(tile);
 
-                    Tiles[x, y] = tile;
+                        Tiles[x, y] = tile;
+                    }
                 }
-            }
 
-            for (int y = 0; y < 15; y++)
-            {
-                for (int x = 0; x < 15; x++)
+                for (int y = 0; y < 15; y++)
                 {
-                    TilesConnected[x, y] = GetPositionIsConneted(x, y);
+                    for (int x = 0; x < 15; x++)
+                    {
+                        TilesConnected[x, y] = GetPositionIsConneted(x, y);
+                    }
                 }
             }
         }
