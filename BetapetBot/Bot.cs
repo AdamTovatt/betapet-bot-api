@@ -83,30 +83,16 @@ namespace BetapetBot
 
             List<string> words = await lexicon.GetPossibleWordsAsync("AIhäRDIGPTRKRZ");
 
-            Move move1 = new Move();
-            move1.AddTile("T", 1, 13);
-            move1.AddTile("A", 2, 13);
-            await EvaluateMoveAsync(move1, game, new List<Tile>() { new Tile("A") });
+            List<WordLine> wordLines = GetWordLines(game);
 
-            if (game.OurTurn)
+            List<Move> moves = await GenerateMovesFromWordLinesAsync(game, wordLines);
+
+            foreach (Move move in moves)
             {
-                Stopwatch stopwatch = Stopwatch.StartNew();
-                List<WordLine> wordLines = GetWordLines(game);
-
-                List<Move> moves = await GenerateMovesFromWordLinesAsync(game, wordLines);
-                stopwatch.Stop();
-                return stopwatch.ElapsedMilliseconds.ToString();
-
-                foreach (Move move in moves)
-                {
-                    RequestResponse playRequestResponse = await betapet.PlayMoveAsync(move, game);
-                    if (playRequestResponse != null && playRequestResponse.Success)
-                        return string.Format("Played \"{0}\" for {1} points. Server response: {2}", move.Tiles.ToTileString(), move.Evaluation.Points, ((PlayMoveResponse)playRequestResponse.InnerResponse).Code);
-                }
-            }
-            else
-            {
-                return "Not our turn";
+                MoveEvaluation evaluation = await EvaluateMoveAsync(move, game, game.Hand);
+                //RequestResponse playRequestResponse = await betapet.PlayMoveAsync(move, game);
+                //if (playRequestResponse != null && playRequestResponse.Success)
+                //    return string.Format("Played \"{0}\" for {1} points. Server response: {2}", move.Tiles.ToTileString(), move.Evaluation.Points, ((PlayMoveResponse)playRequestResponse.InnerResponse).Code);
             }
 
             //SendChatResponse chatResponse = (SendChatResponse)(await betapet.SendChatMessage(game.Id, "du är noob")).InnerResponse;
@@ -403,10 +389,16 @@ namespace BetapetBot
             if (move.Tiles.Any(tile => tile.X > 14 || tile.X < 0 || tile.Y > 14 || tile.Y < 0))
                 return MoveEvaluation.ImpossibleMove;
 
+            List<Tile> tilesToRemove = new List<Tile>();
             foreach (Tile tile in move.Tiles)
             {
                 if (game.Board.TileIsLetter(game.Board.GetTileAtPosition(tile.X, tile.Y)))
-                    return MoveEvaluation.ImpossibleMove;
+                    tilesToRemove.Add(tile);
+            }
+
+            foreach(Tile tile in tilesToRemove)
+            {
+                move.Tiles = move.Tiles.Where(x => x.StringValue != tile.StringValue && x.X != tile.X && x.Y != tile.Y).ToList();
             }
 
             if (!move.IsConnected(game.Board))
