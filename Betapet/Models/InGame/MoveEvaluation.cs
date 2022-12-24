@@ -12,6 +12,7 @@ namespace Betapet.Models.InGame
 
         public bool Possible { get; set; }
         public int Points { get; set; }
+        public List<Tile> TilesFromBoard { get; set; }
 
         public static MoveEvaluation ImpossibleMove { get { return impossibleMove; } }
 

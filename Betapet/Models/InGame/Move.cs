@@ -41,7 +41,29 @@ namespace Betapet.Models.InGame
         {
             StringBuilder stringBuilder = new StringBuilder();
 
+            if(Evaluation != null)
+                stringBuilder.Append(Evaluation.ToString() + " ");
+
             foreach(Tile tile in Tiles)
+            {
+                stringBuilder.Append(tile.WildCard ? tile.StringValue.ToLower() : tile.StringValue);
+                stringBuilder.Append(',');
+                stringBuilder.Append(tile.X);
+                stringBuilder.Append(',');
+                stringBuilder.Append(tile.Y);
+                stringBuilder.Append(',');
+            }
+
+            stringBuilder.Remove(stringBuilder.Length - 1, 1);
+
+            return stringBuilder.ToString();
+        }
+
+        public string ToMoveString()
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+
+            foreach (Tile tile in Tiles)
             {
                 stringBuilder.Append(tile.WildCard ? tile.StringValue.ToLower() : tile.StringValue);
                 stringBuilder.Append(',');

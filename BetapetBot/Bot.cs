@@ -201,9 +201,9 @@ namespace BetapetBot
                                         }
                                     }
 
-                                    if (moves.Count > 50)
+                                    if (moves.Count > 1000)
                                     {
-                                        moves.RemoveRange(41, 9);
+                                        moves.RemoveRange(990, 9);
                                     }
                                 }
                             }
@@ -386,8 +386,15 @@ namespace BetapetBot
             if (!game.Hand.AddTiles(additionalTiles).ContainsTiles(move.Tiles))
                 return MoveEvaluation.ImpossibleMove;
 
-            if (move.Tiles.Any(tile => tile.X > 14 || tile.X < 0 || tile.Y > 14 || tile.Y < 0))
-                return MoveEvaluation.ImpossibleMove;
+            foreach (Tile tile in move.Tiles)
+            {
+                if (tile.X > 14 || tile.X < 0 || tile.Y > 14 || tile.Y < 0)
+                    return MoveEvaluation.ImpossibleMove;
+
+                Tile boardTile = game.Board.GetTileAtPosition(tile.X, tile.Y);
+                if (boardTile.Type == TileType.Letter && boardTile.StringValue != tile.StringValue)
+                    return MoveEvaluation.ImpossibleMove;
+            }
 
             List<Tile> tilesToRemove = new List<Tile>();
             foreach (Tile tile in move.Tiles)
@@ -396,22 +403,17 @@ namespace BetapetBot
                     tilesToRemove.Add(tile);
             }
 
-            foreach(Tile tile in tilesToRemove)
-            {
-                move.Tiles.Remove(tile);
-            }
-
-            if (!move.IsConnected(game.Board))
-                return MoveEvaluation.ImpossibleMove;
-
-            List<List<Tile>> words = new List<List<Tile>>();
-
             Direction moveDirection = Direction.None;
 
             if (move.Tiles.Count > 1)
             {
                 moveDirection = move.Tiles[0].X > move.Tiles[1].X ? Direction.Horizontal : Direction.Vertical;
             }
+
+            if (!move.IsConnected(game.Board))
+                return MoveEvaluation.ImpossibleMove;
+
+            List<List<Tile>> words = new List<List<Tile>>();
 
             foreach (Tile tile in move.Tiles)
             {
@@ -468,7 +470,7 @@ namespace BetapetBot
                 }
             }
 
-            return new MoveEvaluation(true, pointsPerWord.Sum());
+            return new MoveEvaluation(true, pointsPerWord.Sum()) { TilesFromBoard = tilesToRemove };
         }
     }
 }

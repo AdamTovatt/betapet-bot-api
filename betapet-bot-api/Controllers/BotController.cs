@@ -14,9 +14,16 @@ namespace BetapetBotApi.Controllers
         [HttpGet("handleMatches")]
         public async Task<IActionResult> HandleMatches(string username, string password)
         {
-            string connectionString = ConnectionStringHelper.GetConnectionStringFromUrl(EnvironmentHelper.GetEnvironmentVariable("DATABASE_URL"), SslMode.Prefer);
-            Bot bot = new Bot(username, password, "FF1912DED13658C431A222B5A7EA1D6DC6569E2C1A11E185FF81E7823C896B46", connectionString);
-            return new ApiResponse(await bot.HandleAllMatches());
+            try
+            {
+                string connectionString = ConnectionStringHelper.GetConnectionStringFromUrl(EnvironmentHelper.GetEnvironmentVariable("DATABASE_URL"), SslMode.Prefer);
+                Bot bot = new Bot(username, password, "FF1912DED13658C431A222B5A7EA1D6DC6569E2C1A11E185FF81E7823C896B46", connectionString);
+                return new ApiResponse(await bot.HandleAllMatches());
+            }
+            catch (ApiException exception)
+            {
+                return new ApiResponse(exception);
+            }
         }
 
         [HttpGet("prediction")]

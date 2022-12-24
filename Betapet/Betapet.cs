@@ -137,7 +137,7 @@ namespace Betapet
             Request request = new Request("/play.php", loginResponse);
             request.AddParameter("type", "word");
             request.AddParameter("gameid", game.Id.ToString());
-            request.AddParameter("word", move.ToString());
+            request.AddParameter("word", move.ToMoveString());
             request.AddParameter("turn", game.Turn.ToString());
 
             HttpResponseMessage response = await api.GetResponseAsync(request);
