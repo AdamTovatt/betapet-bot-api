@@ -398,7 +398,7 @@ namespace BetapetBot
 
             foreach(Tile tile in tilesToRemove)
             {
-                move.Tiles = move.Tiles.Where(x => x.StringValue != tile.StringValue && x.X != tile.X && x.Y != tile.Y).ToList();
+                move.Tiles.Remove(tile);
             }
 
             if (!move.IsConnected(game.Board))
