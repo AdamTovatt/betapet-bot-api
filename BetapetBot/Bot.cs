@@ -220,7 +220,7 @@ namespace BetapetBot
 
         private Move CreateMoveFromPosition(Position position, string word, WordLine wordLine, Board board, string hand, bool firstMove)
         {
-            if ((wordLine.Direction == Direction.Horizontal ? position.X : position.Y) + word.Length > 14 || position.X < 0 || position.Y < 0)
+            if ((wordLine.Direction == Direction.Horizontal ? position.X : position.Y) + word.Length > 15 || position.X < 0 || position.Y < 0)
                 return null;
 
             List<char> missingHandLettes = null;
@@ -237,6 +237,7 @@ namespace BetapetBot
                 }
             }
 
+            bool anyTileConnected = false;
             Move move = new Move();
             bool hasMissingHandLetters = missingHandLettes != null && missingHandLettes.Count > 0;
 
@@ -246,7 +247,7 @@ namespace BetapetBot
                 int y = position.Y + (wordLine.Direction == Direction.Vertical ? offset : 0);
 
                 if (!board.TilesConnected[x, y] && !firstMove)
-                    return null;
+                    anyTileConnected = true;
 
                 if (hasMissingHandLetters && missingHandLettes.Contains(word[offset]))
                 {
@@ -255,6 +256,9 @@ namespace BetapetBot
                 }
                 move.AddTile(word[offset].ToString(), x, y);
             }
+
+            if (!anyTileConnected)
+                return null;
 
             return move;
         }
