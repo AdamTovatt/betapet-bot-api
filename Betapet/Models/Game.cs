@@ -2,7 +2,6 @@
 using Betapet.Models.InGame;
 using Newtonsoft.Json;
 using Betapet.Helpers;
-using System.Text.Json.Serialization;
 
 namespace Betapet.Models
 {
@@ -77,48 +76,61 @@ namespace Betapet.Models
         /// <summary>
         /// If the game has been finished or not
         /// </summary>
+        [JsonIgnore]
         public bool Finished { get { return BoardData == null; } }
 
         /// <summary>
         /// A list of all tiles that can be used. That is the tiles currently in our hand + the tiles on the board
         /// </summary>
+        [JsonIgnore]
         public List<Tile> UseableTiles { get { if (_useableTiles == null) _useableTiles = Hand.AddTiles(PlayedTiles); return _useableTiles; } }
+        [JsonIgnore]
         private List<Tile> _useableTiles;
 
         /// <summary>
         /// The tiles that have been played to the board
         /// </summary>
+        [JsonIgnore]
         public List<Tile> PlayedTiles { get { return Board.LetterTilesOnBoard; } }
 
         /// <summary>
         /// The tiles that are hidden from us. Either they are in the opponents hand or they are in the tiles stash.
         /// We can't know unless the tiles left are 0, then we know that all the hidden tiles are in the opponents hand.
         /// </summary>
+        [JsonIgnore]
         public List<Tile> HiddenTiles { get { if (_hiddenTiles == null) _hiddenTiles = GetHiddenTiles(); return _hiddenTiles; } }
+        [JsonIgnore]
         private List<Tile> _hiddenTiles;
 
         /// <summary>
         /// Our currently available tiles to place
         /// </summary>
+        [JsonIgnore]
         public List<Tile> Hand { get { if (_hand == null) _hand = GetHand(); return _hand; } }
         private List<Tile> _hand;
 
         /// <summary>
         /// The board
         /// </summary>
+        [JsonIgnore]
         public Board Board { get { if (_board == null) _board = new Board(BoardData); return _board; } }
+        [JsonIgnore]
         private Board _board { get; set; }
 
         /// <summary>
         /// The original board, free from any placed tiles
         /// </summary>
+        [JsonIgnore]
         public Board OriginalBoard { get { if (_originalBoard == null) _originalBoard = new Board(OriginalBoardData); return _originalBoard; } }
+        [JsonIgnore]
         public Board _originalBoard;
 
         /// <summary>
         /// Tells wether or not it's our turn to play
         /// </summary>
+        [JsonIgnore]
         public bool OurTurn { get { if (_ourTurn == null) CheckOurTurn(); return (bool)_ourTurn; } }
+        [JsonIgnore]
         private bool? _ourTurn;
 
         public static Game FromJson(string json)
@@ -183,6 +195,11 @@ namespace Betapet.Models
             tiles.AddTile(" ", 2);
 
             return tiles;
+        }
+
+        public string ToJson()
+        {
+            return JsonConvert.SerializeObject(this);
         }
     }
 }
