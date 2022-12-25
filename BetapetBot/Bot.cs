@@ -246,7 +246,7 @@ namespace BetapetBot
                 int x = position.X + (wordLine.Direction == Direction.Horizontal ? offset : 0);
                 int y = position.Y + (wordLine.Direction == Direction.Vertical ? offset : 0);
 
-                if (!board.TilesConnected[x, y] && !firstMove)
+                if (!anyTileConnected && (board.TilesConnected[x, y] || firstMove))
                     anyTileConnected = true;
 
                 if (hasMissingHandLetters && missingHandLettes.Contains(word[offset]))
