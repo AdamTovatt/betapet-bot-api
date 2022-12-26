@@ -20,11 +20,31 @@ namespace BetapetBot
             lexicon = new Lexicon(connectionString);
         }
 
+        public async Task AcceptAllMatchRequests()
+        {
+            await betapet.LoginAsync();
+
+            RequestResponse matchesRequestRespone = await betapet.GetMatchRequestsAsync();
+
+            if (!matchesRequestRespone.Success)
+                return; //maybe we should do something??
+
+            MatchRequestResponse matchResponse = (MatchRequestResponse)matchesRequestRespone.InnerResponse;
+
+            if (matchResponse.MatchRequests == null)
+                return; //maybe do something?
+
+            foreach(MatchRequestResponseItem requestItem in matchResponse.MatchRequests)
+            {
+                await betapet.AcceptMatchRequestAsync(requestItem.GameId);
+            }
+        }
+
         public async Task<List<string>> HandleAllMatches()
         {
             List<string> result = new List<string>();
 
-            RequestResponse loginResponse = await betapet.LoginAsync();
+            await betapet.LoginAsync();
             RequestResponse requestResponse = await betapet.GetGameAndUserListAsync();
 
             GamesAndUserListResponse gameResponse = (GamesAndUserListResponse)requestResponse.InnerResponse;

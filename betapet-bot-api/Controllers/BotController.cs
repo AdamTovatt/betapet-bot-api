@@ -18,7 +18,11 @@ namespace BetapetBotApi.Controllers
             {
                 string connectionString = ConnectionStringHelper.GetConnectionStringFromUrl(EnvironmentHelper.GetEnvironmentVariable("DATABASE_URL"), SslMode.Prefer);
                 Bot bot = new Bot(username, password, "FF1912DED13658C431A222B5A7EA1D6DC6569E2C1A11E185FF81E7823C896B46", connectionString);
-                return new ApiResponse(await bot.HandleAllMatches());
+
+                await bot.AcceptAllMatchRequests();
+
+                List<string> matchHandlingResponse = await bot.HandleAllMatches();
+                return new ApiResponse(matchHandlingResponse);
             }
             catch (ApiException exception)
             {

@@ -13,6 +13,9 @@ namespace Betapet.Models.Communication.Responses
 
         public static MatchRequestResponse FromJson(string json)
         {
+            if (string.IsNullOrEmpty(json) || json == "[]")
+                return new MatchRequestResponse() { MatchRequests = new List<MatchRequestResponseItem>() };
+
             return JsonConvert.DeserializeObject<MatchRequestResponse>(json);
         }
     }

@@ -77,7 +77,7 @@ namespace Betapet
         /// Will get the match request that this account has
         /// </summary>
         /// <returns></returns>
-        public async Task<RequestResponse> GetMatchRequestAsync()
+        public async Task<RequestResponse> GetMatchRequestsAsync()
         {
             await VerifyLoginAsync();
 
