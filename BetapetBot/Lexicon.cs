@@ -1,8 +1,11 @@
-﻿using Npgsql;
+﻿using Microsoft.VisualBasic;
+using Newtonsoft.Json.Linq;
+using Npgsql;
 using NpgsqlTypes;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,9 +42,13 @@ namespace BetapetBot
         /// <returns></returns>
         public async Task DisableLexiconWord(string word)
         {
+            string query = @"UPDATE lexicon SET disable = true WHERE word = @word";
             using (NpgsqlConnection connection = await GetConnectionAsync())
+            using (NpgsqlCommand command = new NpgsqlCommand(query, connection))
             {
-                throw new NotImplementedException();
+                command.Parameters.Add("@word", NpgsqlDbType.Varchar).Value  = word;
+                
+                await command.ExecuteNonQueryAsync();
             }
         }
 
