@@ -462,6 +462,9 @@ namespace BetapetBot
             if (!words.Any(x => x.Count > 1))
                 return MoveEvaluation.ImpossibleMove;
 
+            words = words.RemoveDuplicates();
+            words = words.Where(x => x.Count > 1).ToList();
+
             List<int> pointsPerWord = new List<int>();
             UniqueTileCollection multiplyTiles = new UniqueTileCollection();
 
