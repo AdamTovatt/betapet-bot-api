@@ -37,6 +37,11 @@ namespace Betapet.Models.InGame
             Tiles.Add(new Tile(letter, x, y));
         }
 
+        public void AddTile(string letter, int x, int y, bool isFromWordLine)
+        {
+            Tiles.Add(new Tile(letter, x, y) { IsFromWordLine = isFromWordLine });
+        }
+
         public override string ToString()
         {
             StringBuilder stringBuilder = new StringBuilder();
@@ -65,6 +70,9 @@ namespace Betapet.Models.InGame
 
             foreach (Tile tile in Tiles)
             {
+                if (tile.IsFromWordLine)
+                    continue;
+
                 stringBuilder.Append(tile.WildCard ? tile.StringValue.ToLower() : tile.StringValue);
                 stringBuilder.Append(',');
                 stringBuilder.Append(tile.X);

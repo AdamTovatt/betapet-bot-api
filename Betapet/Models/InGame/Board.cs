@@ -56,6 +56,18 @@ namespace Betapet.Models.InGame
             }
         }
 
+        public bool HasLetterAtPosition(int x, int y, string letter)
+        {
+            Tile tile = GetTileAtPosition(x, y);
+            if (tile == null)
+                return false;
+            if (tile.Type != TileType.Letter)
+                return false;
+            if (tile.StringValue == letter)
+                return true;
+            return false;
+        }
+
         /// <summary>
         /// Will return the letter multiplier for a certain position on the board
         /// </summary>

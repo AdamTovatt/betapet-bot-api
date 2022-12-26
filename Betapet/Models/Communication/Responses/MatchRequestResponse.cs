@@ -16,7 +16,9 @@ namespace Betapet.Models.Communication.Responses
             if (string.IsNullOrEmpty(json) || json == "[]")
                 return new MatchRequestResponse() { MatchRequests = new List<MatchRequestResponseItem>() };
 
-            return JsonConvert.DeserializeObject<MatchRequestResponse>(json);
+            MatchRequestResponse response = new MatchRequestResponse();
+            response.MatchRequests = JsonConvert.DeserializeObject<List<MatchRequestResponseItem>>(json);
+            return response;
         }
     }
 

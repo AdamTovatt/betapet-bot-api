@@ -34,7 +34,7 @@ namespace BetapetBot
             if (matchResponse.MatchRequests == null)
                 return; //maybe do something?
 
-            foreach(MatchRequestResponseItem requestItem in matchResponse.MatchRequests)
+            foreach (MatchRequestResponseItem requestItem in matchResponse.MatchRequests)
             {
                 await betapet.AcceptMatchRequestAsync(requestItem.GameId);
             }
@@ -72,7 +72,7 @@ namespace BetapetBot
                             else
                             {
                                 PlayMoveResponse playMove = (PlayMoveResponse)playRequestResponse.InnerResponse;
-                                if(playMove.CodeType == CodeType.Word)
+                                if (playMove.CodeType == CodeType.Word)
                                 {
                                     lexicon.DisableLexiconWord(move.ToString());
                                 }
@@ -170,6 +170,9 @@ namespace BetapetBot
         {
             foreach (Tile tile in move.Tiles)
             {
+                if (tile.IsFromWordLine)
+                    continue;
+
                 if (!tiles.Any(c => c == tile.StringValue[0]))
                 {
                     tile.WildCard = true;
@@ -285,7 +288,9 @@ namespace BetapetBot
                     if (!wordLine.Letters.Any(tile => tile.StringValue == word[offset].ToString() && tile.X == x && tile.Y == y))
                         return null;
                 }
-                move.AddTile(word[offset].ToString(), x, y);
+
+                string letter = word[offset].ToString();
+                move.AddTile(letter, x, y, board.HasLetterAtPosition(x, y, letter));
             }
 
             if (!anyTileConnected)
@@ -421,15 +426,24 @@ namespace BetapetBot
             if (!game.Hand.AddTiles(additionalTiles).ContainsTiles(move.Tiles))
                 return MoveEvaluation.ImpossibleMove;
 
+            bool oneTileWasNew = false;
             foreach (Tile tile in move.Tiles)
             {
                 if (tile.X > 14 || tile.X < 0 || tile.Y > 14 || tile.Y < 0)
                     return MoveEvaluation.ImpossibleMove;
 
                 Tile boardTile = game.Board.GetTileAtPosition(tile.X, tile.Y);
-                if (boardTile.Type == TileType.Letter && boardTile.StringValue != tile.StringValue)
-                    return MoveEvaluation.ImpossibleMove;
+                if (boardTile.Type == TileType.Letter)
+                {
+                    if (boardTile.StringValue != tile.StringValue)
+                        return MoveEvaluation.ImpossibleMove;
+                }
+                else if (!oneTileWasNew)
+                    oneTileWasNew = true;
             }
+
+            if (!oneTileWasNew)
+                return MoveEvaluation.ImpossibleMove;
 
             List<Tile> tilesToRemove = new List<Tile>();
             foreach (Tile tile in move.Tiles)
@@ -442,7 +456,7 @@ namespace BetapetBot
 
             if (move.Tiles.Count > 1)
             {
-                moveDirection = move.Tiles[0].X > move.Tiles[1].X ? Direction.Horizontal : Direction.Vertical;
+                moveDirection = move.Tiles[0].X != move.Tiles[1].X ? Direction.Horizontal : Direction.Vertical;
             }
 
             if (game.Turn != 0 && !move.IsConnected(game.Board))
