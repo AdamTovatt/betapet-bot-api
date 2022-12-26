@@ -41,11 +41,22 @@ namespace BetapetBot
                     foreach (Move move in moves)
                     {
                         RequestResponse playRequestResponse = await betapet.PlayMoveAsync(move, game);
-                        if (playRequestResponse != null && playRequestResponse.Success)
+                        if (playRequestResponse != null)
                         {
-                            result.Add(string.Format("Played \"{0}\" for {1} points", move.Tiles.ToTileString(), move.Evaluation.Points));
-                            performedMove = true;
-                            break;
+                            if (playRequestResponse.Success)
+                            {
+                                result.Add(string.Format("Played \"{0}\" for {1} points", move.Tiles.ToTileString(), move.Evaluation.Points));
+                                performedMove = true;
+                                break;
+                            }
+                            else
+                            {
+                                PlayMoveResponse playMove = (PlayMoveResponse)playRequestResponse.InnerResponse;
+                                if(playMove.CodeType == CodeType.Word)
+                                {
+                                    lexicon.DisableLexiconWord(move.ToString());
+                                }
+                            }
                         }
                     }
 

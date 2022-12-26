@@ -32,6 +32,19 @@ namespace BetapetBot
             }
         }
 
+        /// <summary>
+        /// Disables a word in the lexicon so it will not be included in the possible words
+        /// </summary>
+        /// <param name="word">The word to disable</param>
+        /// <returns></returns>
+        public async Task DisableLexiconWord(string word)
+        {
+            using (NpgsqlConnection connection = await GetConnectionAsync())
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         private async Task<List<string>> GetPossibleWordsWildCardHandledAsync(string letters, NpgsqlConnection connection)
         {
             List<string> result = new List<string>();
