@@ -74,6 +74,52 @@ namespace Betapet
         }
 
         /// <summary>
+        /// Will get the match request that this account has
+        /// </summary>
+        /// <returns></returns>
+        public async Task<RequestResponse> GetMatchRequestAsync()
+        {
+            await VerifyLoginAsync();
+
+            if (loginResponse == null)
+                throw new Exception("Not logged in when attempting to get match request");
+
+            Request request = new Request("/matchmake.php", loginResponse);
+            request.AddParameter("type", "vsfind");
+
+            HttpResponseMessage response = await api.GetResponseAsync(request);
+
+            if(response.IsSuccessStatusCode)
+                return new RequestResponse(MatchRequestResponse.FromJson(await response.Content.ReadAsStringAsync()));
+
+            return new RequestResponse(false);
+        }
+
+        /// <summary>
+        /// Will accept a mach request
+        /// </summary>
+        /// <param name="gameId">The matchId of the match request to accept</param>
+        /// <returns></returns>
+        public async Task<RequestResponse> AcceptMatchRequestAsync(int gameId)
+        {
+            await VerifyLoginAsync();
+
+            if (loginResponse == null)
+                throw new Exception("Not logged in when attempting to accept match request");
+
+            Request request = new Request("/matchmake.php", loginResponse);
+            request.AddParameter("type", "vsaccept");
+            request.AddParameter("gameid", gameId.ToString());
+
+            HttpResponseMessage responseMessage = await api.GetResponseAsync(request);
+
+            if (responseMessage.IsSuccessStatusCode)
+                return new RequestResponse(AcceptMatchRequestResponse.FromJson(await responseMessage.Content.ReadAsStringAsync()));
+
+            return new RequestResponse(false);
+        }
+
+        /// <summary>
         /// Method for getting a list of friends of the current user
         /// </summary>
         /// <returns></returns>
@@ -90,9 +136,7 @@ namespace Betapet
             HttpResponseMessage response = await api.GetResponseAsync(request);
 
             if (response.IsSuccessStatusCode)
-            {
                 return new RequestResponse(FriendsResponse.FromJson(await response.Content.ReadAsStringAsync()));
-            }
 
             return new RequestResponse(false);
         }
@@ -115,9 +159,7 @@ namespace Betapet
             HttpResponseMessage response = await api.GetResponseAsync(request);
 
             if (response.IsSuccessStatusCode)
-            {
                 return new RequestResponse(GamesAndUserListResponse.FromJson(await response.Content.ReadAsStringAsync()));
-            }
 
             return new RequestResponse(false);
         }
