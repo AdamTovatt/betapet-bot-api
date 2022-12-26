@@ -10,40 +10,35 @@ namespace BetapetTests
         [TestMethod]
         public void TestMoveEvaluation1()
         {
-            /*
-            Game game = new Game()
-            {
-                BoardData = "4552555555525545155555155555155545535553554552553553535535525555155JULS55555535535U53553555553554S4H535555155355TOAN5515555355454D5V55555355355LEKA35555551553551R55525535535355A552554553555355455515555515555515455255555552554",
-                OriginalBoardData = "455255555552554515555515555515554553555355455255355353553552555515535515555553553555355355555355454553555515535565535515555355454553555553553555355355555515535515555255355353553552554553555355455515555515555515455255555552554",
-                UserList = new List<InGameUser>() { new InGameUser() { Hand = "TMÅELUF" } }
-            };
+            const string gameJson = "{\"gameid\":16336507,\"start_time\":\"2022-12-26T16:56:36\",\"board_type\":3,\"player_cnt\":2,\"wordlist\":2,\"activity\":3,\"activity_time\":\"2022-12-26T17:40:32\",\"active\":1,\"status\":1,\"board_data\":\"553525155555255555555555545555155355555532555555545555555535435555555555555255555555355255543555555255555555555565515554555555555555515425555555513514355545354555525555125551552543555555125515115555551555555555535555555314555\",\"board_data_org\":\"553525155555255555555555545555155355555532555555545555555535435555555555555255555555355255543555555255555555555565515554555555555555515425555555513514355545354555525555125551552543555555125515115555551555555555535555555314555\",\"turn\":1,\"last_chat_time\":\"2022-12-26T16:56:36\",\"user_list\":[{\"userid\":748338,\"hand\":\"ARÅYKSE\",\"score\":40,\"chat\":0,\"bingos\":0,\"hand_cnt\":7},{\"userid\":814356,\"hand\":null,\"score\":0,\"chat\":0,\"bingos\":0,\"hand_cnt\":7}],\"tiles_left\":82,\"tiles_percent\":4,\"fails\":0,\"swap_count\":0,\"words_first\":\"\",\"words\":\"\",\"bingo\":false,\"mark\":[\"112\",\"113\",\"114\",\"115\"]}";
+            Game game = Game.FromJson(gameJson);      
 
-            Move move1 = new Move();
-            move1.AddTile("M", 6, 5);
-            move1.AddTile("Å", 6, 6);
+            Move move = new Move();
+            move.AddTile("R", 7, 7);
+            move.AddTile("Y", 8, 7);
+            move.AddTile("S", 9, 7);
+            move.AddTile("A", 10, 7);
 
-            MoveEvaluation evaluation1 = game.EvaluateMoveAsync(move1);
+            MoveEvaluation evaluation = null;
 
-            Move move2 = new Move();
-            move2.AddTile("E", 10, 8);
-            move2.AddTile("L", 11, 8);
+            Assert.IsTrue(evaluation.Points == 40);
+        }
 
-            MoveEvaluation evaluation2 = game.EvaluateMoveAsync(move2);
+        [TestMethod]
+        public void TestMoveEvaluation2()
+        {
+            const string gameJson = "{\"gameid\":16336507,\"start_time\":\"2022-12-26T16:56:36\",\"board_type\":3,\"player_cnt\":2,\"wordlist\":2,\"activity\":3,\"activity_time\":\"2022-12-26T18:05:13\",\"active\":1,\"status\":1,\"board_data\":\"5535251555552555555555555455551553555555325555555455555555354355555555555552555555553552555435555552G55555555555RYSA55545555555555S55154255555555S35143555453545A5525555125551552543555555125515115555551555555555535555555314555\",\"board_data_org\":\"553525155555255555555555545555155355555532555555545555555535435555555555555255555555355255543555555255555555555565515554555555555555515425555555513514355545354555525555125551552543555555125515115555551555555555535555555314555\",\"turn\":3,\"last_chat_time\":\"2022-12-26T16:56:36\",\"user_list\":[{\"userid\":748338,\"hand\":\"ÅKOTLEI\",\"score\":101,\"chat\":0,\"bingos\":0,\"hand_cnt\":7},{\"userid\":814356,\"hand\":null,\"score\":12,\"chat\":0,\"bingos\":0,\"hand_cnt\":7}],\"tiles_left\":74,\"tiles_percent\":12,\"fails\":0,\"swap_count\":0,\"words_first\":\"ÅKTE (61p)\",\"words\":\"ÅKTE, GASSAT (54+7=61p)\",\"bingo\":false,\"mark\":[\"173\",\"174\",\"175\",\"176\",\"100\",\"115\",\"130\",\"145\",\"160\"]}";
+            Game game = Game.FromJson(gameJson);
 
-            Move move3 = new Move();
-            move3.AddTile("Å", 10, 10);
-            move3.AddTile("T", 10, 11);
+            Move move = new Move();
+            move.AddTile("Å", 8, 11);
+            move.AddTile("K", 9, 11);
+            move.AddTile("T", 10, 11);
+            move.AddTile("E", 11, 11);
 
-            MoveEvaluation evaluation3 = game.EvaluateMoveAsync(move3);
+            MoveEvaluation evaluation = null;
 
-            Move move4 = new Move();
-            move4.AddTile("U", 10, 10);
-            move4.AddTile("F", 10, 11);
-
-            MoveEvaluation evaluation4 = game.EvaluateMoveAsync(move4);
-
-            Assert.IsTrue(evaluation1.Points == 35 && evaluation2.Possible == false && evaluation3.Points == 28 && evaluation4.Points == 37);
-            */
+            Assert.IsTrue(evaluation.Points == 40);
         }
     }
 }
