@@ -477,7 +477,7 @@ namespace BetapetBot
                 return MoveEvaluation.ImpossibleMove;
 
             words = words.RemoveDuplicates();
-            words = words.Where(x => x.Count > 1).ToList();
+            words = words.Where(x => x.Count > 1 && !x.All(tile => game.Board.HasLetterAtPosition(tile.X, tile.Y, tile.StringValue))).ToList();
 
             List<int> pointsPerWord = new List<int>();
             UniqueTileCollection multiplyTiles = new UniqueTileCollection();
