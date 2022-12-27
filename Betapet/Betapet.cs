@@ -259,5 +259,25 @@ namespace Betapet
 
             return new RequestResponse(SwapTilesResponse.FromJson(await response.Content.ReadAsStringAsync()));
         }
+
+        public async Task<RequestResponse> PassTurn(Game game)
+        {
+            await VerifyLoginAsync();
+
+            if (loginResponse == null)
+                throw new Exception("Not logged in when attempting to pass turn");
+
+            Request request = new Request("/play.php", loginResponse);
+            request.AddParameter("type", "pass");
+            request.AddParameter("gameid", game.Id.ToString());
+            request.AddParameter("turn", game.Turn.ToString());
+
+            HttpResponseMessage response = await api.GetResponseAsync(request);
+
+            if (response.IsSuccessStatusCode)
+                return new RequestResponse(PassTurnResponse.FromJson(await response.Content.ReadAsStringAsync()));
+
+            return new RequestResponse(false);
+        }
     }
 }

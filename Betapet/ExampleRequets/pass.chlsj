@@ -1,0 +1,122 @@
+[
+  {
+    "status": "COMPLETE",
+    "method": "GET",
+    "protocolVersion": "HTTP/1.1",
+    "scheme": "https",
+    "host": "mobile-app-se.betapet.se",
+    "actualPort": 443,
+    "path": "/play.php",
+    "query": "type=pass&gameid=16328809&turn=39&userid=748338&authkey=8b42d0fc7f91fb6ab4e6605bae42c187&proto_ver=5&device_type=2",
+    "tunnel": false,
+    "keptAlive": true,
+    "webSocket": false,
+    "remoteAddress": "mobile-app-se.betapet.se/194.48.213.144",
+    "clientAddress": "198.18.72.253/198.18.72.253",
+    "times": {
+      "start": "2022-12-27T01:21:52.905+01:00",
+      "requestBegin": "2022-12-27T01:21:52.918+01:00",
+      "requestComplete": "2022-12-27T01:21:52.922+01:00",
+      "responseBegin": "2022-12-27T01:21:53.059+01:00",
+      "end": "2022-12-27T01:21:53.091+01:00"
+    },
+    "durations": {},
+    "totalSize": "1202",
+    "ssl": {
+      "protocol": "TLSv1.2",
+      "cipherSuite": "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
+    },
+    "request": {
+      "sizes": {
+        "body": "0",
+        "headers": 334
+      },
+      "mimeType": null,
+      "charset": null,
+      "contentEncoding": null,
+      "header": {
+        "firstLine": "GET /play.php?type=pass&gameid=16328809&turn=39&userid=748338&authkey=8b42d0fc7f91fb6ab4e6605bae42c187&proto_ver=5&device_type=2 HTTP/1.1",
+        "headers": [
+          {
+            "name": "Host",
+            "value": "mobile-app-se.betapet.se"
+          },
+          {
+            "name": "Accept",
+            "value": "*/*"
+          },
+          {
+            "name": "Accept-Language",
+            "value": "sv-SE,sv;q=0.9"
+          },
+          {
+            "name": "Connection",
+            "value": "keep-alive"
+          },
+          {
+            "name": "Accept-Encoding",
+            "value": "gzip, deflate, br"
+          },
+          {
+            "name": "User-Agent",
+            "value": "Betapet/1.71 CFNetwork/1399 Darwin/22.1.0"
+          }
+        ]
+      }
+    },
+    "response": {
+      "sizes": {
+        "body": "576",
+        "headers": 292
+      },
+      "mimeType": "text/html",
+      "charset": "iso-8859-1",
+      "contentEncoding": "gzip",
+      "header": {
+        "firstLine": "HTTP/1.1 200 OK",
+        "headers": [
+          {
+            "name": "Date",
+            "value": "Tue, 27 Dec 2022 00:21:51 GMT"
+          },
+          {
+            "name": "Server",
+            "value": "Apache/2.4.7 (Ubuntu)"
+          },
+          {
+            "name": "X-Powered-By",
+            "value": "PHP/5.5.9-1ubuntu4.19"
+          },
+          {
+            "name": "Vary",
+            "value": "Accept-Encoding"
+          },
+          {
+            "name": "Content-Encoding",
+            "value": "gzip"
+          },
+          {
+            "name": "Content-Length",
+            "value": "576"
+          },
+          {
+            "name": "Keep-Alive",
+            "value": "timeout=5, max=99"
+          },
+          {
+            "name": "Connection",
+            "value": "Keep-Alive"
+          },
+          {
+            "name": "Content-Type",
+            "value": "text/html; charset=iso-8859-1"
+          }
+        ]
+      },
+      "body": {
+        "encoding": "base64",
+        "encoded": "H4sIAAAAAAAAA31U226jMBD9lYinrjaVsM0kJNI+0A2bZpubCKn2ViEXSIqWBGSbVlGVf+/YQDdppEUIOMdnzoxHY14tkcoqV9bQUqJKra4VF0mKqORSIkr3CYINz6Ve2/JdmmmC9Bh1XXuAnFRcqEhlOx1FbUqvCb2mrEPtod0bsh5KHgsukkgdSiNBosz5IRVRvFcN8VKIJM+khgQhj1X2nKkDQjiBF1n6HZsMKRnCe1DaOGBVqpINqPMnXHEkHICpD+aaAKyAjCZLAIJwvvh6B7AOgSFgMHbApzcLT38zWPljGIEwSgY33twPIPR+aADf/lS2HaPxHD1XmnFmNRUE2guzIHmPWTWb9EarqQfeLRsZHEPowN3iTgs9CH6GHopnCxO39AKYrzFnCHAPXjCG28X3EFbhejYBp8mc9KZ6He2fg9oQrykxWySoWvkjf6oBxcLO2hEVYlu3hNYdMRJoQ9unA01LoFayuiX6po2GtfqGb19NVOPQKHv/9GerF7Gnzhd5z6r6UPOHHeGmVSX2eqs2fudcqih+4pdjawaKDIbAUFZJnNF6Kn+/GmRmv++4jLm4/sTN4filxy0uhDZiTE+ztkagUz1m+20hG6ADmqEn1rF74ukSxzE5341c+E80tY4PuKUsT2WUp5s2WU2UqYhTIxv0kdzwLG8PgnzhZRQX1b6N0OdORptMmKPnLztX/fJTyxum25n6nSvnM/tSr5iSTn4JOy7+Yn8s3WOi/wfMeji+AbrLQNJWBAAA"
+      }
+    }
+  }
+]

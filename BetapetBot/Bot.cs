@@ -82,7 +82,13 @@ namespace BetapetBot
 
                     if (!performedMove)
                     {
-                        result.Add("Cannot find move");
+                        if (game.TilesLeft == 0)
+                        {
+                            RequestResponse passTurnResponse = await betapet.PassTurn(game);
+                            result.Add("Passed turn");
+                        }
+                        else
+                            result.Add("Cannot find move");
                         /*
                         SwapTilesResponse swapResponse = (SwapTilesResponse)(await betapet.SwapTilesAsync(game, game.Hand)).InnerResponse;
                         if (swapResponse.SwapCount > 0)
