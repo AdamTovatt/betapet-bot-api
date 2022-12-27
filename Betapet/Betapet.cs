@@ -260,7 +260,7 @@ namespace Betapet
             return new RequestResponse(SwapTilesResponse.FromJson(await response.Content.ReadAsStringAsync()));
         }
 
-        public async Task<RequestResponse> PassTurn(Game game)
+        public async Task<RequestResponse> PassTurnAsync(Game game)
         {
             await VerifyLoginAsync();
 
@@ -276,6 +276,27 @@ namespace Betapet
 
             if (response.IsSuccessStatusCode)
                 return new RequestResponse(PassTurnResponse.FromJson(await response.Content.ReadAsStringAsync()));
+
+            return new RequestResponse(false);
+        }
+
+        public async Task<RequestResponse> CreateGameAsync(int boardType = 2, int wordList = 2)
+        {
+            await VerifyLoginAsync();
+
+            if (loginResponse == null)
+                throw new Exception("Not logged in when attempting to create random match");
+
+            Request request = new Request("/matchmake.php", loginResponse);
+            request.AddParameter("type", "rndgamer");
+            request.AddParameter("board_type", boardType.ToString());
+            request.AddParameter("rating_lvl", "0");
+            request.AddParameter("dict", wordList.ToString());
+
+            HttpResponseMessage response = await api.GetResponseAsync(request);
+
+            if (response.IsSuccessStatusCode)
+                return new RequestResponse(CreateGameResponse.FromJson(await response.Content.ReadAsStringAsync()));
 
             return new RequestResponse(false);
         }

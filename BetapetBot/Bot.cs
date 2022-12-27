@@ -49,6 +49,11 @@ namespace BetapetBot
 
             GamesAndUserListResponse gameResponse = (GamesAndUserListResponse)requestResponse.InnerResponse;
 
+            if(gameResponse.Games.Where(x => !x.Finished).Count() < 6)
+            {
+                RequestResponse createGameRequestResponse = await betapet.CreateGameAsync();
+            }
+
             foreach (Game game in gameResponse.Games)
             {
                 if (game.OurTurn && !game.Finished)
@@ -84,7 +89,7 @@ namespace BetapetBot
                     {
                         if (game.TilesLeft == 0)
                         {
-                            RequestResponse passTurnResponse = await betapet.PassTurn(game);
+                            RequestResponse passTurnResponse = await betapet.PassTurnAsync(game);
                             result.Add("Passed turn");
                         }
                         else
