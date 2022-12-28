@@ -40,6 +40,15 @@ namespace BetapetBot
             }
         }
 
+        public async Task<List<Game>> GetGamesAsync()
+        {
+            await betapet.LoginAsync();
+            RequestResponse requestResponse = await betapet.GetGameAndUserListAsync();
+
+            GamesAndUserListResponse gameResponse = (GamesAndUserListResponse)requestResponse.InnerResponse;
+            return gameResponse.Games;
+        }
+
         public async Task<List<string>> HandleAllMatches()
         {
             List<string> result = new List<string>();
@@ -51,7 +60,7 @@ namespace BetapetBot
 
             if(gameResponse.Games.Where(x => !x.Finished).Count() < 6)
             {
-                RequestResponse createGameRequestResponse = await betapet.CreateGameAsync();
+                //RequestResponse createGameRequestResponse = await betapet.CreateGameAsync();
             }
 
             foreach (Game game in gameResponse.Games)
