@@ -88,7 +88,7 @@ namespace BetapetBot
                                 PlayMoveResponse playMove = (PlayMoveResponse)playRequestResponse.InnerResponse;
                                 if (playMove.CodeType == CodeType.Word)
                                 {
-                                    lexicon.DisableLexiconWord(move.ToString());
+                                    //lexicon.DisableLexiconWord(move.ToString());
                                 }
                             }
                         }
@@ -245,13 +245,20 @@ namespace BetapetBot
                                     }
                                     else
                                     {
-                                        for (int i = 0; i < moves.Count; i++)
+                                        if (moves.Count > 0 && moves[moves.Count - 1].Evaluation.Points > evaluation.Points)
                                         {
-                                            if (moves[i].Evaluation.Points < evaluation.Points)
+                                            moves.Add(move);
+                                        }
+                                        else
+                                        {
+                                            for (int i = 0; i < moves.Count; i++)
                                             {
-                                                worstScore = moves[i].Evaluation.Points;
-                                                moves.Insert(i, move);
-                                                break;
+                                                if (moves[i].Evaluation.Points < evaluation.Points)
+                                                {
+                                                    worstScore = moves[i].Evaluation.Points;
+                                                    moves.Insert(i, move);
+                                                    break;
+                                                }
                                             }
                                         }
                                     }
