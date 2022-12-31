@@ -9,6 +9,8 @@ namespace Betapet
 {
     public class BetapetManager
     {
+        public int UserId { get; private set; }
+
         private ApiHelper api;
         private string? username;
         private string? password;
@@ -16,12 +18,15 @@ namespace Betapet
 
         private LoginResponse? loginResponse;
 
+        private Dictionary<int, User> userDictionary;
+
         /// <summary>
         /// Default constructor
         /// </summary>
         public BetapetManager(string username, string password, string deviceId)
         {
             api = new ApiHelper();
+            userDictionary = new Dictionary<int, User>();
             this.deviceId = deviceId;
             this.username = username;
             this.password = password;
@@ -67,6 +72,7 @@ namespace Betapet
             if (response.IsSuccessStatusCode)
             {
                 loginResponse = LoginResponse.FromJson(await response.Content.ReadAsStringAsync());
+                UserId = int.Parse(loginResponse.UserId);
                 return new RequestResponse(loginResponse);
             }
 
@@ -159,7 +165,19 @@ namespace Betapet
             HttpResponseMessage response = await api.GetResponseAsync(request);
 
             if (response.IsSuccessStatusCode)
-                return new RequestResponse(GamesAndUserListResponse.FromJson(await response.Content.ReadAsStringAsync()));
+            {
+                GamesAndUserListResponse result = GamesAndUserListResponse.FromJson(await response.Content.ReadAsStringAsync());
+
+                foreach(User user in result.Users)
+                {
+                    if (userDictionary.ContainsKey(user.Id))
+                        userDictionary[user.Id] = user;
+                    else
+                        userDictionary.Add(user.Id, user);
+                }
+
+                return new RequestResponse(result);
+            }
 
             return new RequestResponse(false);
         }
@@ -340,6 +358,16 @@ namespace Betapet
                 return new RequestResponse(ChallengePlayerResponse.FromJson(await response.Content.ReadAsStringAsync()));
 
             return new RequestResponse(false);
+        }
+
+        public User GetUserInfo(int userId)
+        {
+            if(userDictionary.ContainsKey(userId))
+            {
+                return userDictionary[userId];
+            }
+
+            return null;
         }
     }
 }

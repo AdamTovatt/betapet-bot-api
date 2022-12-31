@@ -49,9 +49,9 @@ namespace BetapetBot
             return gameResponse.Games;
         }
 
-        public async Task<List<string>> HandleAllMatches()
+        public async Task<List<GameSummary>> HandleAllMatches()
         {
-            List<string> result = new List<string>();
+            List<GameSummary> result = new List<GameSummary>();
 
             await betapet.LoginAsync();
             RequestResponse requestResponse = await betapet.GetGameAndUserListAsync();
@@ -79,7 +79,7 @@ namespace BetapetBot
                         {
                             if (playRequestResponse.Success)
                             {
-                                result.Add(string.Format("Played \"{0}\" for {1} points", move.Tiles.ToTileString(), move.Evaluation.Points));
+                                result.Add(new GameSummary(game, betapet) { LastAction = string.Format("Played \"{0}\" for {1} points", move.Tiles.ToTileString(), move.Evaluation.Points) });
                                 performedMove = true;
                                 break;
                             }
@@ -99,10 +99,10 @@ namespace BetapetBot
                         if (game.TilesLeft == 0)
                         {
                             RequestResponse passTurnResponse = await betapet.PassTurnAsync(game);
-                            result.Add("Passed turn");
+                            result.Add(new GameSummary(game, betapet) { LastAction = "Passed turn since no tiles are left" });
                         }
                         else
-                            result.Add("Cannot find move");
+                            result.Add(new GameSummary(game, betapet) { LastAction = "Cannot find move!" });
                         /*
                         SwapTilesResponse swapResponse = (SwapTilesResponse)(await betapet.SwapTilesAsync(game, game.Hand)).InnerResponse;
                         if (swapResponse.SwapCount > 0)
@@ -118,7 +118,7 @@ namespace BetapetBot
                 }
                 else
                 {
-                    result.Add("Not our turn in game: " + game.Id);
+                    result.Add(new GameSummary(game, betapet));
                 }
             }
 

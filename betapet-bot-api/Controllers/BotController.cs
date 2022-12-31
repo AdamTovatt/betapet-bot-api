@@ -22,7 +22,7 @@ namespace BetapetBotApi.Controllers
 
                 await bot.AcceptAllMatchRequests();
 
-                List<string> matchHandlingResponse = await bot.HandleAllMatches();
+                List<GameSummary> matchHandlingResponse = await bot.HandleAllMatches();
                 return new ApiResponse(matchHandlingResponse);
             }
             catch (ApiException exception)
