@@ -260,6 +260,12 @@ namespace Betapet
             return new RequestResponse(SwapTilesResponse.FromJson(await response.Content.ReadAsStringAsync()));
         }
 
+        /// <summary>
+        /// Will pass the turn
+        /// </summary>
+        /// <param name="game">The game to pass the turn in</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public async Task<RequestResponse> PassTurnAsync(Game game)
         {
             await VerifyLoginAsync();
@@ -280,6 +286,13 @@ namespace Betapet
             return new RequestResponse(false);
         }
 
+        /// <summary>
+        /// Will create a game for someone to join
+        /// </summary>
+        /// <param name="boardType">The desired board type. Default is 2 which is "standard"</param>
+        /// <param name="wordList">The desired word list. Default is 2 which is "böjningar"</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public async Task<RequestResponse> CreateGameAsync(int boardType = 2, int wordList = 2)
         {
             await VerifyLoginAsync();
@@ -297,6 +310,34 @@ namespace Betapet
 
             if (response.IsSuccessStatusCode)
                 return new RequestResponse(CreateGameResponse.FromJson(await response.Content.ReadAsStringAsync()));
+
+            return new RequestResponse(false);
+        }
+
+        /// <summary>
+        /// Will challenge another player to a game
+        /// </summary>
+        /// <param name="playerId">The id of the player to challenge</param>
+        /// <param name="boardType">The desired board type. Default is 2 which is "standard"</param>
+        /// <param name="wordList">The desired word list. Default is 2 which is "böjningar"</param>
+        /// <returns></returns>
+        public async Task<RequestResponse> ChallengePlayerAsync(int playerId, int boardType = 2, int wordList = 2)
+        {
+            await VerifyLoginAsync();
+
+            if (loginResponse == null)
+                throw new Exception("Not logged in when attempting to create random match");
+
+            Request request = new Request("/matchmake.php", loginResponse);
+            request.AddParameter("type", "vsrequest");
+            request.AddParameter("board_type", boardType.ToString());
+            request.AddParameter("req_userid", playerId.ToString());
+            request.AddParameter("dict", wordList.ToString());
+
+            HttpResponseMessage response = await api.GetResponseAsync(request);
+
+            if (response.IsSuccessStatusCode)
+                return new RequestResponse(ChallengePlayerResponse.FromJson(await response.Content.ReadAsStringAsync()));
 
             return new RequestResponse(false);
         }
