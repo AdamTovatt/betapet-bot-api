@@ -31,6 +31,25 @@ namespace BetapetBotApi.Controllers
             }
         }
 
+        [HttpPost("handleEverything")]
+        public async Task<IActionResult> HandleEverything(string username, string password)
+        {
+            try
+            {
+                string connectionString = ConnectionStringHelper.GetConnectionStringFromUrl(EnvironmentHelper.GetEnvironmentVariable("DATABASE_URL"), SslMode.Prefer);
+                Bot bot = new Bot(username, password, "FF1912DED13658C431A222B5A7EA1D6DC6569E2C1A11E185FF81E7823C896B46", connectionString);
+
+                await bot.AcceptAllMatchRequests();
+
+                List<GameSummary> matchHandlingResponse = await bot.HandleAllMatches();
+                return new ApiResponse(matchHandlingResponse);
+            }
+            catch (ApiException exception)
+            {
+                return new ApiResponse(exception);
+            }
+        }
+
         [HttpGet("botStatus")]
         public async Task<IActionResult> GetMatches(string username, string password)
         {
