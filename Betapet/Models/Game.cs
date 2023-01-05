@@ -74,6 +74,14 @@ namespace Betapet.Models
         public List<string> Mark { get; set; }
 
         [JsonIgnore]
+        public InGameUser OurUser { get { if (_ourUser == null) _ourUser = UserList.Where(x => x.Hand != null).FirstOrDefault(); return _ourUser; } }
+        private InGameUser _ourUser;
+
+        [JsonIgnore]
+        public InGameUser TheirUser { get { if (_theirUser == null) _theirUser = UserList.Where(x => x.Hand == null).FirstOrDefault(); return _theirUser; } }
+        private InGameUser _theirUser;
+
+        [JsonIgnore]
         public bool IsFirstMove { get { return Turn == 0 || OriginalBoardData == BoardData; } }
 
         /// <summary>

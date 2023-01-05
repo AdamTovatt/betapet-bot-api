@@ -14,6 +14,8 @@ namespace BetapetBot
         private BetapetManager betapet;
         private Lexicon lexicon;
 
+        public BetapetManager Betapet { get { return betapet; } }
+
         public Bot(string username, string password, string deviceId, string connectionString)
         {
             betapet = new BetapetManager(username, password, deviceId);

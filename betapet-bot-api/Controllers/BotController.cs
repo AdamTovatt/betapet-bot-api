@@ -22,7 +22,7 @@ namespace BetapetBotApi.Controllers
 
                 await bot.AcceptAllMatchRequests();
 
-                List<GameSummary> matchHandlingResponse = await bot.HandleAllMatches();
+                List<BetapetBot.GameSummary> matchHandlingResponse = await bot.HandleAllMatches();
                 return new ApiResponse(matchHandlingResponse);
             }
             catch (ApiException exception)
@@ -50,6 +50,30 @@ namespace BetapetBotApi.Controllers
                 return new ApiResponse(new { games });
             }
             catch (ApiException exception)
+            {
+                return new ApiResponse(exception);
+            }
+        }
+
+        [HttpGet("gameSummaries")]
+        public async Task<IActionResult> GetGameSummaries(string username, string password)
+        {
+            try
+            {
+                string connectionString = ConnectionStringHelper.GetConnectionStringFromUrl(EnvironmentHelper.GetEnvironmentVariable("DATABASE_URL"), SslMode.Prefer);
+                Bot bot = new Bot(username, password, "FF1912DED13658C431A222B5A7EA1D6DC6569E2C1A11E185FF81E7823C896B46", connectionString);
+
+                List<Betapet.Models.Game> betapetGames = await bot.GetGamesAsync();
+                List<FrontendModels.GameSummary> gameSummaries = new List<FrontendModels.GameSummary>();
+
+                foreach(Betapet.Models.Game game in betapetGames)
+                {
+                    gameSummaries.Add(new FrontendModels.GameSummary(game, bot.Betapet));
+                }
+
+                return new ApiResponse(gameSummaries);
+            }
+            catch(ApiException exception)
             {
                 return new ApiResponse(exception);
             }
