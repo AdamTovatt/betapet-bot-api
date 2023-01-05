@@ -73,6 +73,9 @@ namespace Betapet.Models
         [JsonProperty("mark")]
         public List<string> Mark { get; set; }
 
+        [JsonIgnore]
+        public bool IsFirstMove { get { return Turn == 0 || OriginalBoardData == BoardData; } }
+
         /// <summary>
         /// If the game has been finished or not
         /// </summary>

@@ -229,8 +229,8 @@ namespace BetapetBot
                             int shiftedX = wordLine.StartPosition.X + (wordLine.Direction == Direction.Horizontal ? startPositionOffset : 0);
                             int shiftedY = wordLine.StartPosition.Y + (wordLine.Direction == Direction.Vertical ? startPositionOffset : 0);
 
-                            Move move = CreateMoveFromPosition(new Position(shiftedX, shiftedY), candidateWord, wordLine, game.Board, hand, game.Turn == 0 || game.Board.LetterTilesOnBoard.Count() == 0);
-                            if (move != null && !(game.Turn == 0 && (move.Tiles[0].X != 7 || move.Tiles[0].Y != 7)))
+                            Move move = CreateMoveFromPosition(new Position(shiftedX, shiftedY), candidateWord, wordLine, game.Board, hand, game.IsFirstMove);
+                            if (move != null && !(game.IsFirstMove && (move.Tiles[0].X != 7 || move.Tiles[0].Y != 7)))
                             {
                                 MoveEvaluation evaluation = await EvaluateMoveAsync(move, game, wordLine.Letters, connection);
 
@@ -328,7 +328,7 @@ namespace BetapetBot
 
         public List<WordLine> GetWordLines(Game game)
         {
-            if (game.Turn == 0 || game.Board.LetterTilesOnBoard.Count() == 0)
+            if (game.IsFirstMove)
                 return new List<WordLine>() { new WordLine(Direction.Horizontal, new Position(7, 7)), new WordLine(Direction.Vertical, new Position(7, 7)) };
 
             List<WordLine> wordLines = new List<WordLine>();
@@ -486,7 +486,7 @@ namespace BetapetBot
                 moveDirection = move.Tiles[0].X != move.Tiles[1].X ? Direction.Horizontal : Direction.Vertical;
             }
 
-            if (game.Turn != 0 && !move.IsConnected(game.Board))
+            if (!game.IsFirstMove && !move.IsConnected(game.Board))
                 return MoveEvaluation.ImpossibleMove;
 
             List<List<Tile>> words = new List<List<Tile>>();
