@@ -128,18 +128,17 @@ namespace BetapetBot
                             result.Add(new GameSummary(game, betapet) { LastAction = "Passed turn since no tiles are left" });
                         }
                         else
-                            result.Add(new GameSummary(game, betapet) { LastAction = "Cannot find move!" });
-                        /*
-                        SwapTilesResponse swapResponse = (SwapTilesResponse)(await betapet.SwapTilesAsync(game, game.Hand)).InnerResponse;
-                        if (swapResponse.SwapCount > 0)
                         {
-                            result.Add("Swapped " + swapResponse.SwapCount.ToString() + " tiles");
+                            SwapTilesResponse swapResponse = (SwapTilesResponse)(await betapet.SwapTilesAsync(game, game.Hand)).InnerResponse;
+                            if (swapResponse.SwapCount > 0)
+                            {
+                                result.Add(new GameSummary(game, betapet) { LastAction = "Swapped " + swapResponse.SwapCount.ToString() + " tiles" });
+                            }
+                            else
+                            {
+                                result.Add(new GameSummary(game, betapet) { LastAction = "Tried to swap tiles but failed" });
+                            }
                         }
-                        else
-                        {
-                            result.Add("Tried to swap tiles but failed");
-                        }
-                        */
                     }
                 }
                 else
