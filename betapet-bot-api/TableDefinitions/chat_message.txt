@@ -1,0 +1,10 @@
+﻿DROP TABLE IF EXISTS chat_message CASCADE;
+
+CREATE TABLE chat_message (
+id SERIAL PRIMARY KEY,
+match_id INT NOT NULL,
+local_id INT NOT NULL,
+author_id INT NOT NULL,
+text VARCHAR(500) NOT NULL,
+time_of_creation TIMESTAMP NOT NULL,
+sent_by_us BOOLEAN NOT NULL)

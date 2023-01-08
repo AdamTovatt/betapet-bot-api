@@ -20,7 +20,7 @@ namespace Betapet.Models.Communication.Responses
     public class ChatMessage
     {
         [JsonProperty("id")]
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         [JsonProperty("userid")]
         public int UserId { get; set; }

@@ -75,6 +75,39 @@ namespace BetapetBot
             }
         }
 
+        public async Task HandleChats()
+        {
+            try
+            {
+                if (!betapet.LoggedIn)
+                    await betapet.LoginAsync();
+
+                RequestResponse requestResponse = await betapet.GetGameAndUserListAsync();
+                GamesAndUserListResponse gameResponse = (GamesAndUserListResponse)requestResponse.InnerResponse;
+
+                using (NpgsqlConnection connection = await database.GetConnectionAsync())
+                {
+                    foreach (Game game in gameResponse.Games)
+                    {
+                        if (game.LastChatTime != game.StartTime)
+                        {
+                            RequestResponse chatMessagesResponse = await betapet.GetChatMessagesAsync(game);
+                            if (chatMessagesResponse.Success)
+                            {
+                                GetChatResponse chatResponse = (GetChatResponse)chatMessagesResponse.InnerResponse;
+
+                                foreach (ChatMessage message in chatResponse.Messages)
+                                {
+                                    await database.SaveChatMessage(connection, game.Id, message.Id, message.UserId, message.Message, message.Created, message.UserId == 748338); // 748338 is our user DavidRdrgz. This needs to be changed if the users changes!!
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch { return; }
+        }
+
         public async Task<List<GameSummary>> HandleAllMatches()
         {
             List<GameSummary> result = new List<GameSummary>();

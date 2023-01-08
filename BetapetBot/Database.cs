@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace BetapetBot
@@ -34,6 +35,32 @@ namespace BetapetBot
             using (NpgsqlCommand command = new NpgsqlCommand(query, connection))
             {
                 command.Parameters.Add("@rating", NpgsqlDbType.Integer).Value = rating;
+
+                await command.ExecuteNonQueryAsync();
+            }
+        }
+
+        public async Task SaveChatMessage(NpgsqlConnection connection, int matchId, int localId, int authorId, string text, DateTime timeOfCreation, bool sentByUs)
+        {
+            string query = @"INSERT INTO chat_message
+                            (match_id, local_id, author_id, text, time_of_creation, sent_by_us) 
+                            SELECT
+                            @match_id, @local_id, @author_id, @text, @time_of_creation, @sent_by_us
+                            WHERE NOT EXISTS
+                            (SELECT match_id, local_id
+                            FROM chat_message
+                            WHERE
+                            match_id = @match_id AND
+                            local_id = @local_id);";
+
+            using (NpgsqlCommand command = new NpgsqlCommand(query, connection))
+            {
+                command.Parameters.Add("@match_id", NpgsqlDbType.Integer).Value = matchId;
+                command.Parameters.Add("@local_id", NpgsqlDbType.Integer).Value = localId;
+                command.Parameters.Add("@author_id", NpgsqlDbType.Integer).Value = authorId;
+                command.Parameters.Add("@text", NpgsqlDbType.Varchar).Value = Regex.Unescape(text);
+                command.Parameters.Add("@time_of_creation", NpgsqlDbType.Timestamp).Value = timeOfCreation;
+                command.Parameters.Add("@sent_by_us", NpgsqlDbType.Boolean).Value = sentByUs;
 
                 await command.ExecuteNonQueryAsync();
             }

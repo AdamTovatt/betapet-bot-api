@@ -25,6 +25,7 @@ namespace BetapetBotApi.Controllers
                 List<BetapetBot.GameSummary> matchHandlingResponse = await bot.HandleAllMatches();
 
                 await bot.UpdateRating();
+                await bot.HandleChats();
 
                 return new ApiResponse(matchHandlingResponse);
             }
