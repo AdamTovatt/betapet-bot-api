@@ -23,6 +23,9 @@ namespace BetapetBotApi.Controllers
                 await bot.AcceptAllMatchRequests();
 
                 List<BetapetBot.GameSummary> matchHandlingResponse = await bot.HandleAllMatches();
+
+                await bot.UpdateRating();
+
                 return new ApiResponse(matchHandlingResponse);
             }
             catch (ApiException exception)

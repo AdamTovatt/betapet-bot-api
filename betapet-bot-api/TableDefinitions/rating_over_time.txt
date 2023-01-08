@@ -1,0 +1,6 @@
+﻿DROP TABLE IF EXISTS rating_over_time CASCADE;
+
+CREATE TABLE rating_over_time (
+id SERIAL PRIMARY KEY,
+rating INT NOT NULL,
+time_of_rating TIMESTAMP DEFAULT NOW())

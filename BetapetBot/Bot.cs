@@ -13,6 +13,7 @@ namespace BetapetBot
     {
         private BetapetManager betapet;
         private Lexicon lexicon;
+        private Database database;
 
         public BetapetManager Betapet { get { return betapet; } }
 
@@ -20,6 +21,7 @@ namespace BetapetBot
         {
             betapet = new BetapetManager(username, password, deviceId);
             lexicon = new Lexicon(connectionString);
+            database = new Database(connectionString);
         }
 
         public async Task AcceptAllMatchRequests()
@@ -51,13 +53,35 @@ namespace BetapetBot
             return gameResponse.Games;
         }
 
+        public async Task UpdateRating()
+        {
+            try
+            {
+                if (!betapet.LoggedIn)
+                    await betapet.LoginAsync();
+
+                RequestResponse requestResponse = await betapet.GetGameAndUserListAsync();
+                GamesAndUserListResponse gameResponse = (GamesAndUserListResponse)requestResponse.InnerResponse;
+
+                int currentRating = gameResponse.Users[0].Rating;
+                if (await database.GetLastRating() == currentRating)
+                    return;
+
+                await database.AddRating(currentRating);
+            }
+            catch
+            {
+                return;
+            }
+        }
+
         public async Task<List<GameSummary>> HandleAllMatches()
         {
             List<GameSummary> result = new List<GameSummary>();
 
             await betapet.LoginAsync();
-            RequestResponse requestResponse = await betapet.GetGameAndUserListAsync();
 
+            RequestResponse requestResponse = await betapet.GetGameAndUserListAsync();
             GamesAndUserListResponse gameResponse = (GamesAndUserListResponse)requestResponse.InnerResponse;
 
             if(gameResponse.Games.Where(x => !x.Finished).Count() < 15)

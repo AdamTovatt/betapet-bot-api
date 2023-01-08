@@ -10,6 +10,7 @@ namespace Betapet
     public class BetapetManager
     {
         public int UserId { get; private set; }
+        public bool LoggedIn { get { return loginResponse != null; } }
 
         private ApiHelper api;
         private string? username;
