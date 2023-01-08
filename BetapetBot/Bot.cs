@@ -117,7 +117,7 @@ namespace BetapetBot
             RequestResponse requestResponse = await betapet.GetGameAndUserListAsync();
             GamesAndUserListResponse gameResponse = (GamesAndUserListResponse)requestResponse.InnerResponse;
 
-            if(gameResponse.Games.Where(x => !x.Finished).Count() < 15)
+            if(gameResponse.Games.Where(x => !x.Finished).Count() < 25)
             {
                 RequestResponse createGameRequestResponse = await betapet.CreateGameAsync();
             }
