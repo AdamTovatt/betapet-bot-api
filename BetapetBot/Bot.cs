@@ -60,9 +60,9 @@ namespace BetapetBot
 
             GamesAndUserListResponse gameResponse = (GamesAndUserListResponse)requestResponse.InnerResponse;
 
-            if(gameResponse.Games.Where(x => !x.Finished).Count() < 6)
+            if(gameResponse.Games.Where(x => !x.Finished).Count() < 15)
             {
-                //RequestResponse createGameRequestResponse = await betapet.CreateGameAsync();
+                RequestResponse createGameRequestResponse = await betapet.CreateGameAsync();
             }
 
             foreach (Game game in gameResponse.Games)
