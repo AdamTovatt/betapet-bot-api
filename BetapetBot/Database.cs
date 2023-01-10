@@ -18,6 +18,30 @@ namespace BetapetBot
             ConnectionString = connectionString;
         }
 
+        public async Task<List<RatingPoint>> GetRatingPointsAsync()
+        {
+            List<RatingPoint> result = new List<RatingPoint>();
+
+            string query = @"SELECT rating, time_of_rating FROM rating_over_time ORDER BY time_of_rating DESC";
+            using (NpgsqlConnection connection = await GetConnectionAsync())
+            using (NpgsqlCommand command = new NpgsqlCommand(query, connection))
+            {
+                using(NpgsqlDataReader reader = await command.ExecuteReaderAsync())
+                {
+                    while (reader.Read())
+                    {
+                        result.Add(new RatingPoint()
+                        {
+                            Rating = (int)reader["rating"],
+                            Time = (DateTime)reader["time_of_rating"]
+                        });
+                    }
+                }
+            }
+
+            return result;
+        }
+
         public async Task<int> GetLastRating()
         {
             string query = @"SELECT rating FROM rating_over_time ORDER BY time_of_rating DESC LIMIT 1";

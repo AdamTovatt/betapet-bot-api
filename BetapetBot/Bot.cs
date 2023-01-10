@@ -16,6 +16,7 @@ namespace BetapetBot
         private Database database;
 
         public BetapetManager Betapet { get { return betapet; } }
+        public Database Database { get { return database; } }
 
         public Bot(string username, string password, string deviceId, string connectionString)
         {
