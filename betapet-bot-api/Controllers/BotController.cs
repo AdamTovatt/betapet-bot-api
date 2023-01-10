@@ -41,6 +41,12 @@ namespace BetapetBotApi.Controllers
             try
             {
                 string connectionString = ConnectionStringHelper.GetConnectionStringFromUrl(EnvironmentHelper.GetEnvironmentVariable("DATABASE_URL"), SslMode.Prefer);
+
+                if (string.IsNullOrEmpty(username))
+                    username = EnvironmentHelper.GetEnvironmentVariable("USERNAME");
+                if (string.IsNullOrEmpty(password))
+                    password = EnvironmentHelper.GetEnvironmentVariable("PASSWORD");
+
                 Bot bot = new Bot(username, password, "FF1912DED13658C431A222B5A7EA1D6DC6569E2C1A11E185FF81E7823C896B46", connectionString);
 
                 List<Game> games = new List<Game>();
@@ -60,35 +66,43 @@ namespace BetapetBotApi.Controllers
         }
 
         [HttpGet("gameSummaries")]
-        public async Task<IActionResult> GetGameSummaries(string username, string password)
+        public async Task<IActionResult> GetGameSummaries()
         {
             try
             {
                 string connectionString = ConnectionStringHelper.GetConnectionStringFromUrl(EnvironmentHelper.GetEnvironmentVariable("DATABASE_URL"), SslMode.Prefer);
+
+                string username = EnvironmentHelper.GetEnvironmentVariable("USERNAME");
+                string password = EnvironmentHelper.GetEnvironmentVariable("PASSWORD");
+
                 Bot bot = new Bot(username, password, "FF1912DED13658C431A222B5A7EA1D6DC6569E2C1A11E185FF81E7823C896B46", connectionString);
 
                 List<Betapet.Models.Game> betapetGames = await bot.GetGamesAsync();
                 List<FrontendModels.GameSummary> gameSummaries = new List<FrontendModels.GameSummary>();
 
-                foreach(Betapet.Models.Game game in betapetGames)
+                foreach (Betapet.Models.Game game in betapetGames)
                 {
                     gameSummaries.Add(new FrontendModels.GameSummary(game, bot.Betapet));
                 }
 
                 return new ApiResponse(gameSummaries);
             }
-            catch(ApiException exception)
+            catch (ApiException exception)
             {
                 return new ApiResponse(exception);
             }
         }
 
         [HttpGet("rating")]
-        public async Task<IActionResult> GetRating(string username, string password)
+        public async Task<IActionResult> GetRating()
         {
             try
             {
                 string connectionString = ConnectionStringHelper.GetConnectionStringFromUrl(EnvironmentHelper.GetEnvironmentVariable("DATABASE_URL"), SslMode.Prefer);
+
+                string username = EnvironmentHelper.GetEnvironmentVariable("USERNAME");
+                string password = EnvironmentHelper.GetEnvironmentVariable("PASSWORD");
+
                 Bot bot = new Bot(username, password, "FF1912DED13658C431A222B5A7EA1D6DC6569E2C1A11E185FF81E7823C896B46", connectionString);
 
                 return new ApiResponse(await bot.Database.GetRatingPointsAsync());
