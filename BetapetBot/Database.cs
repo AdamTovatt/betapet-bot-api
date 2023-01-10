@@ -26,7 +26,7 @@ namespace BetapetBot
             using (NpgsqlConnection connection = await GetConnectionAsync())
             using (NpgsqlCommand command = new NpgsqlCommand(query, connection))
             {
-                using(NpgsqlDataReader reader = await command.ExecuteReaderAsync())
+                using (NpgsqlDataReader reader = await command.ExecuteReaderAsync())
                 {
                     while (reader.Read())
                     {
@@ -36,6 +36,17 @@ namespace BetapetBot
                             Time = (DateTime)reader["time_of_rating"]
                         });
                     }
+                }
+            }
+
+            if (result.Count > 2)
+            {
+                DateTime last = result.Last().Time;
+                double totalHours = (result.Last().Time - result.First().Time).TotalHours;
+                
+                foreach (RatingPoint ratingPoint in result)
+                {
+                    ratingPoint.XValue = (((last - ratingPoint.Time).TotalHours / totalHours) * 100.0);
                 }
             }
 
