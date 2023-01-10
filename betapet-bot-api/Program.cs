@@ -13,6 +13,12 @@ namespace betapet_bot_api
             builder.Services.AddEndpointsApiExplorer();
             //builder.Services.AddSwaggerGen();
 
+            //services cors
+            builder.Services.AddCors(p => p.AddPolicy("corsapp", builder =>
+            {
+                builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
+            }));
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -26,6 +32,10 @@ namespace betapet_bot_api
 
             app.UseAuthorization();
 
+            //app cors
+            app.UseCors("corsapp");
+            app.UseHttpsRedirection();
+            app.UseAuthorization();
 
             app.MapControllers();
 
