@@ -10,6 +10,6 @@ namespace BetapetBot
     {
         public int Rating { get; set; }
         public DateTime Time { get; set; }
-        public double XValue { get; set; }
+        public string XValue { get; set; }
     }
 }

@@ -39,15 +39,9 @@ namespace BetapetBot
                 }
             }
 
-            if (result.Count > 2)
+            foreach (RatingPoint ratingPoint in result)
             {
-                DateTime last = result.First().Time;
-                double totalHours = (result.First().Time - result.Last().Time).TotalHours;
-                
-                foreach (RatingPoint ratingPoint in result)
-                {
-                    ratingPoint.XValue = (((last - ratingPoint.Time).TotalHours / totalHours) * 100.0);
-                }
+                ratingPoint.XValue = ratingPoint.Time.ToString("yyyy-MM-dd");
             }
 
             return result;
