@@ -121,7 +121,7 @@ namespace BetapetBot
             RequestResponse requestResponse = await betapet.GetGameAndUserListAsync();
             GamesAndUserListResponse gameResponse = (GamesAndUserListResponse)requestResponse.InnerResponse;
 
-            if(gameResponse.Games.Where(x => !x.Finished).Count() < 25)
+            if (gameResponse.Games.Where(x => !x.Finished).Count() < 25)
             {
                 RequestResponse createGameRequestResponse = await betapet.CreateGameAsync();
             }
@@ -186,7 +186,8 @@ namespace BetapetBot
 
             stopwatch.Stop();
 
-            AverageTimePerMove = (int)(stopwatch.ElapsedMilliseconds / (double)result.Count);
+            if (result.Count > 0)
+                AverageTimePerMove = (int)(stopwatch.ElapsedMilliseconds / (double)result.Count);
 
             return result;
         }
