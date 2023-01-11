@@ -55,6 +55,7 @@ namespace BetapetBotApi.Controllers
                 int leading = 0;
                 int leadingRatingCorrected = 0;
                 int projectedRatingChange = 0;
+                int opponentsWaitingForUs = 0;
 
                 foreach (Betapet.Models.Game game in betapetGames)
                 {
@@ -70,6 +71,8 @@ namespace BetapetBotApi.Controllers
                             leading++;
                         if (summary.RatingChange > 0)
                             leadingRatingCorrected++;
+                        if (summary.OurTurn)
+                            opponentsWaitingForUs++;
 
                         projectedRatingChange += summary.RatingChange;
                     }
@@ -89,6 +92,7 @@ namespace BetapetBotApi.Controllers
                     ourUser.Lost,
                     ourUser.Bingos,
                     ourUser.Rating,
+                    opponentsWaitingForUs,
                     games = gameSummaries
                 });
             }
