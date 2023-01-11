@@ -22,7 +22,7 @@ namespace BetapetBot
         {
             List<RatingPoint> result = new List<RatingPoint>();
 
-            string query = @"SELECT rating, time_of_rating FROM rating_over_time ORDER BY time_of_rating DESC";
+            string query = @"SELECT rating, time_of_rating FROM rating_over_time ORDER BY time_of_rating";
             using (NpgsqlConnection connection = await GetConnectionAsync())
             using (NpgsqlCommand command = new NpgsqlCommand(query, connection))
             {
@@ -41,8 +41,8 @@ namespace BetapetBot
 
             if (result.Count > 2)
             {
-                DateTime last = result.Last().Time;
-                double totalHours = (result.Last().Time - result.First().Time).TotalHours;
+                DateTime last = result.First().Time;
+                double totalHours = (result.First().Time - result.Last().Time).TotalHours;
                 
                 foreach (RatingPoint ratingPoint in result)
                 {
