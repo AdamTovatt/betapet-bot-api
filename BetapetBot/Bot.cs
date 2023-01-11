@@ -18,6 +18,8 @@ namespace BetapetBot
         public BetapetManager Betapet { get { return betapet; } }
         public Database Database { get { return database; } }
 
+        public static int AverageTimePerMove { get; private set; }
+
         public Bot(string username, string password, string deviceId, string connectionString)
         {
             betapet = new BetapetManager(username, password, deviceId);
@@ -112,6 +114,7 @@ namespace BetapetBot
         public async Task<List<GameSummary>> HandleAllMatches()
         {
             List<GameSummary> result = new List<GameSummary>();
+            Stopwatch stopwatch = Stopwatch.StartNew();
 
             await betapet.LoginAsync();
 
@@ -180,6 +183,10 @@ namespace BetapetBot
                     result.Add(new GameSummary(game, betapet));
                 }
             }
+
+            stopwatch.Stop();
+
+            AverageTimePerMove = (int)(stopwatch.ElapsedMilliseconds / (double)result.Count);
 
             return result;
         }

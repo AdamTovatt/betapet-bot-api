@@ -1,3 +1,4 @@
+using Betapet.Models;
 using BetapetBot;
 using BetapetBotApi.FrontendModels;
 using BetapetBotApi.Helpers;
@@ -35,29 +36,61 @@ namespace BetapetBotApi.Controllers
             }
         }
 
-        [HttpGet("botStatus")]
-        public async Task<IActionResult> GetMatches(string username, string password)
+        [HttpGet("status")]
+        public async Task<IActionResult> GetStatus()
         {
             try
             {
                 string connectionString = ConnectionStringHelper.GetConnectionStringFromUrl(EnvironmentHelper.GetEnvironmentVariable("DATABASE_URL"), SslMode.Prefer);
 
-                if (string.IsNullOrEmpty(username))
-                    username = EnvironmentHelper.GetEnvironmentVariable("USERNAME");
-                if (string.IsNullOrEmpty(password))
-                    password = EnvironmentHelper.GetEnvironmentVariable("PASSWORD");
+                string username = EnvironmentHelper.GetEnvironmentVariable("USERNAME");
+                string password = EnvironmentHelper.GetEnvironmentVariable("PASSWORD");
 
                 Bot bot = new Bot(username, password, "FF1912DED13658C431A222B5A7EA1D6DC6569E2C1A11E185FF81E7823C896B46", connectionString);
 
-                List<Game> games = new List<Game>();
-
                 List<Betapet.Models.Game> betapetGames = await bot.GetGamesAsync();
-                for (int i = 0; i < betapetGames.Count; i++)
+                List<FrontendModels.GameSummary> gameSummaries = new List<FrontendModels.GameSummary>();
+
+                DateTime lastPlayTime = DateTime.MinValue;
+                int leading = 0;
+                int leadingRatingCorrected = 0;
+                int projectedRatingChange = 0;
+
+                foreach (Betapet.Models.Game game in betapetGames)
                 {
-                    games.Add(new Game(betapetGames[i]));
+                    FrontendModels.GameSummary summary = new FrontendModels.GameSummary(game, bot.Betapet);
+                    gameSummaries.Add(summary);
+
+                    if (!summary.OurTurn && summary.LastPlayTime > lastPlayTime)
+                        lastPlayTime = summary.LastPlayTime;
+
+                    if(summary.Active)
+                    {
+                        if(summary.OurScore > summary.TheirScore)
+                            leading++;
+                        if (summary.RatingChange > 0)
+                            leadingRatingCorrected++;
+
+                        projectedRatingChange += summary.RatingChange;
+                    }
                 }
 
-                return new ApiResponse(new { games });
+                User ourUser = bot.Betapet.GetUserInfo(bot.Betapet.UserId);
+
+                return new ApiResponse(new
+                {
+                    lastPlayTime,
+                    activeMatches = gameSummaries.Where(x => x.Active).Count(),
+                    averageTimePerMove = Bot.AverageTimePerMove,
+                    leading,
+                    leadingRatingCorrected,
+                    projectedRatingChange,
+                    ourUser.Won,
+                    ourUser.Lost,
+                    ourUser.Bingos,
+                    ourUser.Rating,
+                    games = gameSummaries
+                });
             }
             catch (ApiException exception)
             {
