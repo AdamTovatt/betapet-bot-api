@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Betapet", "Betapet\Betapet.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BetapetBot", "BetapetBot\BetapetBot.csproj", "{F41168CE-FF5F-464F-9BA7-E21C1C8AA2EC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetapetTests", "BetapetTests\BetapetTests.csproj", "{54C6397F-9E77-4BA2-9E5C-082585CD76BB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BetapetTests", "BetapetTests\BetapetTests.csproj", "{54C6397F-9E77-4BA2-9E5C-082585CD76BB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatNeuralNetworkTrainer", "ChatNeuralNetworkTrainer\ChatNeuralNetworkTrainer.csproj", "{376E897D-6A57-4271-841F-EAF20FB9A922}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{54C6397F-9E77-4BA2-9E5C-082585CD76BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{54C6397F-9E77-4BA2-9E5C-082585CD76BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{54C6397F-9E77-4BA2-9E5C-082585CD76BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{376E897D-6A57-4271-841F-EAF20FB9A922}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{376E897D-6A57-4271-841F-EAF20FB9A922}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{376E897D-6A57-4271-841F-EAF20FB9A922}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{376E897D-6A57-4271-841F-EAF20FB9A922}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

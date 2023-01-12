@@ -1,0 +1,188 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>TotteML</name>
+    </assembly>
+    <members>
+        <member name="T:TotteML.Axon">
+            <summary>
+            The axon class. Used in the neural network.
+            </summary>
+        </member>
+        <member name="F:TotteML.Axon.value">
+            <summary>
+            The weight
+            </summary>
+        </member>
+        <member name="F:TotteML.Axon.delta">
+            <summary>
+            the delta, with which to change the weight
+            </summary>
+        </member>
+        <member name="M:TotteML.Axon.#ctor">
+            <summary>
+            Empty constructor
+            </summary>
+        </member>
+        <member name="M:TotteML.Axon.#ctor(System.Double)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="newValue">A new value to set as the weight</param>
+        </member>
+        <member name="T:TotteML.NeuralNetwork">
+            <summary>
+            The neural network.
+            </summary>
+        </member>
+        <member name="F:TotteML.NeuralNetwork.size">
+            <summary>
+            The size of the neural network. Every number represents the height of a layer. The amount of numbers represents the width of the network.
+            </summary>
+        </member>
+        <member name="F:TotteML.NeuralNetwork.neurons">
+            <summary>
+            The neurons of the network
+            </summary>
+        </member>
+        <member name="F:TotteML.NeuralNetwork.axons">
+            <summary>
+            The axons of the network
+            </summary>
+        </member>
+        <member name="F:TotteML.NeuralNetwork.useSigmoid">
+            <summary>
+            Wether or not to use sigmoid. Set to false if needed.
+            </summary>
+        </member>
+        <member name="M:TotteML.NeuralNetwork.Clone">
+            <summary>
+            Return a deep clone of the neural network. Usefull when wanting to create a mutated copy.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TotteML.NeuralNetwork.#ctor">
+            <summary>
+            Empty constructor
+            </summary>
+        </member>
+        <member name="M:TotteML.NeuralNetwork.#ctor(System.Int32[],System.Double)">
+            <summary>
+            Constructor that uses a default value for the axons
+            </summary>
+            <param name="newSize">The size of the neural network. The size of the array equals to the width of the network. Each value in the array equals to the height of that layer.</param>
+            <param name="defaultValue">The default value to assign all axons</param>
+        </member>
+        <member name="M:TotteML.NeuralNetwork.#ctor(System.Int32[],System.Random)">
+            <summary>
+            Constructor that uses a random value fir the axons
+            </summary>
+            <param name="newSize">The size of the neural network. The size of the array equals to the width of the network. Each value in the array equals to the height of that layer.</param>
+            <param name="random">The random instance to create the random value with</param>
+        </member>
+        <member name="M:TotteML.NeuralNetwork.GetWidth">
+            <summary>
+            Gets the width of the network
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TotteML.NeuralNetwork.GetHeight(System.Int32)">
+            <summary>
+            Gets the height of the network at a specified layer
+            </summary>
+            <param name="layer">The layer to get the height of</param>
+            <returns></returns>
+        </member>
+        <member name="M:TotteML.NeuralNetwork.RunCalculations(System.Double[])">
+            <summary>
+            Does one forward propagation and returns the result
+            </summary>
+            <param name="input">The input to use</param>
+            <returns></returns>
+        </member>
+        <member name="M:TotteML.NeuralNetwork.Mutate(System.Double,System.Random)">
+            <summary>
+            Mutates a network with a multiplier
+            </summary>
+            <param name="multiplier">The multiplier</param>
+            <param name="random">The random instance used for generating the randomness</param>
+            <returns></returns>
+        </member>
+        <member name="M:TotteML.NeuralNetwork.UpdateWeightsEvolution(System.Double[][],TotteML.Neuron[][],System.Int32,System.Double,System.Random)">
+            <summary>
+            Updates the weights by "evolution"
+            </summary>
+            <param name="input">An array of arrays with double values. Each double value in a double[] is assigned as input to a neuron. Every double[] in the array of arrays is used as a separate test.</param>
+            <param name="expectedOutput">An array of arrays with neurons that are expected to be found in the output layer of an ideal network. Simular to the input[][].</param>
+            <param name="generationSize">The size of the generation that will be simulated. Higher value means more individuals. More individuals means more chances to find a combination of axon mutations that's good, but it also means longer calculation times.</param>
+            <param name="mutateMultiplier">A multiplier to change the axon by. Should be a very small value. Try something like 0.01</param>
+            <param name="random">The Random instance used for the randomness in the mutations.</param>
+        </member>
+        <member name="M:TotteML.NeuralNetwork.UpdateWeightsEvolutionParallel(System.Double[][],TotteML.Neuron[][],System.Int32,System.Double,System.Random)">
+            <summary>
+            Updates the weights by "evolution" with multiple cores
+            </summary>
+            <param name="input">An array of arrays with double values. Each double value in a double[] is assigned as input to a neuron. Every double[] in the array of arrays is used as a separate test.</param>
+            <param name="expectedOutput">An array of arrays with neurons that are expected to be found in the output layer of an ideal network. Simular to the input[][].</param>
+            <param name="generationSize">The size of the generation that will be simulated. Higher value means more individuals. More individuals means more chances to find a combination of axon mutations that's good, but it also means longer calculation times.</param>
+            <param name="mutateMultiplier">A multiplier to change the axon by. Should be a very small value. Try something like 0.01</param>
+            <param name="random">The Random instance used for the randomness in the mutations.</param>
+        </member>
+        <member name="M:TotteML.NeuralNetwork.UpdateWeights(System.Double[],TotteML.Neuron[],System.Double)">
+            <summary>
+            Updates the weights using gradient descent. Should be used to create a training function.
+            </summary>
+            <param name="input">The input to give the network</param>
+            <param name="expectedOutput">The expected output of the network from the given input</param>
+            <param name="learningRate">The stepsize of the learning. Higher value means faster learning, but may be inaccurate.</param>
+        </member>
+        <member name="M:TotteML.NeuralNetwork.Serialize">
+            <summary>
+            Serializes the network into a string. Good for sending over the interwebz or storing on a harddrive.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:TotteML.NeuralNetwork.Deserialize(System.String)">
+            <summary>
+            Deserializes the network from a serialized string.
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TotteML.NeuralNetwork.DSigmoid(System.Double)">
+            <summary>
+            Derivative of sigmoid
+            </summary>
+            <param name="value">Value to use</param>
+            <returns></returns>
+        </member>
+        <member name="M:TotteML.NeuralNetwork.Sigmoid(System.Double)">
+            <summary>
+            Sigmoid
+            </summary>
+            <param name="value">The value to use</param>
+            <returns></returns>
+        </member>
+        <member name="T:TotteML.Neuron">
+            <summary>
+            The neuron class. Used in the neural network.
+            </summary>
+        </member>
+        <member name="F:TotteML.Neuron.value">
+            <summary>
+            The value to be used for output. Input value with sigmoid applied
+            </summary>
+        </member>
+        <member name="M:TotteML.Neuron.#ctor">
+            <summary>
+            Empty constructor
+            </summary>
+        </member>
+        <member name="M:TotteML.Neuron.#ctor(System.Double)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="newValue">A new value to set as value</param>
+        </member>
+    </members>
+</doc>

@@ -10,3 +10,6 @@
 /BetapetTests/BotConfiguration.json
 /betapet-bot-api/Properties/launchSettings.json
 Properties/launchSettings.json
+/ChatNeuralNetworkTrainer/AppSettings.json
+/ChatNeuralNetworkTrainer/bin/*
+/ChatNeuralNetworkTrainer/obj/*
