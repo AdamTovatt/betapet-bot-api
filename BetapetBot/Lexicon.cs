@@ -78,7 +78,15 @@ namespace BetapetBot
 
                     try
                     {
-                        letterCount[characterIndexes[currentLetter]] = GetLetterCount(letters, currentLetter);
+                        short characterIndex;
+                        if (characterIndexes.TryGetValue(currentLetter, out characterIndex))
+                        {
+                            letterCount[characterIndexes[currentLetter]] = GetLetterCount(letters, currentLetter);
+                        }
+                        else
+                        {
+                            throw new Exception("Tried to get " + currentLetter + " from characterIndexes but it does not exist. CharaterIndexesCount: " + characterIndexes.Count() + " lettes: " + letters);
+                        }
                     }
                     catch
                     {
