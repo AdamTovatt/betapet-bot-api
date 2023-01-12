@@ -85,7 +85,15 @@ namespace BetapetBot
                         }
                         else
                         {
-                            throw new Exception("Tried to get " + currentLetter + " from characterIndexes but it does not exist. CharaterIndexesCount: " + characterIndexes.Count() + " lettes: " + letters);
+                            StringBuilder stringBuilder = new StringBuilder();
+
+                            foreach(char key in characterIndexes.Keys)
+                            {
+                                stringBuilder.Append(key);
+                                stringBuilder.Append(", ");
+                            }
+
+                            throw new Exception("Tried to get \"" + currentLetter + "\" from characterIndexes but it does not exist. CharaterIndexesCount: " + characterIndexes.Count() + " lettes: " + letters + " characterIndexes: " + stringBuilder.ToString());
                         }
                     }
                     catch
