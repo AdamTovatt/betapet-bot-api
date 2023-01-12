@@ -30,9 +30,12 @@ namespace BetapetBotApi.Controllers
 
                 return new ApiResponse(matchHandlingResponse);
             }
-            catch (ApiException exception)
+            catch (Exception exception)
             {
-                return new ApiResponse(exception);
+                if (exception.GetType() == typeof(ApiException))
+                    return new ApiResponse((ApiException)exception);
+
+                return new ApiResponse(new { errorMessage = exception.Message }, System.Net.HttpStatusCode.InternalServerError);
             }
         }
 
@@ -65,9 +68,9 @@ namespace BetapetBotApi.Controllers
                     if (!summary.OurTurn && summary.LastPlayTime > lastPlayTime)
                         lastPlayTime = summary.LastPlayTime;
 
-                    if(summary.Active)
+                    if (summary.Active)
                     {
-                        if(summary.OurScore > summary.TheirScore)
+                        if (summary.OurScore > summary.TheirScore)
                             leading++;
                         if (summary.RatingChange > 0)
                             leadingRatingCorrected++;
