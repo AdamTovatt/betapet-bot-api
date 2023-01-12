@@ -66,7 +66,12 @@ namespace BetapetBot
                 RequestResponse requestResponse = await betapet.GetGameAndUserListAsync();
                 GamesAndUserListResponse gameResponse = (GamesAndUserListResponse)requestResponse.InnerResponse;
 
-                int currentRating = gameResponse.Users[0].Rating;
+                User us = gameResponse.Users.Where(x => x.Id == betapet.UserId).FirstOrDefault();
+
+                if (us == null)
+                    return;
+
+                int currentRating = us.Rating;
                 if (await database.GetLastRating() == currentRating)
                     return;
 
