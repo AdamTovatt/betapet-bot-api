@@ -179,6 +179,7 @@ namespace BetapetBot
                                         OurText = Regex.Unescape(ourText.ToString()),
                                         TheirText = Regex.Unescape(theirText.ToString()),
                                         Game = game,
+                                        Messages = chatResponse.Messages,
                                     };
 
                                     chatScenarios.Add(chatScenario);
@@ -196,7 +197,11 @@ namespace BetapetBot
                 foreach (ChatScenario chatScenario in chatScenarios)
                 {
                     string ourResponse = ChatHelper.GetChatResponse(chatScenario.TheirText);
-                    RequestResponse response = await betapet.SendChatMessageAsync(chatScenario.Game, ourResponse);
+
+                    if (chatScenario.Messages.Where(x => Regex.Escape(x.Message.ToLower()) == ourResponse).Count() == 0)
+                    {
+                        RequestResponse response = await betapet.SendChatMessageAsync(chatScenario.Game, ourResponse);
+                    }
                 }
             }
         }

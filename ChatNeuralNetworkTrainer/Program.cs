@@ -35,7 +35,7 @@ namespace ChatNeuralNetworkTrainer
             ConversationService conversationService = new ConversationService();
             conversationService.LoadModel("model.zip");
 
-            database.SaveModel(File.ReadAllBytes("model.zip"), "chat_model");
+            //database.SaveModel(File.ReadAllBytes("model.zip"), "chat_model");
 
             //conversationService.LoadModel(database.ReadModel("chat_model"));
 

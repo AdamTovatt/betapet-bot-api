@@ -1,4 +1,5 @@
 ﻿using Betapet.Models;
+using Betapet.Models.Communication.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,5 +14,7 @@ namespace BetapetBot.Chat
         public string OurText { get; set; }
         public bool HasResponded { get; set; }
         public Game Game { get; set; }
+
+        public List<ChatMessage> Messages { get; set; }
     }
 }
