@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.ML;
 using Npgsql;
 using ReadSecretsConsole;
 using System.Text;
@@ -30,23 +31,40 @@ namespace ChatNeuralNetworkTrainer
             List<TrainingSet> trainingSets = new List<TrainingSet>();
             conversations.ForEach(x => trainingSets.Add(GetTrainingSet(x, possibleAnswerWords, maxInputLength, characters, wordsToAnswerWith)));
 
-            NeuralNetwork network = CreateNetwork(maxInputLength, characters.Length, 2, 0.8, possibleAnswerWords.Count * wordsToAnswerWith);
+            ConversationTrainingService trainingService = new ConversationTrainingService();
+            trainingService.Train(conversations, "model.zip");
+
+            var conversationService = new ConversationService();
+            conversationService.LoadModel("model.zip");
+
+            /*NeuralNetwork network = CreateNetwork(maxInputLength, characters.Length, 1, 0.5, possibleAnswerWords.Count * wordsToAnswerWith);
             network.Mutate(0.4, new Random());
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 100; i++)
             {
                 foreach (TrainingSet trainingSet in trainingSets)
                     network.UpdateWeights(trainingSet.Input, trainingSet.Output, 0.3);
             }
+            */
 
             while (true)
             {
                 Console.WriteLine("Enter input");
-                Console.WriteLine(OutputWord.GetAsString(ParseOutput(network.RunCalculations(CreateInput(Console.ReadLine(), characters, maxInputLength)), wordsToAnswerWith, possibleAnswerWords)));
+                Console.WriteLine(MakePrediction(conversationService, Console.ReadLine()));
                 Console.WriteLine("\n");
             }
 
             Console.ReadLine();
+        }
+
+        private static string MakePrediction(ConversationService labelService, string prompt)
+        {
+            string prediction = labelService.PredictResponse(new Conversation
+            {
+                Promt = prompt
+            });
+
+            return prediction;
         }
 
         private static List<OutputWord> ParseOutput(Neuron[] neurons, int wordsToAnswerWith, List<string> possibleAnswerWords)
