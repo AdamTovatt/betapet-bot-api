@@ -95,6 +95,22 @@ namespace BetapetBot
             }
         }
 
+        public async Task<byte[]> ReadModelAsync(string name)
+        {
+            string query = @"SELECT byte_data FROM network_model WHERE name = @name";
+
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                using (NpgsqlConnection connection = await GetConnectionAsync())
+                using (NpgsqlCommand command = new NpgsqlCommand(query, connection))
+                {
+                    command.Parameters.Add("@name", NpgsqlDbType.Varchar).Value = name;
+
+                    return (await command.ExecuteScalarAsync()) as byte[];
+                }
+            }
+        }
+
         /// <summary>
         /// Will return a connection
         /// </summary>

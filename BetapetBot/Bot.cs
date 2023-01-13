@@ -4,8 +4,12 @@ using Betapet.Models;
 using Betapet.Models.Communication;
 using Betapet.Models.Communication.Responses;
 using Betapet.Models.InGame;
+using BetapetBot.Chat;
+using Microsoft.VisualBasic;
 using Npgsql;
 using System.Diagnostics;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace BetapetBot
 {
@@ -17,6 +21,7 @@ namespace BetapetBot
 
         public BetapetManager Betapet { get { return betapet; } }
         public Database Database { get { return database; } }
+        public ChatHelper ChatHelper { get; private set; }
 
         public static int AverageTimePerMove { get; private set; }
 
@@ -85,6 +90,20 @@ namespace BetapetBot
 
         public async Task HandleChats()
         {
+            if (ChatHelper == null)
+            {
+                try
+                {
+                    ChatHelper = new ChatHelper(await database.ReadModelAsync("chat_model"));
+                }
+                catch
+                {
+                    throw new Exception("Error when creating chat helper");
+                }
+            }
+
+            List<ChatScenario> chatScenarios = new List<ChatScenario>();
+
             try
             {
                 if (!betapet.LoggedIn)
@@ -104,9 +123,56 @@ namespace BetapetBot
                             {
                                 GetChatResponse chatResponse = (GetChatResponse)chatMessagesResponse.InnerResponse;
 
+                                StringBuilder theirText = new StringBuilder();
+                                StringBuilder ourText = new StringBuilder();
+                                bool opponentMessage = chatResponse.Messages[0].UserId != betapet.UserId;
+                                bool ourMessage = chatResponse.Messages[0].UserId == betapet.UserId;
+                                bool didAddMessage = false;
+
                                 foreach (ChatMessage message in chatResponse.Messages)
                                 {
-                                    await database.SaveChatMessage(connection, game.Id, message.Id, message.UserId, message.Message, message.Created, message.UserId == 748338); // 748338 is our user DavidRdrgz. This needs to be changed if the users changes!!
+                                    if ((DateTime.Now - message.Created).TotalHours < 24)
+                                    {
+                                        if (message.UserId == betapet.UserId) //our message
+                                        {
+                                            if (opponentMessage)
+                                                ourText.Clear();
+
+                                            opponentMessage = false;
+                                            ourMessage = true;
+
+                                            didAddMessage = true;
+                                            ourText.Append(message.Message);
+                                            ourText.Append(" ");
+                                        }
+                                        else //their message
+                                        {
+                                            if (ourMessage)
+                                                theirText.Clear();
+
+                                            ourMessage = false;
+                                            opponentMessage = true;
+
+                                            didAddMessage = true;
+                                            theirText.Append(message.Message);
+                                            theirText.Append(" ");
+                                        }
+                                    }
+
+                                    await database.SaveChatMessage(connection, game.Id, message.Id, message.UserId, message.Message, message.Created, message.UserId == betapet.UserId);
+                                }
+
+                                if (chatResponse.Messages.Count > 0 && didAddMessage)
+                                {
+                                    ChatScenario chatScenario = new ChatScenario()
+                                    {
+                                        HasResponded = chatResponse.Messages.Last().UserId == betapet.UserId,
+                                        OurText = Regex.Unescape(ourText.ToString()),
+                                        TheirText = Regex.Unescape(theirText.ToString()),
+                                        Game = game,
+                                    };
+
+                                    chatScenarios.Add(chatScenario);
                                 }
                             }
                         }
@@ -114,6 +180,16 @@ namespace BetapetBot
                 }
             }
             catch { return; }
+
+            chatScenarios = chatScenarios.Where(x => !x.HasResponded && x.TheirText.Length < 50).ToList();
+            if(chatScenarios.Count > 0)
+            {
+                foreach(ChatScenario chatScenario in chatScenarios)
+                {
+                    string ourResponse = ChatHelper.GetChatResponse(chatScenario.TheirText);
+                    RequestResponse response = await betapet.SendChatMessageAsync(chatScenario.Game, ourResponse);
+                }
+            }
         }
 
         public async Task<List<GameSummary>> HandleAllMatches()
