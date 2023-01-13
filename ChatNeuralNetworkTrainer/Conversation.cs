@@ -27,5 +27,19 @@ namespace ChatNeuralNetworkTrainer
     {
         [ColumnName("PredictedLabel")]
         public string Response { get; set; }
+
+        [ColumnName("Score")]
+        public float[] Score { get; set; }
+    }
+
+    public class ConversationResponse
+    {
+        public string Text { get; set; }
+        public float Probability { get; set; }
+
+        public override string ToString()
+        {
+            return string.Format("{0}: {1}", Probability.ToString("0.0"), Text);
+        }
     }
 }

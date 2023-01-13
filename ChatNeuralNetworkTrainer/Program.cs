@@ -3,7 +3,6 @@ using Microsoft.ML;
 using Npgsql;
 using ReadSecretsConsole;
 using System.Text;
-using TotteML;
 using WebApiUtilities.Helpers;
 
 namespace ChatNeuralNetworkTrainer
@@ -12,40 +11,32 @@ namespace ChatNeuralNetworkTrainer
     {
         private static int[] blackListedUserIds = { 814453 };
         private const string characters = " .,abcdefghijklmnopqrstuvwxyzåäö!?";
-        private static Neuron emptyNeuron = new Neuron(0);
 
         static void Main(string[] args)
         {
             SecretAppsettingReader secrets = new SecretAppsettingReader();
             SecretValues secretValues = secrets.ReadSection<SecretValues>("Configuration");
 
+            //get database connection
             Database database = new Database(ConnectionStringHelper.GetConnectionStringFromUrl(secretValues.DatabaseUrl, WebApiUtilities.Helpers.SslMode.Prefer));
 
+            //get cleaned messages
             List<ChatMessage> messages = CleanMessages(database.GetChatMessages(), characters, blackListedUserIds);
 
+            //create training data
             List<Conversation> conversations = GetConversations(messages);
-            List<string> possibleAnswerWords = GetPossibleAnswerWords(conversations);
-            int wordsToAnswerWith = 5;
-            int maxInputLength = 22;
 
-            List<TrainingSet> trainingSets = new List<TrainingSet>();
-            conversations.ForEach(x => trainingSets.Add(GetTrainingSet(x, possibleAnswerWords, maxInputLength, characters, wordsToAnswerWith)));
+            //create and train model
+            //ConversationTrainingService trainingService = new ConversationTrainingService();
+            //trainingService.Train(conversations, "model.zip");
 
-            ConversationTrainingService trainingService = new ConversationTrainingService();
-            trainingService.Train(conversations, "model.zip");
+            //load model
+            ConversationService conversationService = new ConversationService();
+            //conversationService.LoadModel("model.zip");
 
-            var conversationService = new ConversationService();
-            conversationService.LoadModel("model.zip");
+            database.SaveModel(File.ReadAllBytes("model.zip"), "chat_model");
 
-            /*NeuralNetwork network = CreateNetwork(maxInputLength, characters.Length, 1, 0.5, possibleAnswerWords.Count * wordsToAnswerWith);
-            network.Mutate(0.4, new Random());
-
-            for (int i = 0; i < 100; i++)
-            {
-                foreach (TrainingSet trainingSet in trainingSets)
-                    network.UpdateWeights(trainingSet.Input, trainingSet.Output, 0.3);
-            }
-            */
+            conversationService.LoadModel(database.ReadModel("chat_model"));
 
             while (true)
             {
@@ -59,121 +50,11 @@ namespace ChatNeuralNetworkTrainer
 
         private static string MakePrediction(ConversationService labelService, string prompt)
         {
-            string prediction = labelService.PredictResponse(new Conversation
-            {
-                Promt = prompt
-            });
+            Conversation conversation = new Conversation() { Promt = prompt };
 
-            return prediction;
-        }
+            List<ConversationResponse> result = labelService.PredictResponse(conversation);
 
-        private static List<OutputWord> ParseOutput(Neuron[] neurons, int wordsToAnswerWith, List<string> possibleAnswerWords)
-        {
-            List<OutputWord> result = new List<OutputWord>();
-
-            for (int i = 0; i < wordsToAnswerWith; i++)
-            {
-                double maxCertainty = 0;
-                int maxCertaintyIndex = 0;
-
-                for (int j = 0; j < possibleAnswerWords.Count; j++)
-                {
-                    double value = neurons[i * possibleAnswerWords.Count + j].value;
-
-                    if(value > maxCertainty)
-                    {
-                        maxCertainty = value;
-                        maxCertaintyIndex = j;
-                    }
-                }
-
-                result.Add(new OutputWord() { Certainty = maxCertainty, Text = possibleAnswerWords[maxCertaintyIndex] });
-            }
-
-            return result;
-        }
-
-        private static double[] CreateInput(string inputText, string charactersToUse, int maxInputLength)
-        {
-            double[] input = new double[charactersToUse.Length * maxInputLength];
-
-            int characterCount = 0;
-            foreach (char character in inputText)
-            {
-                if (characterCount >= maxInputLength)
-                    break;
-
-                int characterIndex = charactersToUse.IndexOf(character);
-
-                if (characterIndex < 0)
-                    throw new Exception("Found invalid character in input. This is because the messages used to create this input has not been cleaned to comply with the characters to use");
-
-                input[characterCount * charactersToUse.Length + characterIndex] = 1;
-
-                characterCount++;
-            }
-
-            return input;
-        }
-
-        private static TrainingSet GetTrainingSet(Conversation conversation, List<string> possibleAnswerWords, int maxInputLength, string charactersToUse, int wordsToAnswerWith)
-        {
-            double[] input = CreateInput(conversation.Promt, charactersToUse, maxInputLength);
-            Neuron[] output = new Neuron[possibleAnswerWords.Count * wordsToAnswerWith];
-
-            int characterCount = 0;
-            foreach (char character in conversation.Promt)
-            {
-                if (characterCount >= maxInputLength)
-                    break;
-
-                int characterIndex = charactersToUse.IndexOf(character);
-
-                if (characterIndex < 0)
-                    throw new Exception("Found invalid character in input. This is because the messages used to create this input has not been cleaned to comply with the characters to use");
-
-                input[characterCount * charactersToUse.Length + characterIndex] = 1;
-
-                characterCount++;
-            }
-
-            for (int i = 0; i < output.Length; i++)
-            {
-                output[i] = emptyNeuron;
-            }
-
-            int wordCount = 0;
-            foreach (string word in conversation.Response.Split())
-            {
-                if (wordCount >= wordsToAnswerWith)
-                    break;
-
-                int wordIndex = possibleAnswerWords.IndexOf(word);
-
-                if (wordIndex < 0)
-                    throw new Exception("Word not found in possible answer words, the list of possible words has been incorrectly generated or this conversation has not been part of generating it");
-
-                output[wordCount * possibleAnswerWords.Count + wordIndex] = new Neuron(1);
-
-                wordCount++;
-            }
-
-            return new TrainingSet() { Input = input, Output = output };
-        }
-
-        private static List<string> GetPossibleAnswerWords(List<Conversation> conversations)
-        {
-            HashSet<string> result = new HashSet<string>();
-
-            foreach (Conversation conversation in conversations)
-            {
-                foreach (string word in conversation.Response.Split())
-                {
-                    result.Add(word);
-                }
-            }
-
-            return result.ToList();
+            return result[0].Text;
         }
 
         private static List<Conversation> GetConversations(List<ChatMessage> messages)
@@ -258,21 +139,6 @@ namespace ChatNeuralNetworkTrainer
             }
 
             return messagesToClean;
-        }
-
-        private static NeuralNetwork CreateNetwork(int textLength, int possibleLettersCount, int hiddenLayers, double hiddenLayerScale, int possibleOutputs)
-        {
-            int[] size = new int[hiddenLayers + 2];
-            size[0] = textLength * possibleLettersCount;
-
-            for (int i = 1; i < hiddenLayers + 1; i++)
-            {
-                size[i] = (int)(size[0] * hiddenLayerScale);
-            }
-
-            size[hiddenLayers + 1] = possibleOutputs;
-
-            return new NeuralNetwork(size, 0.5);
         }
     }
 }

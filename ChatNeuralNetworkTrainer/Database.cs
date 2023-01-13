@@ -1,4 +1,6 @@
-﻿using Npgsql;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.ML;
+using Npgsql;
 using NpgsqlTypes;
 using System;
 using System.Collections.Generic;
@@ -24,14 +26,14 @@ namespace ChatNeuralNetworkTrainer
 
             string query = @"SELECT * FROM chat_message";
 
-            using(NpgsqlConnection connection = new NpgsqlConnection(connectionString))
+            using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
             using (NpgsqlCommand command = new NpgsqlCommand(query, connection))
             {
                 connection.Open();
 
-                using(NpgsqlDataReader reader = command.ExecuteReader())
+                using (NpgsqlDataReader reader = command.ExecuteReader())
                 {
-                    while(reader.Read())
+                    while (reader.Read())
                     {
                         ChatMessage chatMessage = new ChatMessage()
                         {
@@ -50,6 +52,44 @@ namespace ChatNeuralNetworkTrainer
             }
 
             return result;
+        }
+
+        public void SaveModel(byte[] bytes, string name)
+        {
+            string query = @"INSERT INTO network_model (name, byte_data) VALUES (@name, @byte_data)
+                             ON CONFLICT (name) DO UPDATE SET byte_data = @byte_data";
+
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
+                using (NpgsqlCommand command = new NpgsqlCommand(query, connection))
+                {
+                    connection.Open();
+
+                    command.Parameters.Add("@name", NpgsqlDbType.Varchar).Value = name;
+                    command.Parameters.Add("@byte_data", NpgsqlDbType.Bytea).Value = bytes;
+
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public byte[] ReadModel(string name)
+        {
+            string query = @"SELECT byte_data FROM network_model WHERE name = @name";
+
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
+                using (NpgsqlCommand command = new NpgsqlCommand(query, connection))
+                {
+                    connection.Open();
+
+                    command.Parameters.Add("@name", NpgsqlDbType.Varchar).Value = name;
+
+                    return command.ExecuteScalar() as byte[];
+                }
+            }
         }
     }
 }
