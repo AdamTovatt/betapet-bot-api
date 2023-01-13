@@ -24,19 +24,20 @@ namespace ChatNeuralNetworkTrainer
             List<ChatMessage> messages = CleanMessages(database.GetChatMessages(), characters, blackListedUserIds);
 
             //create training data
-            List<Conversation> conversations = GetConversations(messages);
+            //List<Conversation> conversations = GetConversations(messages);
+            List<Conversation> conversations = LoadConversations("chatData.txt");
 
             //create and train model
-            //ConversationTrainingService trainingService = new ConversationTrainingService();
+            ConversationTrainingService trainingService = new ConversationTrainingService();
             //trainingService.Train(conversations, "model.zip");
 
             //load model
             ConversationService conversationService = new ConversationService();
-            //conversationService.LoadModel("model.zip");
+            conversationService.LoadModel("model.zip");
 
             database.SaveModel(File.ReadAllBytes("model.zip"), "chat_model");
 
-            conversationService.LoadModel(database.ReadModel("chat_model"));
+            //conversationService.LoadModel(database.ReadModel("chat_model"));
 
             while (true)
             {
@@ -46,6 +47,46 @@ namespace ChatNeuralNetworkTrainer
             }
 
             Console.ReadLine();
+        }
+
+        private static List<Conversation> LoadConversations(string path)
+        {
+            List<Conversation> result = new List<Conversation>();
+
+            string[] lines = File.ReadAllLines(path);
+
+            Conversation conversation = null;
+
+            int type = 0;
+            for (int i = 0; i < lines.Length; i++)
+            {
+                if (type == 0)
+                    conversation = new Conversation() { Promt = lines[i].ToLower() };
+                if (type == 1)
+                    conversation.Response = lines[i].ToLower();
+                if (type == 2)
+                    result.Add(conversation);
+
+                type++;
+                if (type == 3)
+                    type = 0;
+            }
+
+            return result;
+        }
+
+        private static void SaveConversations(List<Conversation> conversations, string path)
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+
+            foreach(Conversation conversation in conversations)
+            {
+                stringBuilder.AppendLine(conversation.Promt);
+                stringBuilder.AppendLine(conversation.Response);
+                stringBuilder.AppendLine();
+            }
+
+            File.WriteAllText(path, stringBuilder.ToString());
         }
 
         private static string MakePrediction(ConversationService labelService, string prompt)

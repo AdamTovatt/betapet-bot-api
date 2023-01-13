@@ -34,16 +34,13 @@ namespace BetapetBot
 
         public async Task LoadChatHelperAsync()
         {
-            if (ChatHelper == null)
+            try
             {
-                try
-                {
-                    ChatHelper = new ChatHelper(await database.ReadModelAsync("chat_model"));
-                }
-                catch
-                {
-                    throw new Exception("Error when creating chat helper");
-                }
+                ChatHelper = new ChatHelper(await database.ReadModelAsync("chat_model"));
+            }
+            catch
+            {
+                throw new Exception("Error when creating chat helper");
             }
         }
 
@@ -105,16 +102,13 @@ namespace BetapetBot
 
         public async Task HandleChats()
         {
-            if (ChatHelper == null)
+            try
             {
-                try
-                {
-                    ChatHelper = new ChatHelper(await database.ReadModelAsync("chat_model"));
-                }
-                catch
-                {
-                    throw new Exception("Error when creating chat helper");
-                }
+                ChatHelper = new ChatHelper(await database.ReadModelAsync("chat_model"));
+            }
+            catch
+            {
+                throw new Exception("Error when creating chat helper");
             }
 
             List<ChatScenario> chatScenarios = new List<ChatScenario>();
@@ -196,10 +190,10 @@ namespace BetapetBot
             }
             catch { return; }
 
-            chatScenarios = chatScenarios.Where(x => !x.HasResponded && x.TheirText.Length < 50).ToList();
-            if(chatScenarios.Count > 0)
+            chatScenarios = chatScenarios.Where(x => !x.HasResponded).ToList();
+            if (chatScenarios.Count > 0)
             {
-                foreach(ChatScenario chatScenario in chatScenarios)
+                foreach (ChatScenario chatScenario in chatScenarios)
                 {
                     string ourResponse = ChatHelper.GetChatResponse(chatScenario.TheirText);
                     RequestResponse response = await betapet.SendChatMessageAsync(chatScenario.Game, ourResponse);

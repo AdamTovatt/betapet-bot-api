@@ -19,7 +19,7 @@ namespace ChatNeuralNetworkTrainer
 
         public override string ToString()
         {
-            return string.Format("{0} --- {1} --- promptLength: {2}", Promt, Response, Promt.Length);
+            return string.Format("{0}\t{1}", Promt, Response, Promt.Length);
         }
     }
 
