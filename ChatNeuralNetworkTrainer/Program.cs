@@ -29,13 +29,13 @@ namespace ChatNeuralNetworkTrainer
 
             //create and train model
             ConversationTrainingService trainingService = new ConversationTrainingService();
-            //trainingService.Train(conversations, "model.zip");
+            trainingService.Train(conversations, "model.zip");
 
             //load model
             ConversationService conversationService = new ConversationService();
             conversationService.LoadModel("model.zip");
 
-            //database.SaveModel(File.ReadAllBytes("model.zip"), "chat_model");
+            database.SaveModel(File.ReadAllBytes("model.zip"), "chat_model_boring");
 
             //conversationService.LoadModel(database.ReadModel("chat_model"));
 
