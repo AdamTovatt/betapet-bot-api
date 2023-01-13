@@ -621,7 +621,10 @@ namespace BetapetBot
                 }
             }
 
-            int bingoScore = move.Tiles.Count() == 7 ? 50 : 0;
+            int bingoScore = 0;
+
+            if (move.Tiles.Where(x => !x.IsFromWordLine).Count() == 7)
+                bingoScore = 50;
 
             return new MoveEvaluation(true, pointsPerWord.Sum() + bingoScore) { TilesFromBoard = tilesToRemove };
         }
