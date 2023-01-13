@@ -198,7 +198,7 @@ namespace BetapetBot
                 {
                     string ourResponse = ChatHelper.GetChatResponse(chatScenario.TheirText);
 
-                    if (chatScenario.Messages.Where(x => Regex.Escape(x.Message.ToLower()) == ourResponse).Count() == 0)
+                    if (ourResponse != "-" && chatScenario.Messages.Where(x => Regex.Escape(x.Message.ToLower()) == ourResponse).Count() == 0)
                     {
                         RequestResponse response = await betapet.SendChatMessageAsync(chatScenario.Game, ourResponse);
                     }
