@@ -32,6 +32,21 @@ namespace BetapetBot
             database = new Database(connectionString);
         }
 
+        public async Task LoadChatHelperAsync()
+        {
+            if (ChatHelper == null)
+            {
+                try
+                {
+                    ChatHelper = new ChatHelper(await database.ReadModelAsync("chat_model"));
+                }
+                catch
+                {
+                    throw new Exception("Error when creating chat helper");
+                }
+            }
+        }
+
         public async Task AcceptAllMatchRequests()
         {
             await betapet.LoginAsync();
