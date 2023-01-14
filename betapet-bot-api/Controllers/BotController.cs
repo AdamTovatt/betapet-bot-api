@@ -166,5 +166,24 @@ namespace BetapetBotApi.Controllers
                 return new ApiResponse(exception);
             }
         }
+
+        [HttpGet("nextPlayTime")]
+        public async Task<IActionResult> GetNextPlayTime()
+        {
+            PlayTimeHelper timeHelper = new PlayTimeHelper();
+
+            DateTime nextTimeAwake = timeHelper.GetNextTimeAwake(DateTime.Now + TimeSpan.FromMinutes(36) + TimeSpan.FromHours(2));
+
+            DateTime previouslyAddedTime = nextTimeAwake;
+            List<DateTime> commingTimes = new List<DateTime>();
+            for (int i = 0; i < 10; i++)
+            {
+                DateTime nextTime = timeHelper.GetNextTimeAwake(previouslyAddedTime);
+                commingTimes.Add(nextTime);
+                previouslyAddedTime = nextTime;
+            }
+
+            return new ApiResponse(new { nextTimeAwake, commingTimes });
+        }
     }
 }
