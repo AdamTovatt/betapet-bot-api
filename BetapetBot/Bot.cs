@@ -104,7 +104,7 @@ namespace BetapetBot
         {
             try
             {
-                ChatHelper = new ChatHelper(await database.ReadModelAsync("chat_model"));
+                ChatHelper = new ChatHelper(await database.ReadModelAsync("chat_model_boring"));
             }
             catch
             {
