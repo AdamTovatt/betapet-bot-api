@@ -8,13 +8,13 @@ namespace BetapetBotApi.Helpers
 
         public PlayTimeHelper()
         {
-            daysOfTheWeek.Add(1, new SleepConfiguration(-0.1, 0.5));
-            daysOfTheWeek.Add(2, new SleepConfiguration(0.3, 0.6));
-            daysOfTheWeek.Add(3, new SleepConfiguration(0.5, 0.8));
-            daysOfTheWeek.Add(4, new SleepConfiguration(-0.3, 0.4));
-            daysOfTheWeek.Add(5, new SleepConfiguration(-1.1, 0.2));
-            daysOfTheWeek.Add(6, new SleepConfiguration(-1.4, 0));
-            daysOfTheWeek.Add(7, new SleepConfiguration(-0.2, 0.2));
+            daysOfTheWeek.Add(0, new SleepConfiguration(-0.1, 0.5));
+            daysOfTheWeek.Add(1, new SleepConfiguration(0.3, 0.6));
+            daysOfTheWeek.Add(2, new SleepConfiguration(0.5, 0.8));
+            daysOfTheWeek.Add(3, new SleepConfiguration(-0.3, 0.4));
+            daysOfTheWeek.Add(4, new SleepConfiguration(-1.1, 0.2));
+            daysOfTheWeek.Add(5, new SleepConfiguration(-1.4, 0));
+            daysOfTheWeek.Add(6, new SleepConfiguration(-0.2, 0.2));
         }
 
         public DateTime GetNextTimeAwake(DateTime dateTime)

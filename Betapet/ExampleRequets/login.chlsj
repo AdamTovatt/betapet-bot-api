@@ -7,7 +7,7 @@
     "host": "mobile-app-se.betapet.se",
     "actualPort": 443,
     "path": "/login.php",
-    "query": "username=DavidRdrgz&password=gunnaral&proto_ver=5",
+    "query": "username=DavidRdrgz&password=pwd&proto_ver=5",
     "tunnel": false,
     "keptAlive": false,
     "webSocket": false,
@@ -39,7 +39,7 @@
       "charset": null,
       "contentEncoding": null,
       "header": {
-        "firstLine": "GET /login.php?username=DavidRdrgz&password=gunnaral&proto_ver=5 HTTP/1.1",
+        "firstLine": "GET /login.php?username=DavidRdrgz&password=pwd&proto_ver=5 HTTP/1.1",
         "headers": [
           {
             "name": "Host",
@@ -131,7 +131,7 @@
     "host": "mobile-app-se.betapet.se",
     "actualPort": 443,
     "path": "/login.php",
-    "query": "username=DavidRdrgz&password=gunnaral&proto_ver=5",
+    "query": "username=DavidRdrgz&password=pwd&proto_ver=5",
     "tunnel": false,
     "keptAlive": false,
     "webSocket": false,
@@ -163,7 +163,7 @@
       "charset": null,
       "contentEncoding": null,
       "header": {
-        "firstLine": "GET /login.php?username=DavidRdrgz&password=gunnaral&proto_ver=5 HTTP/1.1",
+        "firstLine": "GET /login.php?username=DavidRdrgz&password=pwd&proto_ver=5 HTTP/1.1",
         "headers": [
           {
             "name": "Host",
