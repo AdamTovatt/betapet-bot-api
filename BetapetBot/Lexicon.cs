@@ -16,7 +16,7 @@ namespace BetapetBot
     public class Lexicon
     {
         private const string characters = "ABCDEFGHIJKLMNOPRSTUVWXYZÅÄÖ";
-        private static Dictionary<char, short> characterIndexes;
+        private Dictionary<char, short> characterIndexes;
 
         public string ConnectionString { get; private set; }
 
