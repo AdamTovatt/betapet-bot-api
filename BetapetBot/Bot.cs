@@ -187,22 +187,54 @@ namespace BetapetBot
                             }
                         }
                     }
+
+                    chatScenarios = chatScenarios.Where(x => !x.HasResponded).ToList();
+                    if (chatScenarios.Count > 0)
+                    {
+                        foreach (ChatScenario chatScenario in chatScenarios)
+                        {
+                            string ourResponse = ChatHelper.GetChatResponse(chatScenario.TheirText);
+
+                            if (ourResponse != "-" && chatScenario.Messages.Where(x => Regex.Escape(x.Message.ToLower()) == ourResponse).Count() == 0)
+                            {
+                                RequestResponse response = await betapet.SendChatMessageAsync(chatScenario.Game, ourResponse);
+                            }
+                        }
+                    }
+
+                    foreach(Game game in gameResponse.Games)
+                    {
+                        if (game.Finished && (DateTime.Now - game.ActivityTime).TotalMinutes < 10)
+                        {
+                            string theirName = betapet.GetUserInfo(game.TheirUser.Id).Handle;
+
+                            RequestResponse chatMessagesResponse = await betapet.GetChatMessagesAsync(game);
+                            if (chatMessagesResponse.Success)
+                            {
+                                GetChatResponse chatResponse = (GetChatResponse)chatMessagesResponse.InnerResponse;
+
+                                int userId = betapet.UserId;
+                                if (chatResponse.Messages.Where(x => x.UserId == userId && x.Message.ToLower().Contains("tfgm")).Count() == 0) //if we have not already said tfgm
+                                {
+                                    RequestResponse sendChatResponse = await betapet.SendChatMessageAsync(game, GetEndOfGameMessage(game.TheirUser.Score > game.OurUser.Score));
+                                }
+                            }
+                        }
+                    }
                 }
             }
             catch { return; }
+        }
 
-            chatScenarios = chatScenarios.Where(x => !x.HasResponded).ToList();
-            if (chatScenarios.Count > 0)
+        private string GetEndOfGameMessage(bool theyWon)
+        {
+            if (theyWon)
             {
-                foreach (ChatScenario chatScenario in chatScenarios)
-                {
-                    string ourResponse = ChatHelper.GetChatResponse(chatScenario.TheirText);
-
-                    if (ourResponse != "-" && chatScenario.Messages.Where(x => Regex.Escape(x.Message.ToLower()) == ourResponse).Count() == 0)
-                    {
-                        RequestResponse response = await betapet.SendChatMessageAsync(chatScenario.Game, ourResponse);
-                    }
-                }
+                return "Tfgm och grattis till vinst!";
+            }
+            else
+            {
+                return "Tfgm";
             }
         }
 
