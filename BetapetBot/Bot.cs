@@ -202,6 +202,7 @@ namespace BetapetBot
                         }
                     }
 
+                    /*
                     foreach(Game game in gameResponse.Games)
                     {
                         if (game.Finished && (DateTime.Now - game.ActivityTime).TotalMinutes < 10)
@@ -220,7 +221,7 @@ namespace BetapetBot
                                 }
                             }
                         }
-                    }
+                    }*/
                 }
             }
             catch { return; }
