@@ -139,6 +139,8 @@ namespace BetapetBotApi.Controllers
                     gameSummaries.Add(new FrontendModels.GameSummary(game, bot.Betapet));
                 }
 
+                gameSummaries = gameSummaries.OrderByDescending(x => x.Active).ToList();
+
                 return new ApiResponse(gameSummaries);
             }
             catch (ApiException exception)
