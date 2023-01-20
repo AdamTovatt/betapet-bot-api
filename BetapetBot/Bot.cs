@@ -100,129 +100,127 @@ namespace BetapetBot
             }
         }
 
-        public async Task HandleChats()
+        public async Task<List<ChatScenario>> GetChatScenariosAsync()
         {
-            try
-            {
-                ChatHelper = new ChatHelper(await database.ReadModelAsync("chat_model_boring"));
-            }
-            catch
-            {
-                throw new Exception("Error when creating chat helper");
-            }
-
             List<ChatScenario> chatScenarios = new List<ChatScenario>();
 
+            if (!betapet.LoggedIn)
+                await betapet.LoginAsync();
+
+            RequestResponse requestResponse = await betapet.GetGameAndUserListAsync();
+            GamesAndUserListResponse gameResponse = (GamesAndUserListResponse)requestResponse.InnerResponse;
+
+            using (NpgsqlConnection connection = await database.GetConnectionAsync())
+            {
+                foreach (Game game in gameResponse.Games)
+                {
+                    if (game.LastChatTime != game.StartTime)
+                    {
+                        RequestResponse chatMessagesResponse = await betapet.GetChatMessagesAsync(game);
+                        if (chatMessagesResponse.Success)
+                        {
+                            GetChatResponse chatResponse = (GetChatResponse)chatMessagesResponse.InnerResponse;
+
+                            StringBuilder theirText = new StringBuilder();
+                            StringBuilder ourText = new StringBuilder();
+                            bool opponentMessage = chatResponse.Messages[0].UserId != betapet.UserId;
+                            bool ourMessage = chatResponse.Messages[0].UserId == betapet.UserId;
+                            bool didAddMessage = false;
+
+                            foreach (ChatMessage message in chatResponse.Messages)
+                            {
+                                if ((DateTime.Now - message.Created).TotalHours < 24)
+                                {
+                                    if (message.UserId == betapet.UserId) //our message
+                                    {
+                                        if (opponentMessage)
+                                            ourText.Clear();
+
+                                        opponentMessage = false;
+                                        ourMessage = true;
+
+                                        didAddMessage = true;
+                                        ourText.Append(message.Message);
+                                        ourText.Append(" ");
+                                    }
+                                    else //their message
+                                    {
+                                        if (ourMessage)
+                                            theirText.Clear();
+
+                                        ourMessage = false;
+                                        opponentMessage = true;
+
+                                        didAddMessage = true;
+                                        theirText.Append(message.Message);
+                                        theirText.Append(" ");
+                                    }
+                                }
+
+                                await database.SaveChatMessage(connection, game.Id, message.Id, message.UserId, message.Message, message.Created, message.UserId == betapet.UserId);
+                            }
+
+                            if (chatResponse.Messages.Count > 0 && didAddMessage)
+                            {
+                                ChatScenario chatScenario = new ChatScenario()
+                                {
+                                    HasResponded = chatResponse.Messages.Last().UserId == betapet.UserId,
+                                    OurText = Regex.Unescape(ourText.ToString()),
+                                    TheirText = Regex.Unescape(theirText.ToString()),
+                                    Game = game,
+                                    Messages = chatResponse.Messages,
+                                };
+
+                                chatScenarios.Add(chatScenario);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return chatScenarios;
+        }
+
+        public async Task HandleChats()
+        {
+            await LoadChatHelperAsync();
+
             try
             {
-                if (!betapet.LoggedIn)
-                    await betapet.LoginAsync();
-
-                RequestResponse requestResponse = await betapet.GetGameAndUserListAsync();
-                GamesAndUserListResponse gameResponse = (GamesAndUserListResponse)requestResponse.InnerResponse;
-
-                using (NpgsqlConnection connection = await database.GetConnectionAsync())
+                List<ChatScenario>  chatScenarios = (await GetChatScenariosAsync()).Where(x => !x.HasResponded).ToList();
+                if (chatScenarios.Count > 0)
                 {
-                    foreach (Game game in gameResponse.Games)
+                    foreach (ChatScenario chatScenario in chatScenarios)
                     {
-                        if (game.LastChatTime != game.StartTime)
+                        string ourResponse = ChatHelper.GetChatResponse(chatScenario.TheirText);
+
+                        if (ourResponse != "-" && chatScenario.Messages.Where(x => Regex.Escape(x.Message.ToLower()) == ourResponse).Count() == 0)
                         {
-                            RequestResponse chatMessagesResponse = await betapet.GetChatMessagesAsync(game);
-                            if (chatMessagesResponse.Success)
-                            {
-                                GetChatResponse chatResponse = (GetChatResponse)chatMessagesResponse.InnerResponse;
-
-                                StringBuilder theirText = new StringBuilder();
-                                StringBuilder ourText = new StringBuilder();
-                                bool opponentMessage = chatResponse.Messages[0].UserId != betapet.UserId;
-                                bool ourMessage = chatResponse.Messages[0].UserId == betapet.UserId;
-                                bool didAddMessage = false;
-
-                                foreach (ChatMessage message in chatResponse.Messages)
-                                {
-                                    if ((DateTime.Now - message.Created).TotalHours < 24)
-                                    {
-                                        if (message.UserId == betapet.UserId) //our message
-                                        {
-                                            if (opponentMessage)
-                                                ourText.Clear();
-
-                                            opponentMessage = false;
-                                            ourMessage = true;
-
-                                            didAddMessage = true;
-                                            ourText.Append(message.Message);
-                                            ourText.Append(" ");
-                                        }
-                                        else //their message
-                                        {
-                                            if (ourMessage)
-                                                theirText.Clear();
-
-                                            ourMessage = false;
-                                            opponentMessage = true;
-
-                                            didAddMessage = true;
-                                            theirText.Append(message.Message);
-                                            theirText.Append(" ");
-                                        }
-                                    }
-
-                                    await database.SaveChatMessage(connection, game.Id, message.Id, message.UserId, message.Message, message.Created, message.UserId == betapet.UserId);
-                                }
-
-                                if (chatResponse.Messages.Count > 0 && didAddMessage)
-                                {
-                                    ChatScenario chatScenario = new ChatScenario()
-                                    {
-                                        HasResponded = chatResponse.Messages.Last().UserId == betapet.UserId,
-                                        OurText = Regex.Unescape(ourText.ToString()),
-                                        TheirText = Regex.Unescape(theirText.ToString()),
-                                        Game = game,
-                                        Messages = chatResponse.Messages,
-                                    };
-
-                                    chatScenarios.Add(chatScenario);
-                                }
-                            }
+                            RequestResponse response = await betapet.SendChatMessageAsync(chatScenario.Game, ourResponse);
                         }
                     }
-
-                    chatScenarios = chatScenarios.Where(x => !x.HasResponded).ToList();
-                    if (chatScenarios.Count > 0)
-                    {
-                        foreach (ChatScenario chatScenario in chatScenarios)
-                        {
-                            string ourResponse = ChatHelper.GetChatResponse(chatScenario.TheirText);
-
-                            if (ourResponse != "-" && chatScenario.Messages.Where(x => Regex.Escape(x.Message.ToLower()) == ourResponse).Count() == 0)
-                            {
-                                RequestResponse response = await betapet.SendChatMessageAsync(chatScenario.Game, ourResponse);
-                            }
-                        }
-                    }
-
-                    /*
-                    foreach(Game game in gameResponse.Games)
-                    {
-                        if (game.Finished && (DateTime.Now - game.ActivityTime).TotalMinutes < 10)
-                        {
-                            string theirName = betapet.GetUserInfo(game.TheirUser.Id).Handle;
-
-                            RequestResponse chatMessagesResponse = await betapet.GetChatMessagesAsync(game);
-                            if (chatMessagesResponse.Success)
-                            {
-                                GetChatResponse chatResponse = (GetChatResponse)chatMessagesResponse.InnerResponse;
-
-                                int userId = betapet.UserId;
-                                if (chatResponse.Messages.Where(x => x.UserId == userId && x.Message.ToLower().Contains("tfgm")).Count() == 0) //if we have not already said tfgm
-                                {
-                                    RequestResponse sendChatResponse = await betapet.SendChatMessageAsync(game, GetEndOfGameMessage(game.TheirUser.Score > game.OurUser.Score));
-                                }
-                            }
-                        }
-                    }*/
                 }
+
+                /*
+                foreach(Game game in gameResponse.Games)
+                {
+                    if (game.Finished && (DateTime.Now - game.ActivityTime).TotalMinutes < 10)
+                    {
+                        string theirName = betapet.GetUserInfo(game.TheirUser.Id).Handle;
+
+                        RequestResponse chatMessagesResponse = await betapet.GetChatMessagesAsync(game);
+                        if (chatMessagesResponse.Success)
+                        {
+                            GetChatResponse chatResponse = (GetChatResponse)chatMessagesResponse.InnerResponse;
+
+                            int userId = betapet.UserId;
+                            if (chatResponse.Messages.Where(x => x.UserId == userId && x.Message.ToLower().Contains("tfgm")).Count() == 0) //if we have not already said tfgm
+                            {
+                                RequestResponse sendChatResponse = await betapet.SendChatMessageAsync(game, GetEndOfGameMessage(game.TheirUser.Score > game.OurUser.Score));
+                            }
+                        }
+                    }
+                }*/
             }
             catch { return; }
         }

@@ -39,6 +39,26 @@ namespace BetapetBotApi.Controllers
             }
         }
 
+        [HttpGet("getChatScenarios")]
+        public async Task<IActionResult> GetChatScenarios()
+        {
+            try
+            {
+                string connectionString = ConnectionStringHelper.GetConnectionStringFromUrl(EnvironmentHelper.GetEnvironmentVariable("DATABASE_URL"), SslMode.Prefer);
+
+                string username = EnvironmentHelper.GetEnvironmentVariable("USERNAME");
+                string password = EnvironmentHelper.GetEnvironmentVariable("PASSWORD");
+
+                Bot bot = new Bot(username, password, "FF1912DED13658C431A222B5A7EA1D6DC6569E2C1A11E185FF81E7823C896B46", connectionString);
+
+                return new ApiResponse(await bot.GetChatScenariosAsync());
+            }
+            catch (Exception exception)
+            {
+                return new ApiResponse("Error when getting chat scenarios. " + exception.Message, System.Net.HttpStatusCode.InternalServerError);
+            }
+        }
+
         [HttpGet("getChatResponse")]
         public async Task<IActionResult> GetChatResponse(string message)
         {
