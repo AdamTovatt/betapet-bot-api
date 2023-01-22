@@ -24,6 +24,8 @@ namespace Betapet.Models.InGame
         public int PointValue { get { if (_pointValue == -1 && !string.IsNullOrEmpty(StringValue)) _pointValue = PointLookup.GetPointValue(StringValue); return _pointValue; } }
         private int _pointValue = -1;
 
+        public char OriginalCharacter { get; private set; }
+
         public Tile(TileType type, int numericValue)
         {
             Type = type;
@@ -49,19 +51,19 @@ namespace Betapet.Models.InGame
             switch (character)
             {
                 case '1':
-                    return new Tile(TileType.MultiplyWord, 2);
+                    return new Tile(TileType.MultiplyWord, 2) { OriginalCharacter = character };
                 case '2':
-                    return new Tile(TileType.MultiplyWord, 3);
+                    return new Tile(TileType.MultiplyWord, 3) { OriginalCharacter = character };
                 case '3':
-                    return new Tile(TileType.MultiplyLetter, 2);
+                    return new Tile(TileType.MultiplyLetter, 2) { OriginalCharacter = character };
                 case '4':
-                    return new Tile(TileType.MultiplyLetter, 3);
+                    return new Tile(TileType.MultiplyLetter, 3) { OriginalCharacter = character };
                 case '5':
-                    return new Tile(TileType.Empty, 0);
+                    return new Tile(TileType.Empty, 0) { OriginalCharacter = character };
                 case '6':
-                    return new Tile(TileType.Start, 0);
+                    return new Tile(TileType.Start, 0) { OriginalCharacter = character };
                 default:
-                    return new Tile(character.ToString());
+                    return new Tile(character.ToString()) { OriginalCharacter = character };
             }
         }
 

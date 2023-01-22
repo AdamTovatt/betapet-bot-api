@@ -56,6 +56,21 @@ namespace Betapet.Models.InGame
             }
         }
 
+        public string ToBoardData()
+        {
+            StringBuilder boardData = new StringBuilder(new string('5', 225)); // board data is 15x15 long
+
+            for (int y = 0; y < 15; y++)
+            {
+                for (int x = 0; x < 15; x++)
+                {
+                    boardData[x + y * 15] = Tiles[x, y].OriginalCharacter;
+                }
+            }
+
+            return boardData.ToString();
+        }
+
         public bool HasLetterAtPosition(int x, int y, string letter)
         {
             Tile tile = GetTileAtPosition(x, y);

@@ -262,6 +262,8 @@ namespace BetapetBot
                     List<WordLine> wordLines = GetWordLines(game);
                     List<Move> moves = await GenerateMovesFromWordLinesAsync(game, wordLines);
 
+                    await SimulateFutureAsync(game, moves, 1, 10);
+
                     bool performedMove = false;
                     foreach (Move move in moves)
                     {
@@ -318,6 +320,25 @@ namespace BetapetBot
                 AverageTimePerMove = (int)(stopwatch.ElapsedMilliseconds / (double)result.Count);
 
             return result;
+        }
+
+        private async Task SimulateFutureAsync(Game game, List<Move> moves, int simulationDepth, int maxMovesToSimulate)
+        {
+            int simulatedMoves = 0;
+
+            foreach (Move move in moves)
+            {
+                simulatedMoves++;
+                await SimulateFutureAsync(game, move, simulationDepth);
+
+                if (simulatedMoves >= maxMovesToSimulate)
+                    break;
+            }
+        }
+
+        private async Task SimulateFutureAsync(Game game, Move move, int simulationDepth)
+        {
+            Game copiedGame = Game.FromJson(game.ToJson());
         }
 
         public async Task<List<Move>> CheckForWildcards(Game game, List<Move> moves)

@@ -167,6 +167,11 @@ namespace Betapet.Models
             _ourTurn = Active == ourIndex;
         }
 
+        public void ApplyMove(Move move)
+        {
+
+        }
+
         private List<Tile> GetHiddenTiles()
         {
             return GetStartingTiles().RemoveTiles(Hand).RemoveTiles(Board.LetterTilesOnBoard);
