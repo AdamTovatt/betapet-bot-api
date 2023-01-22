@@ -320,52 +320,6 @@ namespace BetapetBot
             return result;
         }
 
-        public async Task<string> GetMessage()
-        {
-            RequestResponse message = await betapet.LoginAsync();
-            RequestResponse response = await betapet.GetFriendsAsync();
-            RequestResponse games = await betapet.GetGameAndUserListAsync();
-
-            Game game = ((GamesAndUserListResponse)games.InnerResponse).Games[0];
-
-            List<string> words = await lexicon.GetPossibleWordsAsync("AIhäRDIGPTRKRZ");
-
-            List<WordLine> wordLines = GetWordLines(game);
-
-            List<Move> moves = await GenerateMovesFromWordLinesAsync(game, wordLines);
-
-            foreach (Move move in moves)
-            {
-                MoveEvaluation evaluation = await EvaluateMoveAsync(move, game, game.Hand);
-                //RequestResponse playRequestResponse = await betapet.PlayMoveAsync(move, game);
-                //if (playRequestResponse != null && playRequestResponse.Success)
-                //    return string.Format("Played \"{0}\" for {1} points. Server response: {2}", move.Tiles.ToTileString(), move.Evaluation.Points, ((PlayMoveResponse)playRequestResponse.InnerResponse).Code);
-            }
-
-            //SendChatResponse chatResponse = (SendChatResponse)(await betapet.SendChatMessage(game.Id, "du är noob")).InnerResponse;
-            RequestResponse getChatResponse = await betapet.GetChatMessagesAsync(game);
-
-            //PlayMoveResponse playResponse = (PlayMoveResponse)(await betapet.PlayMoveAsync(move3, game)).InnerResponse;
-
-            return string.Format("authkey: {0}, userid: {1}", ((LoginResponse)message.InnerResponse).AuthKey, ((LoginResponse)message.InnerResponse).UserId);
-        }
-
-        public async Task<List<string>> GetPossibleWords(string letters)
-        {
-            return await lexicon.GetPossibleWordsAsync(letters);
-        }
-
-        public async Task GetPossibleWords(List<string> wordOfLetters)
-        {
-            using (NpgsqlConnection connection = await lexicon.GetConnectionAsync())
-            {
-                foreach (string letters in wordOfLetters)
-                {
-                    await lexicon.GetPossibleWordsAsync(letters, connection);
-                }
-            }
-        }
-
         public async Task<List<Move>> CheckForWildcards(Game game, List<Move> moves)
         {
             List<Move> result = new List<Move>();
