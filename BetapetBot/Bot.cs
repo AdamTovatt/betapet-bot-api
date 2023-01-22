@@ -277,9 +277,9 @@ namespace BetapetBot
                             else
                             {
                                 PlayMoveResponse playMove = (PlayMoveResponse)playRequestResponse.InnerResponse;
-                                if (playMove.CodeType == CodeType.Word)
+                                if (playMove.CodeType == CodeType.Word && game.WordList == 2) // 2 is böjningar, which are all words, so if the word didn't even exist there we will remove it
                                 {
-                                    //lexicon.DisableLexiconWord(move.ToString());
+                                    await lexicon.DisableLexiconWord(move.ToString());
                                 }
                             }
                         }
