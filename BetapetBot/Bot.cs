@@ -138,10 +138,10 @@ namespace BetapetBot
 
                                         opponentMessage = false;
                                         ourMessage = true;
-
                                         didAddMessage = true;
                                         ourText.Append(message.Message);
                                         ourText.Append(" ");
+                                        message.OurMessage = true;
                                     }
                                     else //their message
                                     {
@@ -187,16 +187,19 @@ namespace BetapetBot
 
             try
             {
-                List<ChatScenario>  chatScenarios = (await GetChatScenariosAsync()).Where(x => !x.HasResponded).ToList();
+                List<ChatScenario> chatScenarios = (await GetChatScenariosAsync()).Where(x => !x.HasResponded).ToList();
                 if (chatScenarios.Count > 0)
                 {
                     foreach (ChatScenario chatScenario in chatScenarios)
                     {
-                        string ourResponse = ChatHelper.GetChatResponse(chatScenario.TheirText);
-
-                        if (ourResponse != "-" && chatScenario.Messages.Where(x => Regex.Escape(x.Message.ToLower()) == ourResponse).Count() == 0)
+                        if (chatScenario.Messages.Where(x => x.OurMessage).Count() < 2)
                         {
-                            RequestResponse response = await betapet.SendChatMessageAsync(chatScenario.Game, ourResponse);
+                            string ourResponse = ChatHelper.GetChatResponse(chatScenario.TheirText);
+
+                            if (ourResponse != "-" && chatScenario.Messages.Where(x => Regex.Escape(x.Message.ToLower()) == ourResponse).Count() == 0)
+                            {
+                                RequestResponse response = await betapet.SendChatMessageAsync(chatScenario.Game, ourResponse);
+                            }
                         }
                     }
                 }
@@ -258,7 +261,6 @@ namespace BetapetBot
                 {
                     List<WordLine> wordLines = GetWordLines(game);
                     List<Move> moves = await GenerateMovesFromWordLinesAsync(game, wordLines);
-                    moves = await CheckForWildcards(game, moves);
 
                     bool performedMove = false;
                     foreach (Move move in moves)
@@ -467,6 +469,7 @@ namespace BetapetBot
                 }
             }
 
+            moves = await CheckForWildcards(game, moves);
             moves = moves.OrderByDescending(move => move.Evaluation.Points).ToList();
 
             return moves;

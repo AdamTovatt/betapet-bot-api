@@ -31,6 +31,9 @@ namespace Betapet.Models.Communication.Responses
         [JsonProperty("msg")]
         public string Message { get; set; }
 
+        [JsonIgnore]
+        public bool OurMessage { get; set; }
+
         public override string ToString()
         {
             return string.Format("{0}: {1}", UserId, Message);
