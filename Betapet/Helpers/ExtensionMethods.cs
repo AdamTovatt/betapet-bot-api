@@ -10,6 +10,8 @@ namespace Betapet.Helpers
 {
     public static class ExtensionMethods
     {
+        private static Random random = new Random();
+
         /// <summary>
         /// Will convert a string to a list of tiles by taking all the characters and converting them separately to a tile each
         /// </summary>
@@ -42,6 +44,42 @@ namespace Betapet.Helpers
             }
 
             return tileString.ToString();
+        }
+
+        /// <summary>
+        /// Will take an amount of random tiles from a list of tiles. Will not take the same tile twice
+        /// </summary>
+        /// <param name="tiles">The list of tiles to take the random tiles from</param>
+        /// <param name="amountToTake">The amount of tiles to take</param>
+        /// <returns></returns>
+        public static List<Tile> TakeRandomTiles(this List<Tile> tiles, int amountToTake)
+        {
+            List<Tile> result = new List<Tile>();
+
+            if (amountToTake >= tiles.Count)
+            {
+                result.AddRange(tiles);
+            }
+            else
+            {
+                int tilesTaken = 0;
+                HashSet<Tile> takenTiles = new HashSet<Tile>();
+
+                while(tilesTaken < amountToTake)
+                {
+                    Tile tileToTake = tiles[random.Next(tiles.Count)];
+
+                    while (takenTiles.Contains(tileToTake))
+                        tileToTake = tiles[random.Next(tiles.Count)];
+
+                    result.Add(tileToTake);
+                    takenTiles.Add(tileToTake);
+
+                    tilesTaken++;
+                }
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -92,7 +130,7 @@ namespace Betapet.Helpers
         }
 
         /// <summary>
-        /// Will remove a tile from a list, modifying the list in the process
+        /// Will remove a tile from a list, modifying the list in the process. Uses the string value for equality comparison
         /// </summary>
         /// <param name="tiles"></param>
         /// <param name="tile"></param>

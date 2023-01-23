@@ -169,7 +169,18 @@ namespace Betapet.Models
 
         public void ApplyMove(Move move)
         {
+            _hand = GetHand();
 
+            foreach(Tile tile in move.Tiles)
+            {
+                if (!tile.IsFromWordLine)
+                {
+                    Board.PlaceTile(tile);
+                    _hand.RemoveTile(tile);
+                }
+            }
+
+            BoardData = Board.ToBoardData();
         }
 
         private List<Tile> GetHiddenTiles()

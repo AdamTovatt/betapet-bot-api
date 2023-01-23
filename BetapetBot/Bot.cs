@@ -262,7 +262,7 @@ namespace BetapetBot
                     List<WordLine> wordLines = GetWordLines(game);
                     List<Move> moves = await GenerateMovesFromWordLinesAsync(game, wordLines);
 
-                    await SimulateFutureAsync(game, moves, 1, 10);
+                    await SimulateFutureAsync(game, moves, 10, 10);
 
                     bool performedMove = false;
                     foreach (Move move in moves)
@@ -322,23 +322,35 @@ namespace BetapetBot
             return result;
         }
 
-        private async Task SimulateFutureAsync(Game game, List<Move> moves, int simulationDepth, int maxMovesToSimulate)
+        /// <summary>
+        /// Will simulate the future for a game given a list of moves. Will simulate the future for each move until maxMovesToSimulate is reached
+        /// </summary>
+        /// <param name="game">The game to simulate the future for</param>
+        /// <param name="moves">The list of moves to simulate for</param>
+        /// <param name="maxSimulationsPerMove">The max amount of simulated tile draws per move simulation</param>
+        /// <param name="maxMovesToSimulate">The max amount of moves to simulate the future for</param>
+        /// <returns></returns>
+        private async Task SimulateFutureAsync(Game game, List<Move> moves, int maxSimulationsPerMove, int maxMovesToSimulate)
         {
             int simulatedMoves = 0;
 
             foreach (Move move in moves)
             {
                 simulatedMoves++;
-                await SimulateFutureAsync(game, move, simulationDepth);
+                await SimulateFutureAsync(game, move, maxSimulationsPerMove);
 
                 if (simulatedMoves >= maxMovesToSimulate)
                     break;
             }
         }
 
-        private async Task SimulateFutureAsync(Game game, Move move, int simulationDepth)
+        private async Task SimulateFutureAsync(Game game, Move move, int maxSimulationsPerMove)
         {
             Game copiedGame = Game.FromJson(game.ToJson());
+            copiedGame.ApplyMove(move);
+
+            int tilesToPickUp = move.Tiles.Where(x => !x.IsFromWordLine).Count();
+            List<Tile> tiles = copiedGame.HiddenTiles;
         }
 
         public async Task<List<Move>> CheckForWildcards(Game game, List<Move> moves)

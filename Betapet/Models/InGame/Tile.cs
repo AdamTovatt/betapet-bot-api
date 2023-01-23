@@ -21,10 +21,22 @@ namespace Betapet.Models.InGame
         public int Y { get; set; }
         public bool WildCard { get; set; }
         public bool IsFromWordLine { get; set; }
+        public char OriginalCharacter { get; private set; }
         public int PointValue { get { if (_pointValue == -1 && !string.IsNullOrEmpty(StringValue)) _pointValue = PointLookup.GetPointValue(StringValue); return _pointValue; } }
         private int _pointValue = -1;
 
-        public char OriginalCharacter { get; private set; }
+        public Tile(Tile tile)
+        {
+            Type = tile.Type;
+            NumericValue = tile.NumericValue;
+            StringValue = tile.StringValue;
+            X = tile.X;
+            Y = tile.Y;
+            WildCard = tile.WildCard;
+            IsFromWordLine = tile.IsFromWordLine;
+            OriginalCharacter = tile.OriginalCharacter;
+            _pointValue = tile._pointValue;
+        }
 
         public Tile(TileType type, int numericValue)
         {

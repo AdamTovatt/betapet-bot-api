@@ -129,6 +129,11 @@ namespace Betapet.Models.InGame
             }
         }
 
+        public void PlaceTile(Tile tile)
+        {
+            Tiles[tile.X, tile.Y] = new Tile(tile);
+        }
+
         public bool GetHasConnectedTiles(Tile tile)
         {
             return TilesConnected[tile.X, tile.Y];
