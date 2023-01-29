@@ -42,12 +42,14 @@ namespace Betapet.Models.InGame
         {
             Type = type;
             NumericValue = numericValue;
+            OriginalCharacter = numericValue.ToString()[0];
         }
 
         public Tile(string letter)
         {
             Type = TileType.Letter;
             StringValue = letter;
+            OriginalCharacter = letter[0];
         }
 
         public Tile(string letter, int x, int y)
@@ -56,6 +58,7 @@ namespace Betapet.Models.InGame
             Y = y;
             StringValue = letter;
             Type = TileType.Letter;
+            OriginalCharacter = letter[0];
         }
 
         public static Tile FromCharacter(char character)

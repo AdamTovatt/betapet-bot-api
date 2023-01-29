@@ -262,7 +262,7 @@ namespace BetapetBot
                     List<WordLine> wordLines = GetWordLines(game);
                     List<Move> moves = await GenerateMovesFromWordLinesAsync(game, wordLines);
 
-                    await SimulateFutureAsync(game, moves, 10, 10);
+                    await SimulateFutureAsync(game, moves, 10, 10, 5);
 
                     bool performedMove = false;
                     foreach (Move move in moves)
@@ -329,28 +329,92 @@ namespace BetapetBot
         /// <param name="moves">The list of moves to simulate for</param>
         /// <param name="maxSimulationsPerMove">The max amount of simulated tile draws per move simulation</param>
         /// <param name="maxMovesToSimulate">The max amount of moves to simulate the future for</param>
+        /// <param name="topMovesToUse">How many of the best possible moves in a simulated future should be used to calculate an average move potential for that future</param>
         /// <returns></returns>
-        private async Task SimulateFutureAsync(Game game, List<Move> moves, int maxSimulationsPerMove, int maxMovesToSimulate)
+        private async Task SimulateFutureAsync(Game game, List<Move> moves, int maxSimulationsPerMove, int maxMovesToSimulate, int topMovesToUse)
         {
             int simulatedMoves = 0;
 
+            double bestLeadGainageFound = 0;
             foreach (Move move in moves)
             {
                 simulatedMoves++;
-                await SimulateFutureAsync(game, move, maxSimulationsPerMove);
+                await SimulateFutureAsync(game, move, maxSimulationsPerMove, topMovesToUse, true); //true because we only want to simulate the opponent for now, only one step into the future
 
                 if (simulatedMoves >= maxMovesToSimulate)
                     break;
+
+                double thisLeadGainage = (double)move.Evaluation.LeadGainage;
+                if (thisLeadGainage > bestLeadGainageFound)
+                    bestLeadGainageFound = thisLeadGainage;
+
+                if (bestLeadGainageFound > 0 && thisLeadGainage < 0) //if we have found a move that will increase our lead and are now looking at moves that won't we should stop
+                    break;
             }
+
+            List<Move> simulatedMovesList = moves.Take(simulatedMoves).OrderByDescending(x => x.Evaluation.LeadGainage).ToList();
+            List<Move> otherMoves = moves.Skip(simulatedMoves).ToList();
+
+            moves.Clear();
+            moves.AddRange(simulatedMovesList);
+            moves.AddRange(otherMoves);
         }
 
-        private async Task SimulateFutureAsync(Game game, Move move, int maxSimulationsPerMove)
+        /// <summary>
+        /// Simulates the future of a single move in a single game. Will update the move evaulation for the move sent in as a parameter
+        /// </summary>
+        /// <param name="game">The game to simulate for</param>
+        /// <param name="move">The move to simulate the next possible moves for</param>
+        /// <param name="maxSimulationsPerMove">The amount of simulation samples for this move. This is the number of random pickups it will simulate the best moves for</param>
+        /// <param name="topMovesToUse">How many of the best scored possible next moves it should include in the average potential score of that future. For example, 1 will only include the best move for a simulated pickup, 2 will include the 2 best moves and so on</param>
+        /// <param name="simulateOpponent">If we will simulate the opponent making a move or not</param>
+        /// <returns></returns>
+        private async Task SimulateFutureAsync(Game game, Move move, int maxSimulationsPerMove, int topMovesToUse, bool simulateOpponent)
         {
             Game copiedGame = Game.FromJson(game.ToJson());
             copiedGame.ApplyMove(move);
 
-            int tilesToPickUp = move.Tiles.Where(x => !x.IsFromWordLine).Count();
+            int tilesToPickUp = simulateOpponent ? 7 : move.Tiles.Where(x => !x.IsFromWordLine).Count(); //if it is the opponent we will simulate we take the whole hand
             List<Tile> tiles = copiedGame.HiddenTiles;
+
+            List<Tile> simulatedHand = new List<Tile>(); //create the simulated hand  
+            List<Tile> tilesLeftAfterMove = null;
+
+            if(!simulateOpponent)
+            {
+                tilesLeftAfterMove = new List<Tile>();
+                tilesLeftAfterMove.AddRange(copiedGame.Hand);
+            }
+
+            double totalPossibleScore = 0;
+            for (int i = 0; i < maxSimulationsPerMove; i++)
+            {
+                simulatedHand.Clear();
+
+                if (!simulateOpponent) //if we are simulating our selves we will use the hand we have and then pick up tiles, otherwise leave it empty so we simulate a full hand pickup
+                    simulatedHand.AddRange(tilesLeftAfterMove);
+
+                simulatedHand.AddRange(tiles.TakeRandomTiles(tilesToPickUp));
+
+                copiedGame.SetSimulatedHand(simulatedHand);
+
+                List<WordLine> wordLines = GetWordLines(copiedGame);
+                List<Move> moves = await GenerateMovesFromWordLinesAsync(copiedGame, wordLines);
+
+                int movesToUse = Math.Min(moves.Count, topMovesToUse);
+                double possibleScore = 0;
+                for (int j = 0; j < movesToUse; j++)
+                {
+                    possibleScore += moves[j].Evaluation.Points;
+                }
+
+                totalPossibleScore += possibleScore / (double)movesToUse;
+            }
+
+            if (simulateOpponent)
+                move.Evaluation.HasSimulatedOpponent = true;
+
+            move.Evaluation.AverageSimulatedOpponentPoints = totalPossibleScore / (double)maxSimulationsPerMove;
         }
 
         public async Task<List<Move>> CheckForWildcards(Game game, List<Move> moves)

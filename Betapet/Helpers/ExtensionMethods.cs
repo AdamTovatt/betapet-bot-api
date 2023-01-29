@@ -40,7 +40,8 @@ namespace Betapet.Helpers
 
             foreach (Tile tile in tiles)
             {
-                tileString.Append(tile.StringValue);
+                if (tile.StringValue != " ")
+                    tileString.Append(tile.StringValue);
             }
 
             return tileString.ToString();
@@ -65,7 +66,7 @@ namespace Betapet.Helpers
                 int tilesTaken = 0;
                 HashSet<Tile> takenTiles = new HashSet<Tile>();
 
-                while(tilesTaken < amountToTake)
+                while (tilesTaken < amountToTake)
                 {
                     Tile tileToTake = tiles[random.Next(tiles.Count)];
 
@@ -120,7 +121,7 @@ namespace Betapet.Helpers
         {
             List<Tile> result = new List<Tile>();
 
-            foreach(Tile tile in tiles)
+            foreach (Tile tile in tiles)
                 result.AddTile(tile, 1);
 
             foreach (Tile tile in tilesToAdd)
@@ -173,7 +174,7 @@ namespace Betapet.Helpers
         {
             Dictionary<string, int> letterCount = new Dictionary<string, int>();
 
-            foreach(Tile tile in tilesToCheckFor)
+            foreach (Tile tile in tilesToCheckFor)
             {
                 if (!letterCount.ContainsKey(tile.StringValue.ToUpper()))
                     letterCount.Add(tile.StringValue.ToUpper(), 1);
@@ -181,7 +182,7 @@ namespace Betapet.Helpers
                     letterCount[tile.StringValue.ToUpper()] += 1;
             }
 
-            foreach(Tile tile in tiles)
+            foreach (Tile tile in tiles)
             {
                 if (letterCount.ContainsKey(tile.StringValue.ToUpper()))
                     letterCount[tile.StringValue.ToUpper()] -= 1;
@@ -189,7 +190,7 @@ namespace Betapet.Helpers
                 if (letterCount.TryGetValue(tile.StringValue.ToUpper(), out int value) && value == 0)
                 {
                     letterCount.Remove(tile.StringValue.ToUpper());
-                    if(letterCount.Values.All(x => x == 0))
+                    if (letterCount.Values.All(x => x == 0))
                     {
                         return true;
                     }
@@ -200,8 +201,8 @@ namespace Betapet.Helpers
                 return true;
 
             int missingValues = 0;
-            
-            foreach(string key in letterCount.Keys)
+
+            foreach (string key in letterCount.Keys)
             {
                 missingValues += letterCount[key];
             }
@@ -209,7 +210,7 @@ namespace Betapet.Helpers
             if (missingValues > 2)
                 return false;
 
-            if(tiles.Count(x => x.StringValue == ".") >= missingValues)
+            if (tiles.Count(x => x.StringValue == ".") >= missingValues)
                 return true;
 
             return false;

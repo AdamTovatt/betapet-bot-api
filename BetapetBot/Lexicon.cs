@@ -96,9 +96,9 @@ namespace BetapetBot
                             throw new Exception("Tried to get \"" + currentLetter + "\" from characterIndexes but it does not exist. CharaterIndexesCount: " + characterIndexes.Count() + " lettes: " + letters + " characterIndexes: " + stringBuilder.ToString());
                         }
                     }
-                    catch
+                    catch (Exception exception)
                     {
-                        throw;
+                        throw new Exception(exception.Message + " " + exception.StackTrace);
                     }
                 }
 

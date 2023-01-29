@@ -149,6 +149,11 @@ namespace Betapet.Models
             return JsonConvert.DeserializeObject<Game>(json);
         }
 
+        public void SetSimulatedHand(List<Tile> tiles)
+        {
+            _hand = tiles;
+        }
+
         private List<Tile> GetHand()
         {
             return UserList.Where(x => x.Hand != null).First().Hand.ToListOfTiles();
