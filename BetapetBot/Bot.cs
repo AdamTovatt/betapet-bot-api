@@ -262,7 +262,8 @@ namespace BetapetBot
                     List<WordLine> wordLines = GetWordLines(game);
                     List<Move> moves = await GenerateMovesFromWordLinesAsync(game, wordLines);
 
-                    await SimulateFutureAsync(game, moves, 10, 10, 5);
+                    if (gameResponse.Games.Where(x => x.OurTurn && !x.Finished).Count() < 3)
+                        await SimulateFutureAsync(game, moves, 10, 10, 5);
 
                     bool performedMove = false;
                     foreach (Move move in moves)
@@ -380,7 +381,7 @@ namespace BetapetBot
             List<Tile> simulatedHand = new List<Tile>(); //create the simulated hand  
             List<Tile> tilesLeftAfterMove = null;
 
-            if(!simulateOpponent)
+            if (!simulateOpponent)
             {
                 tilesLeftAfterMove = new List<Tile>();
                 tilesLeftAfterMove.AddRange(copiedGame.Hand);
