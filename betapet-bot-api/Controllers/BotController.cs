@@ -13,11 +13,17 @@ namespace BetapetBotApi.Controllers
     [Route("[controller]")]
     public class BotController : ControllerBase
     {
+        private static bool busy = false;
+
         [HttpPost("handleEverything")]
         public async Task<IActionResult> HandleEverything(string username, string password)
         {
+            if (busy)
+                return new ApiResponse("The server is currently busy");
+
             try
             {
+                busy = true;
                 string connectionString = ConnectionStringHelper.GetConnectionStringFromUrl(EnvironmentHelper.GetEnvironmentVariable("DATABASE_URL"), SslMode.Prefer);
                 Bot bot = new Bot(username, password, "FF1912DED13658C431A222B5A7EA1D6DC6569E2C1A11E185FF81E7823C896B46", connectionString);
 
@@ -36,6 +42,10 @@ namespace BetapetBotApi.Controllers
                     return new ApiResponse((ApiException)exception);
 
                 return new ApiResponse(new { errorMessage = exception.Message }, System.Net.HttpStatusCode.InternalServerError);
+            }
+            finally
+            {
+                busy = false;
             }
         }
 
@@ -130,7 +140,8 @@ namespace BetapetBotApi.Controllers
                     ourUser.Bingos,
                     ourUser.Rating,
                     opponentsWaitingForUs,
-                    games = gameSummaries
+                    games = gameSummaries,
+                    handlingThings = busy
                 });
             }
             catch (ApiException exception)
