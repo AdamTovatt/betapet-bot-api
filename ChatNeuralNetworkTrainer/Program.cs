@@ -11,6 +11,8 @@ namespace ChatNeuralNetworkTrainer
     {
         private static int[] blackListedUserIds = { 814453 };
         private const string characters = " .,abcdefghijklmnopqrstuvwxyzåäö!?";
+        //private const string trainingDataUrl = "https://docs.google.com/document/d/1OdQ3M7j9gjKa4s5mZmK-5XogeGp_87MsTCuEIAVrjt8/export?format=txt";
+        private const string trainingDataUrl = "https://docs.google.com/document/d/10lIUjb6ww8uxYNFv74RQXEwdDQyTsY5roqk425PZMHc/export?format=txt";
 
         static void Main(string[] args)
         {
@@ -18,14 +20,16 @@ namespace ChatNeuralNetworkTrainer
             SecretValues secretValues = secrets.ReadSection<SecretValues>("Configuration");
 
             //get database connection
-            Database database = new Database(ConnectionStringHelper.GetConnectionStringFromUrl(secretValues.DatabaseUrl, WebApiUtilities.Helpers.SslMode.Prefer));
+            //Database database = new Database(ConnectionStringHelper.GetConnectionStringFromUrl(secretValues.DatabaseUrl, WebApiUtilities.Helpers.SslMode.Prefer));
 
             //get cleaned messages
-            List<ChatMessage> messages = CleanMessages(database.GetChatMessages(), characters, blackListedUserIds);
+            //List<ChatMessage> messages = CleanMessages(database.GetChatMessages(), characters, blackListedUserIds);
 
             //create training data
             //List<Conversation> conversations = GetConversations(messages);
-            List<Conversation> conversations = LoadConversations("chatData.txt");
+            //List<Conversation> conversations = LoadConversations("chatData.txt");
+            DocumentData documentData = new DocumentData(LoadTrainingDocument(trainingDataUrl, true));
+            List<Conversation> conversations = documentData.Conversations;
 
             //create and train model
             ConversationTrainingService trainingService = new ConversationTrainingService();
@@ -35,44 +39,85 @@ namespace ChatNeuralNetworkTrainer
             ConversationService conversationService = new ConversationService();
             conversationService.LoadModel("model.zip");
 
-            database.SaveModel(File.ReadAllBytes("model.zip"), "chat_model_boring");
+            //database.SaveModel(File.ReadAllBytes("model.zip"), "chat_model_boring");
 
             //conversationService.LoadModel(database.ReadModel("chat_model"));
 
             while (true)
             {
                 Console.WriteLine("Enter input");
-                Console.WriteLine(MakePrediction(conversationService, Console.ReadLine()));
+                string input = Console.ReadLine();
+                string prediction = MakePrediction(conversationService, input);
+                
+                if(documentData.ResponseData.Length > 0)
+                {
+                    Console.WriteLine(documentData.GetResponse(prediction));
+                }
+                else
+                {
+                    Console.WriteLine(prediction);
+                }
+
                 Console.WriteLine("\n");
             }
 
             Console.ReadLine();
         }
 
-        private static List<Conversation> LoadConversations(string path)
+        private static List<Conversation> ParseConversations(string[] lines)
         {
             List<Conversation> result = new List<Conversation>();
-
-            string[] lines = File.ReadAllLines(path);
 
             Conversation conversation = null;
 
             int type = 0;
             for (int i = 0; i < lines.Length; i++)
             {
+                if (string.IsNullOrEmpty(lines[i]))
+                    continue;
+
                 if (type == 0)
-                    conversation = new Conversation() { Promt = lines[i].ToLower() };
+                {
+                    string line = lines[i].ToLower();
+
+                    if (!line.StartsWith("q:"))
+                        throw new Exception("Error in training data! Expected the beggning of an answer with \"Q:\" but instead got: " + line);
+                    conversation = new Conversation() { Promt = line.Substring(2) };
+                }
                 if (type == 1)
-                    conversation.Response = lines[i].ToLower();
-                if (type == 2)
+                {
+                    string line = lines[i].ToLower();
+
+                    if (!line.StartsWith("a:"))
+                        throw new Exception("Error in training data! Expected the beggning of an answer with \"A:\" but instead got: " + line);
+
+                    conversation.Response = line.Substring(2);
                     result.Add(conversation);
+                }
 
                 type++;
-                if (type == 3)
+                if (type == 2)
                     type = 0;
             }
 
             return result;
+        }
+
+        private static string LoadTrainingDocument(string path)
+        {
+            return File.ReadAllText(path);
+        }
+
+        private static string LoadTrainingDocument(string url, bool isFromUrl)
+        {
+            HttpClient client = new HttpClient();
+
+            HttpResponseMessage response = client.GetAsync(url).Result;
+
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                return response.Content.ReadAsStringAsync().Result;
+
+            throw new Exception("Error when reading training data google docs, url: " + url);
         }
 
         private static void SaveConversations(List<Conversation> conversations, string path)
