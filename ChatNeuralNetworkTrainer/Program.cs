@@ -28,9 +28,12 @@ namespace ChatNeuralNetworkTrainer
             //create training data
             //List<Conversation> conversations = GetConversations(messages);
             //List<Conversation> conversations = LoadConversations("chatData.txt");
+            Console.WriteLine("Getting training data");
+
             DocumentData documentData = new DocumentData(LoadTrainingDocument(trainingDataUrl, true));
             List<Conversation> conversations = documentData.Conversations;
 
+            Console.WriteLine("Starting Training");
             //create and train model
             ConversationTrainingService trainingService = new ConversationTrainingService();
             trainingService.Train(conversations, "model.zip");
