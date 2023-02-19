@@ -1,0 +1,80 @@
+states
+{
+    default
+    {
+        enter
+        {
+            0: "Hi, how can I help you?"
+            1: "Is there anything else you need help with?"
+        }
+    }
+    cancel insurance
+    {
+        enter
+        {
+            0: "If you want to cancel your insurance you can go to the start menu and cancel it"
+            0: "Sure, just go to the start page and cancel it"
+            1: "As I said earlier, you can go to the start page and cancel it"
+        }
+        exit
+        {
+            0: "I'm glad I could help you with cancelling your insurance"
+        }
+    }
+    make claim
+    {
+        enter
+        {
+            0: "I will guide you through the process of making a claim. Have you had the insurance for more than 3 months?"
+        }
+    }
+    make claim yes
+    {
+        enter
+        {
+            0: "Then you will have to call the call center to cancel the insurance"
+        }
+    }
+    make claim no
+    {
+        enter
+        {
+            0: "Ok, then you can cancel it right away by clicking cancel"
+        }
+    }
+    make claim cancel : default
+    {
+        enter
+        {
+            0: "Oh, okay, I take it you don't want to cancel your claim then"
+        }
+    }
+}
+routes
+{
+    default
+    {
+        cancel insurance "I want to cancel my insurance"
+        cancel insurance "Cancel insurance"
+        cancel insurance "I would like help with cancelling insurance"
+        cancel insurance "I was wondering how I could cancel my insurance"
+        cancel insurance "Can you help me with cancelling my insurance?"
+        make claim "I want to make a claim"
+        make claim "make a claim"
+        make claim "make claim"
+        make claim "My phone broke"
+        make claim "My computer is dead"
+        make claim "My computer broke"
+        make claim "I was riding my bike and suddenly I hit a rock"
+        make claim "I dropped my phone"
+        make claim "I want to make an insurance claim"
+        make claim "I want to make an insurance claim for my phone"
+        make claim yes "yes"
+        make claim yes "yes I have"
+        make claim yes "I have"
+        make claim yes "indeed"
+        make claim no "no"
+        make claim no "I don't think so"
+        make claim yes "I don't know"
+    }
+}
