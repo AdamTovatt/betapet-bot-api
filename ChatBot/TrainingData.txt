@@ -8,7 +8,7 @@ states
             1: "Is there anything else you need help with?"
         }
     }
-    cancel insurance
+    cancel insurance : default
     {
         enter
         {
@@ -21,21 +21,36 @@ states
             0: "I'm glad I could help you with cancelling your insurance"
         }
     }
+    confirm make claim
+    {
+        enter
+        {
+            0: "Sounds like you want to make a claim, is this right?"
+            0: "To me it sounds like you want to make a claim. Is this correct?"
+        }
+    }
+    confirm make claim negative : default
+    {
+        enter
+        {
+            0: "Okay, I will take that as if you don't want to make a claim then"
+        }
+    }
     make claim
     {
         enter
         {
-            0: "I will guide you through the process of making a claim. Have you had the insurance for more than 3 months?"
+            0: "Then I will guide you through the process of making a claim. Have you had the insurance for more than 3 months?"
         }
     }
-    make claim yes
+    make claim yes : default
     {
         enter
         {
             0: "Then you will have to call the call center to cancel the insurance"
         }
     }
-    make claim no
+    make claim no : default
     {
         enter
         {
@@ -47,6 +62,46 @@ states
         enter
         {
             0: "Oh, okay, I take it you don't want to cancel your claim then"
+        }
+    }
+    default invalid : [previous]
+    {
+        enter
+        {
+            0: "I don't know what you mean by that"
+        }
+    }
+    default need help : [previous]
+    {
+        enter
+        {
+            0: "Of course, I'm here to help. What do you need help with?"
+            0: "What do you want me to help you with?"
+        }
+    }
+    default don't need help : [previous]
+    {
+        enter
+        {
+            0: "Okay then, just let me know if you think of something that I could help you with"
+            0: "Okay, just let me know if you need help with something"
+        }
+    }
+    default thought : [previous]
+    {
+        enter
+        {
+            0: "Okay, what is it?"
+            0: "Tell me, what is it?"
+            0: "Please tell me"
+        }
+    }
+    default robot : [previous]
+    {
+        enter
+        {
+            0: "It doesn't matter what I am, what matters is what you need help with. Now, what is it?"
+            1: "If you really must know, yes I guess you could call me a robot. At the same time, there isn't really a me, I don't have a ego. The only thing making you see this text right now is code running on a computer. I guess that's what I am. But is there anything you need help with?"
         }
     }
 }
@@ -62,13 +117,45 @@ routes
         make claim "I want to make a claim"
         make claim "make a claim"
         make claim "make claim"
-        make claim "My phone broke"
-        make claim "My computer is dead"
-        make claim "My computer broke"
-        make claim "I was riding my bike and suddenly I hit a rock"
-        make claim "I dropped my phone"
         make claim "I want to make an insurance claim"
         make claim "I want to make an insurance claim for my phone"
+        confirm make claim "My phone broke"
+        confirm make claim "My computer is dead"
+        confirm make claim "My computer broke"
+        confirm make claim "I was riding my bike and suddenly I hit a rock"
+        confirm make claim "I dropped my phone"
+        default invalid "I am a grand wizard living in a little tower"
+        default invalid "3d technology"
+        default invalid "anything else than a wanted prompt, really"
+        default invalid "ljsodif aieflksejflise"
+        default invalid "alisejfls islie sijpseep"
+        default invalid "I work every single day"
+        default invalid "I regret everything"
+        default need help "Heeelp"
+        default need help "Please help me"
+        default need help "Can you please help me"
+        default need help "Help me please"
+        default need help "I need help"
+        default need help "I need help with something"
+        default don't need help "No"
+        default don't need help "no, there isn't"
+        default don't need help "there isn't anything I need help with"
+        default don't need help "no, nothing"
+        default don't need help "I don't need help"
+        default don't need help "I don't need help with anything"
+        default thought "I thought of something"
+        default thought "I realized something"
+        default thought "I know something I need help with now"
+        default robot "Are you a robot?"
+        default robot "are you a bot?"
+        default robot "are you a robot"
+        default robot "what are you?"
+        default robot "are you an ai?"
+        default robot "Is this a human?"
+        default robot "are you a human?"
+    }
+    make claim
+    {
         make claim yes "yes"
         make claim yes "yes I have"
         make claim yes "I have"
@@ -76,5 +163,21 @@ routes
         make claim no "no"
         make claim no "I don't think so"
         make claim yes "I don't know"
+        make claim cancel "I don't want to make a claim"
+        make claim cancel "I want to cancel my insurance"
+        make claim cancel "cancel"
+        make claim cancel "don't make the claim"
+    }
+    confirm make claim
+    {
+        confirm make claim negative "No"
+        confirm make claim negative "No, that's not it"
+        confirm make claim negative "No, I don't"
+        confirm make claim negative "I don't want to make claim"
+        make claim "Yes"
+        make claim "I think so"
+        make claim "Yes please"
+        make claim "Yes, I want to make a claim"
+        make claim "I want to make a claim"
     }
 }

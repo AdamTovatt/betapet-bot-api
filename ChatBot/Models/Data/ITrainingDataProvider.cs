@@ -2,6 +2,6 @@
 {
     public interface ITrainingDataProvider
     {
-        public Task<TrainingData> GetTrainingDataAsync();
+        public Task<string> GetTrainingDataAsync();
     }
 }

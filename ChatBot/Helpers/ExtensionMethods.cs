@@ -1,4 +1,7 @@
-﻿namespace ChatBot.Helpers
+﻿using ChatBot.Models.Data;
+using System.Text;
+
+namespace ChatBot.Helpers
 {
     public static class ExtensionMethods
     {
@@ -19,6 +22,63 @@
 
             list.Add(element);
             return list;
+        }
+
+        public static string ReadTokensUntill(this List<string> tokens, int startIndex, out int indexOffset, params string[] stopTokens)
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+
+            indexOffset = 0;
+            for (int i = startIndex; i < tokens.Count; i++)
+            {
+                if (stopTokens.Contains(tokens[i]))
+                    break;
+
+                stringBuilder.Append(tokens[i]);
+                stringBuilder.Append(" ");
+
+                indexOffset++;
+            }
+
+            if (stringBuilder.Length > 0)
+                stringBuilder.Length--;
+
+            return stringBuilder.ToString();
+        }
+
+        public static string Get(this List<string> tokens, int index)
+        {
+            if (index > tokens.Count - 1)
+                return "[end of file]";
+
+            return tokens[index];
+        }
+
+        public static string GetStringsWithOrBetween(this List<string> strings)
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+
+            foreach (string word in strings)
+            {
+                stringBuilder.Append(word);
+                stringBuilder.Append(" or ");
+            }
+
+            stringBuilder.Length = stringBuilder.Length - 4;
+
+            return stringBuilder.ToString();
+        }
+
+        public static List<string> GetNames(this List<State> states)
+        {
+            List<string> result = new List<string>();
+
+            foreach(State state in states)
+            {
+                result.Add(state.Name);
+            }
+
+            return result;
         }
     }
 }

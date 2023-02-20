@@ -11,8 +11,8 @@ namespace ChatBot.Models.Data
         public string ConversationData { get; set; }
         public string ResponseData { get; set; }
 
-        public List<Conversation> Conversations { get { if (_conversations == null) _conversations = ParseConversations(); return _conversations; } }
-        private List<Conversation> _conversations;
+        public List<PromptResponsePair> Conversations { get { if (_conversations == null) _conversations = ParseConversations(); return _conversations; } }
+        private List<PromptResponsePair> _conversations;
 
         public Dictionary<string, List<string>> Responses { get { if (_responses == null) _responses = ParseResponses(); return _responses; } }
         private Dictionary<string, List<string>> _responses;
@@ -35,13 +35,13 @@ namespace ChatBot.Models.Data
             random = new Random();
         }
 
-        private List<Conversation> ParseConversations()
+        private List<PromptResponsePair> ParseConversations()
         {
-            List<Conversation> result = new List<Conversation>();
+            List<PromptResponsePair> result = new List<PromptResponsePair>();
 
             string[] lines = ConversationData.Split("\n");
 
-            Conversation conversation = null;
+            PromptResponsePair conversation = null;
 
             int type = 0;
             for (int i = 0; i < lines.Length; i++)
@@ -55,7 +55,7 @@ namespace ChatBot.Models.Data
 
                     if (!line.StartsWith("q:"))
                         throw new Exception("Error in training data! Expected the beggning of an answer with \"Q:\" but instead got: " + line);
-                    conversation = new Conversation(line.Substring(2));
+                    conversation = new PromptResponsePair(line.Substring(2));
                 }
                 if (type == 1)
                 {

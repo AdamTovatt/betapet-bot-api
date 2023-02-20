@@ -9,49 +9,53 @@ using System.Threading.Tasks;
 
 namespace ChatBot.Models.Prediction
 {
-    public class State
+    public class ConversationalState
     {
         public string Name { get; private set; }
+        public string? ForwardState { get; set; }
         public int RecentVisits { get; private set; }
 
-        private Dictionary<int, List<string>> enterResponses;
-        private Dictionary<int, List<string>> leaveResponses;
+        private Dictionary<int, List<string>> EnterResponses { get; set; }
+        private Dictionary<int, List<string>> ExitResponses { get; set; }
 
-        private PredictionService? conversationService;
+        public PredictionService? ConversationService { get; set; }
         private Bot owner;
 
-        public State(Bot owner, string name, Dictionary<int, List<string>> enterResponses, Dictionary<int, List<string>> leaveResponses)
+        public ConversationalState(Bot owner, string name, Dictionary<int, List<string>> enterResponses, Dictionary<int, List<string>> exitResponses)
         {
             this.owner = owner;
             Name = name;
-            this.enterResponses = enterResponses;
-            this.leaveResponses = leaveResponses;
+            EnterResponses = enterResponses;
+            ExitResponses = exitResponses;
         }
 
         public async Task<string> GetNextStateAsync(string input)
         {
-            if (conversationService == null)
+            if (ForwardState != null)
+                return ForwardState;
+
+            if (ConversationService == null)
                 await LoadConversationServiceAsync();
 
-            List<ConversationResponse> responses = conversationService!.PredictResponse(new Conversation(input));
+            List<ConversationResponse> responses = ConversationService!.PredictResponse(new PromptResponsePair(input));
             return responses.First().Text;
         }
 
         public async Task LoadConversationServiceAsync()
         {
-            conversationService = await owner.PredictionServiceRepository.GetPredictionServiceAsync(Name);
+            ConversationService = await owner.PredictionServiceRepository.GetPredictionServiceAsync(Name);
         }
 
         public string? EnterState()
         {
-            string? response = GetRightResponse(enterResponses);
+            string? response = GetRightResponse(EnterResponses);
             RecentVisits++;
             return response;
         }
 
-        public string? LeaveState()
+        public string? ExitState()
         {
-            return GetRightResponse(leaveResponses);
+            return GetRightResponse(ExitResponses);
         }
 
         private string? GetRightResponse(Dictionary<int, List<string>> responseLists)

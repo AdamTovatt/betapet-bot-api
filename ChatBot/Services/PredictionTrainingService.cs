@@ -10,7 +10,7 @@ namespace ChatBot.Services
 {
     public class PredictionTrainingService
     {
-        public void Train(IEnumerable<Conversation> trainingData, string modelSavePath)
+        public void Train(IEnumerable<PromptResponsePair> trainingData, string modelSavePath)
         {
             var mlContext = new MLContext(seed: 0);
 
@@ -26,13 +26,33 @@ namespace ChatBot.Services
             mlContext.Model.Save(trainingModel, trainingDataView.Schema, modelSavePath);
         }
 
+        public byte[] Train(IEnumerable<PromptResponsePair> trainingData)
+        {
+            var mlContext = new MLContext(seed: 0);
+
+            // Configure ML pipeline
+            var pipeline = LoadDataProcessPipeline(mlContext);
+            var trainingPipeline = GetTrainingPipeline(mlContext, pipeline);
+            var trainingDataView = mlContext.Data.LoadFromEnumerable(trainingData);
+
+            // Generate training model.
+            var trainingModel = trainingPipeline.Fit(trainingDataView);
+
+            // Save training model to disk.
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                mlContext.Model.Save(trainingModel, trainingDataView.Schema, memoryStream);
+                return memoryStream.ToArray();
+            }
+        }
+
         private IEstimator<ITransformer> LoadDataProcessPipeline(MLContext mlContext)
         {
             // Configure data pipeline based on the features in TransactionData.
             // Description and TransactionType are the inputs and Category is the expected result.
             var dataProcessPipeline = mlContext
-                .Transforms.Conversion.MapValueToKey(inputColumnName: nameof(Conversation.Response), outputColumnName: "Label")
-                .Append(mlContext.Transforms.Text.FeaturizeText(inputColumnName: nameof(Conversation.Prompt), outputColumnName: "TitleFeaturized"))
+                .Transforms.Conversion.MapValueToKey(inputColumnName: nameof(PromptResponsePair.Response), outputColumnName: "Label")
+                .Append(mlContext.Transforms.Text.FeaturizeText(inputColumnName: nameof(PromptResponsePair.Prompt), outputColumnName: "TitleFeaturized"))
                 // Merge two features into a single feature.
                 .Append(mlContext.Transforms.Concatenate("Features", "TitleFeaturized"))
                 .AppendCacheCheckpoint(mlContext);

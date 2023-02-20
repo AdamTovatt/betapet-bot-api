@@ -13,7 +13,7 @@ namespace ChatBot.Services
     public class PredictionService
     {
         private readonly MLContext _mlContext;
-        private PredictionEngine<Conversation, ConversationPrediction>? _predEngine;
+        private PredictionEngine<PromptResponsePair, ConversationPrediction>? _predEngine;
 
         public MLContext MlContext { get { return _mlContext; } }
 
@@ -27,7 +27,7 @@ namespace ChatBot.Services
             ITransformer loadedModel;
             using (var stream = new FileStream(modelPath, FileMode.Open, FileAccess.Read, FileShare.Read))
                 loadedModel = _mlContext.Model.Load(stream, out var modelInputSchema);
-            _predEngine = _mlContext.Model.CreatePredictionEngine<Conversation, ConversationPrediction>(loadedModel);
+            _predEngine = _mlContext.Model.CreatePredictionEngine<PromptResponsePair, ConversationPrediction>(loadedModel);
         }
 
         public void LoadModel(byte[] bytes)
@@ -37,10 +37,10 @@ namespace ChatBot.Services
             using (MemoryStream stream = new MemoryStream(bytes))
                 loadedModel = _mlContext.Model.Load(stream, out var modelInputSchema);
 
-            _predEngine = _mlContext.Model.CreatePredictionEngine<Conversation, ConversationPrediction>(loadedModel);
+            _predEngine = _mlContext.Model.CreatePredictionEngine<PromptResponsePair, ConversationPrediction>(loadedModel);
         }
 
-        public List<ConversationResponse> PredictResponse(Conversation conversation)
+        public List<ConversationResponse> PredictResponse(PromptResponsePair conversation)
         {
             if(_predEngine == null)
                 throw new Exception("Prediction engine is null! A model needs to be loaded before a response can be predicted!");

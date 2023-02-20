@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace ChatBot.Models.Data
 {
     [DataContract]
-    public class Conversation
+    public class PromptResponsePair
     {
         [DataMember(Name = "Prompt")]
         public string Prompt { get; set; }
@@ -16,7 +16,7 @@ namespace ChatBot.Models.Data
         [DataMember(Name = "Response")]
         public string? Response { get; set; }
 
-        public Conversation(string prompt) {
+        public PromptResponsePair(string prompt) {
             Prompt = prompt;
         }
 
