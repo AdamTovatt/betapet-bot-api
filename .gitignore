@@ -15,3 +15,5 @@ Properties/launchSettings.json
 /ChatNeuralNetworkTrainer/obj/*
 /ChatBot/bin/*
 /ChatBot/obj/*
+/ChatBotUser/bin/*
+/ChatBotUser/obj/*
