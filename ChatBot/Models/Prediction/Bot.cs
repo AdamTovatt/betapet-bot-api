@@ -76,9 +76,8 @@ namespace ChatBot.Models.Prediction
             return result;
         }
 
-        public void Train(TrainingData trainingData, IProgress<BotTrainingProgress>? progress = null)
+        public void Train(TrainingData trainingData, PredictionTrainingService trainingService, IProgress<BotTrainingProgress>? progress = null)
         {
-            PredictionTrainingService trainingService = new PredictionTrainingService();
             BotTrainingProgress botTrainingProgress = new BotTrainingProgress(trainingData.States.Where(x => x.ForwardState == null).Count());
 
             foreach (State state in trainingData.States)
@@ -92,7 +91,7 @@ namespace ChatBot.Models.Prediction
                 {
                     if (progress != null) progress.Report(botTrainingProgress);
 
-                    conversationalState.ConversationService = new PredictionService();
+                    conversationalState.ConversationService = trainingService.CreateNewPredictionService();
 
                     conversationalState.ConversationService.LoadModel(trainingService.Train(state.Routes));
 
@@ -104,9 +103,9 @@ namespace ChatBot.Models.Prediction
             }
         }
 
-        public async Task TrainAsync(TrainingData trainingData, IProgress<BotTrainingProgress>? progress = null)
+        public async Task TrainAsync(TrainingData trainingData, PredictionTrainingService trainingService, IProgress<BotTrainingProgress>? progress = null)
         {
-            Task trainingTask = Task.Run(() => { Train(trainingData, progress); });
+            Task trainingTask = Task.Run(() => { Train(trainingData, trainingService, progress); });
             await trainingTask;
         }
     }

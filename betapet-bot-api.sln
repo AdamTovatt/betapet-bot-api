@@ -15,9 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatNeuralNetworkTrainer", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatBot", "ChatBot\ChatBot.csproj", "{2389C00C-4EB8-4808-8E21-6762661D759B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatBotTests", "ChatBotTests\ChatBotTests.csproj", "{B9ADF63B-0910-4DBD-BF47-5712E4E7F3CB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatBotTests", "ChatBotTests\ChatBotTests.csproj", "{B9ADF63B-0910-4DBD-BF47-5712E4E7F3CB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatBotUser", "ChatBotUser\ChatBotUser.csproj", "{B4E8B71C-BD43-43EF-B3D8-0B311C974919}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatBotUser", "ChatBotUser\ChatBotUser.csproj", "{B4E8B71C-BD43-43EF-B3D8-0B311C974919}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

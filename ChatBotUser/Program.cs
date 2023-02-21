@@ -2,6 +2,7 @@
 using ChatBot.Models.Data;
 using ChatBot.Models.Data.Parsing;
 using ChatBot.Models.Prediction;
+using ChatBot.Services;
 
 namespace ChatBotUser
 {
@@ -19,7 +20,7 @@ namespace ChatBotUser
 
             ParseResult parseResult = Parser.ParseTrainingData(trainingData);
 
-            if (parseResult.Error != null)
+            if (parseResult.Error != null || parseResult.Data == null)
             {
                 Console.WriteLine(parseResult.Error);
                 return;
@@ -31,9 +32,10 @@ namespace ChatBotUser
                 progress.ProgressChanged += (sender, updatedProgress) => { Console.Clear(); Console.WriteLine(updatedProgress); };
 
                 Bot bot = new Bot(null);
-                await bot.TrainAsync(parseResult.Data, progress);
 
-                System.Threading.Thread.Sleep(100);
+                await bot.TrainAsync(parseResult.Data, new SdcaPredictionTrainingService(), progress);
+
+                Thread.Sleep(100);
 
                 Console.Clear();
                 Console.WriteLine(bot.Start());
