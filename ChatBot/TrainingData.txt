@@ -104,6 +104,14 @@ states
             1: "If you really must know, yes I guess you could call me a robot. At the same time, there isn't really a me, I don't have a ego. The only thing making you see this text right now is code running on a computer. I guess that's what I am. But is there anything you need help with?"
         }
     }
+    default can't help : [previous]
+    {
+        enter
+        {
+            0: "I can't help you with that, unfortunately"
+            1: "I can't help you with that either"
+        }
+    }
 }
 routes
 {
@@ -153,6 +161,10 @@ routes
         default robot "are you an ai?"
         default robot "Is this a human?"
         default robot "are you a human?"
+        default can't help "I need help with my hemoroids"
+        default can't help "I need help with getting more money"
+        default can't help "I want help with my homework"
+        default can't help "I need to cream my sfinx"
     }
     make claim
     {

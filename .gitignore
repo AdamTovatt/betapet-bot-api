@@ -17,3 +17,5 @@ Properties/launchSettings.json
 /ChatBot/obj/*
 /ChatBotUser/bin/*
 /ChatBotUser/obj/*
+/ChatBotTests/bin/*
+/ChatBotTests/obj/*
