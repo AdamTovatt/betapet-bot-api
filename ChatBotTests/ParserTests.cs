@@ -16,7 +16,7 @@ namespace ChatBotTests
         public void AssertReadTokensWorks()
         {
             List<string> tokens = new List<string>() { "\"", "make", "claim", "yes", "\""};
-            string result = tokens.ReadTokensUntill(1, out int offset, "\"");
+            string result = tokens.ReadTokensUntill(1, out int offset, out _, "\"");
 
             Assert.IsTrue(result == "make claim yes");
             Assert.IsTrue(offset == 3);
@@ -44,6 +44,28 @@ namespace ChatBotTests
             State? makeClaim = result.States.Where(x => x.Name == "make claim").FirstOrDefault();
             Assert.IsTrue(makeClaim != null);
             Assert.IsTrue(makeClaim.Routes.Where(x => x.Prompt == "I don't know").Count() > 0);
+        }
+
+        [TestMethod]
+        public void AssertMultipleRoutesInBracesWorks()
+        {
+            string input = "states{default{enter{0:\"hi\"}}cancel{enter{0:\"ok I will cancel then\"}exit{0:\"goodbye\"}}}routes{default{cancel{\"I want to cancel\"\"I don't want to go on\"}}cancel{default{\"take me home\"\"home\"\"enough\"}cancel{\"stay here\"}}}";
+
+            ParseResult parseResult = Parser.ParseTrainingData(input);
+
+            Assert.IsTrue(parseResult.Error == null);
+            Assert.IsTrue(parseResult.Data != null);
+
+            TrainingData data = parseResult.Data;
+            State? defaultState = data.GetState("default");
+
+            Assert.IsTrue(defaultState != null);
+            Assert.IsTrue(defaultState.Routes.Count == 2);
+
+            State? cancelState = data.GetState("cancel");
+
+            Assert.IsTrue(cancelState != null);
+            Assert.IsTrue(cancelState.Routes.Count == 4);
         }
 
         [TestMethod]

@@ -72,10 +72,10 @@ namespace ChatBot.Models.Data.Parsing
                         }
                         else
                         {
-                            string stateName = tokens.ReadTokensUntill(i, out int stateNameOffset, "{", ":");
+                            string stateName = tokens.ReadTokensUntill(i, out int stateNameOffset, out string? _, "{", ":");
                             i += stateNameOffset;
 
-                            string forwardName = tokens.ReadTokensUntill(i, out int forwardNameOffset, "{");
+                            string forwardName = tokens.ReadTokensUntill(i, out int forwardNameOffset, out string? _, "{");
                             i += forwardNameOffset;
 
                             currentState = new State(stateName);
@@ -148,7 +148,7 @@ namespace ChatBot.Models.Data.Parsing
                                     if (tokens.Get(i) == "\"")
                                     {
                                         i++;
-                                        string answerText = tokens.ReadTokensUntill(i, out int answerTextOffset, "\"");
+                                        string answerText = tokens.ReadTokensUntill(i, out int answerTextOffset, out string? _, "\"");
                                         i += answerTextOffset;
 
                                         currentState!.AddResponse(parserState == ParseState.EnterMessages ? State.ResponseType.Enter : State.ResponseType.Exit, recentVisits, answerText);
@@ -177,7 +177,7 @@ namespace ChatBot.Models.Data.Parsing
                         }
                         else
                         {
-                            currentStateName = tokens.ReadTokensUntill(i, out int offset, "{");
+                            currentStateName = tokens.ReadTokensUntill(i, out int offset, out string? _, "{");
                             i += offset;
 
                             if (parsedStates.Where(x => x.Name == currentStateName).Count() == 0)
@@ -189,7 +189,7 @@ namespace ChatBot.Models.Data.Parsing
                             stateStack.Push(ParseState.SingleRoute);
                         }
                     }
-                    else if(parserState == ParseState.SingleRoute)
+                    else if (parserState == ParseState.SingleRoute)
                     {
                         if (token == "}")
                         {
@@ -208,30 +208,50 @@ namespace ChatBot.Models.Data.Parsing
                         }
                         else
                         {
-                            string response = tokens.ReadTokensUntill(i, out int responseOffset, "\"");
+                            string response = tokens.ReadTokensUntill(i, out int responseOffset, out string? stoppingToken, "\"", "{");
                             i += responseOffset + 1;
-                            string prompt = tokens.ReadTokensUntill(i, out int promptOffset, "\"");
-                            i += promptOffset;
 
-                            if (promptResponsePairs == null)
-                                throw new Exception("Has entered single route without creating instance of promptResponsePairs, this should not be possible");
+                            if (stoppingToken == "\"")
+                            {
+                                string prompt = tokens.ReadTokensUntill(i, out int promptOffset, out string? _, "\"");
+                                i += promptOffset;
 
-                            promptResponsePairs.Add(new PromptResponsePair(prompt) { Response = response });
+                                if (promptResponsePairs == null)
+                                    throw new Exception("Has entered single route without creating instance of promptResponsePairs, this should not be possible");
+
+                                promptResponsePairs.Add(new PromptResponsePair(prompt) { Response = response });
+                            }
+                            else
+                            {
+                                while (tokens.Get(i) == "\"")
+                                {
+                                    string prompt = tokens.ReadTokensUntill(i + 1, out int promptOffset, out string? _, "\"");
+                                    i += promptOffset + 2;
+
+                                    if (promptResponsePairs == null)
+                                        throw new Exception("Has entered single route without creating instance of promptResponsePairs, this should not be possible");
+
+                                    promptResponsePairs.Add(new PromptResponsePair(prompt) { Response = response });
+                                }
+
+                                if(tokens.Get(i) != "}")
+                                    return ParseResult.CreateError(tokens.Get(i), i, tokens.Get(i), "}").AddErrorDescription("A collection of possible prompts for a route should end with \"}\"");
+                            }
                         }
                     }
                 }
             }
 
-            foreach(State state in parsedStates.Where(x => x.ForwardState == null && x.Routes.Count == 0))
+            foreach (State state in parsedStates.Where(x => x.ForwardState == null && x.Routes.Count == 0))
             {
                 return ParseResult.CreateError(state.Name, -1, "no route", "routes for state").AddErrorDescription(state.Name + " is missing routes. Please provide routes for it or use the forward operator \":\" and then the state to forward to");
             }
 
-            foreach(State state in parsedStates)
+            foreach (State state in parsedStates)
             {
-                foreach(PromptResponsePair pair in state.Routes)
+                foreach (PromptResponsePair pair in state.Routes)
                 {
-                    if(parsedStates.Where(x => x.Name == pair.Response).Count() == 0)
+                    if (parsedStates.Where(x => x.Name == pair.Response).Count() == 0)
                     {
                         return ParseResult.CreateError("route: " + state.Name + " / " + pair.Response, -1, pair.Prompt, parsedStates.GetNames().ToArray()).AddErrorDescription("The state \"" + pair.Response + "\" does not exist");
                     }

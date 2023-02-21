@@ -24,15 +24,20 @@ namespace ChatBot.Helpers
             return list;
         }
 
-        public static string ReadTokensUntill(this List<string> tokens, int startIndex, out int indexOffset, params string[] stopTokens)
+        public static string ReadTokensUntill(this List<string> tokens, int startIndex, out int indexOffset, out string? stoppingToken, params string[] stopTokens)
         {
             StringBuilder stringBuilder = new StringBuilder();
+
+            stoppingToken = null;
 
             indexOffset = 0;
             for (int i = startIndex; i < tokens.Count; i++)
             {
                 if (stopTokens.Contains(tokens[i]))
+                {
+                    stoppingToken = tokens[i];
                     break;
+                }
 
                 stringBuilder.Append(tokens[i]);
                 stringBuilder.Append(" ");
