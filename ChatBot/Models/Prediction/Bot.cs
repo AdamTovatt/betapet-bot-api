@@ -28,7 +28,7 @@ namespace ChatBot.Models.Prediction
             return CurrentState.EnterState();
         }
 
-        public async Task<List<string>> GetResponsesAsync(string input)
+        public List<string> GetResponse(string input)
         {
             if (CurrentState == null)
                 throw new Exception("The bot needs to be started with the Start() method before it can be used");
@@ -38,7 +38,7 @@ namespace ChatBot.Models.Prediction
 
             result!.AddIfNotNull(CurrentState.ExitState());
 
-            string newStateName = await CurrentState.GetNextStateAsync(input);
+            string newStateName = CurrentState.GetNextState(input);
 
             if (States.TryGetValue(newStateName, out ConversationalState? newState))
             {
@@ -73,9 +73,10 @@ namespace ChatBot.Models.Prediction
             return result;
         }
 
-        public void Train(TrainingData trainingData, PredictionTrainingService trainingService, IProgress<BotTrainingProgress>? progress = null)
+        public void Train(TrainingData trainingData, IProgress<BotTrainingProgress>? progress = null)
         {
             BotTrainingProgress botTrainingProgress = new BotTrainingProgress(trainingData.States.Where(x => x.ForwardState == null).Count());
+            PredictionTrainingService trainingService = PredictionServiceRepository.GetPredictionTrainingServiceInstance();
 
             foreach (State state in trainingData.States)
             {
@@ -100,9 +101,9 @@ namespace ChatBot.Models.Prediction
             }
         }
 
-        public async Task TrainAsync(TrainingData trainingData, PredictionTrainingService trainingService, IProgress<BotTrainingProgress>? progress = null)
+        public async Task TrainAsync(TrainingData trainingData, IProgress<BotTrainingProgress>? progress = null)
         {
-            Task trainingTask = Task.Run(() => { Train(trainingData, trainingService, progress); });
+            Task trainingTask = Task.Run(() => { Train(trainingData, progress); });
             await trainingTask;
         }
 
@@ -153,15 +154,23 @@ namespace ChatBot.Models.Prediction
                 {
                     States = blobFile.States;
 
+                    foreach (ConversationalState state in States.Values)
+                        state.SetOwner(this);
+
                     foreach (BotBlobFile.ModelByteArrayPosition position in blobFile.ModelPositions)
                     {
-                        byte[] modelBytes = new byte[position.Length];
-                        memoryStream.Seek(initialOffset + position.Start, SeekOrigin.Begin);
-                        memoryStream.Read(modelBytes, 0, position.Length);
+                        if (position != null && position.Name != null)
+                        {
+                            byte[] modelBytes = new byte[position.Length];
+                            memoryStream.Seek(initialOffset + position.Start, SeekOrigin.Begin);
+                            memoryStream.Read(modelBytes, 0, position.Length);
 
-                        ConversationalState conversationalState = States[position.Name];
-                        if (conversationalState != null && conversationalState.ConversationService != null)
-                            conversationalState.ConversationService.LoadModel(modelBytes);
+                            ConversationalState conversationalState = States[position.Name];
+                            conversationalState.EnsureConversationServiceIsNotNull();
+
+                            if (conversationalState != null && conversationalState.ConversationService != null)
+                                conversationalState.ConversationService.LoadModel(modelBytes);
+                        }
                     }
                 }
             }

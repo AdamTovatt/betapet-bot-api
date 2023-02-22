@@ -13,13 +13,15 @@ namespace ChatBot.Models
         internal class ModelByteArrayPosition
         {
             [JsonProperty]
-            public string Name { get; set; }
+            public string? Name { get; set; }
 
             [JsonProperty]
             public int Start { get; set; }
 
             [JsonProperty]
             public int Length { get; set; }
+
+            internal ModelByteArrayPosition() { }
 
             internal ModelByteArrayPosition(string name, int start, int length)
             {

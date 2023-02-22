@@ -1,11 +1,11 @@
 ﻿using ChatBot.Helpers;
 using ChatBot.Models.Data;
 using ChatBot.Services;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace ChatBot.Models.Prediction
@@ -33,21 +33,16 @@ namespace ChatBot.Models.Prediction
             ExitResponses = exitResponses;
         }
 
-        public async Task<string> GetNextStateAsync(string input)
+        public string GetNextState(string input)
         {
             if (ForwardState != null)
                 return ForwardState;
 
             if (ConversationService == null)
-                await LoadConversationServiceAsync();
+                throw new Exception("Conversation service is null for a state that needs predictions, this should not happen! The state is: " + Name);
 
             List<ConversationResponse> responses = ConversationService!.PredictResponse(new PromptResponsePair(input));
             return responses.First().Text;
-        }
-
-        public async Task LoadConversationServiceAsync()
-        {
-            ConversationService = await owner.PredictionServiceRepository.GetPredictionServiceAsync(Name);
         }
 
         public string? EnterState()
@@ -60,6 +55,19 @@ namespace ChatBot.Models.Prediction
         public string? ExitState()
         {
             return GetRightResponse(ExitResponses);
+        }
+
+        public void SetOwner(Bot owner)
+        {
+            this.owner = owner;
+        }
+
+        public void EnsureConversationServiceIsNotNull()
+        {
+            if (ConversationService != null)
+                return;
+
+            ConversationService = owner.PredictionServiceRepository.GetPredictionServiceInstance();
         }
 
         private string? GetRightResponse(Dictionary<int, List<string>> responseLists)

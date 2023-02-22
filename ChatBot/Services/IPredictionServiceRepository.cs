@@ -8,6 +8,8 @@ namespace ChatBot.Services
 {
     public interface IPredictionServiceRepository
     {
-        public Task<PredictionService> GetPredictionServiceAsync(string name);
+        public PredictionService GetPredictionServiceInstance();
+
+        public PredictionTrainingService GetPredictionTrainingServiceInstance();
     }
 }
