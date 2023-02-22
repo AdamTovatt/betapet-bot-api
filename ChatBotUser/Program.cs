@@ -10,52 +10,62 @@ namespace ChatBotUser
     {
         public static void Main()
         {
-            HandleBot().Wait();
+            Console.WriteLine("Train?");
+            HandleBot(Console.ReadLine()!.ToLower().Contains("y")).Wait();
         }
 
-        public static async Task HandleBot()
+        public static async Task HandleBot(bool train)
         {
             FileTrainingDataProvider fileTrainingDataProvider = new FileTrainingDataProvider("c:\\users\\adam\\code\\betapet-bot-api\\chatbot\\TrainingData.txt");
             string trainingData = await fileTrainingDataProvider.GetTrainingDataAsync();
 
             ParseResult parseResult = Parser.ParseTrainingData(trainingData);
 
-            if (parseResult.Error != null || parseResult.Data == null)
+            Bot bot = new Bot(new SdcaPredictionServiceRepository());
+
+            if (train)
             {
-                Console.WriteLine(parseResult.Error);
-                return;
+                if (parseResult.Error != null || parseResult.Data == null)
+                {
+                    Console.WriteLine(parseResult.Error);
+                    return;
+                }
+                else
+                {
+                    //training code
+                    Progress<BotTrainingProgress> progress = new Progress<BotTrainingProgress>();
+                    progress.ProgressChanged += (sender, updatedProgress) => { Console.Clear(); Console.WriteLine(updatedProgress); };
+                    await bot.TrainAsync(parseResult.Data, progress);
+
+                    File.WriteAllBytes("model.bin", bot.GetAsBytes());
+
+                    Thread.Sleep(100);
+
+                    Console.Clear();
+                }
             }
             else
             {
-                Progress<BotTrainingProgress> progress = new Progress<BotTrainingProgress>();
+                bot.Load(File.ReadAllBytes("model.bin"));
+            }
 
-                progress.ProgressChanged += (sender, updatedProgress) => { Console.Clear(); Console.WriteLine(updatedProgress); };
+            Console.WriteLine(bot.Start());
 
-                Bot bot = new Bot(null);
+            while (true)
+            {
+                Console.WriteLine("You: ");
+                string? input = Console.ReadLine();
 
-                await bot.TrainAsync(parseResult.Data, new SdcaPredictionTrainingService(), progress);
-
-                Thread.Sleep(100);
-
-                Console.Clear();
-                Console.WriteLine(bot.Start());
-
-                while (true)
+                if (input != null)
                 {
-                    Console.WriteLine("You: ");
-                    string? input = Console.ReadLine();
-
-                    if (input != null)
+                    Console.WriteLine("\nBot: ");
+                    foreach (string response in bot.GetResponse(input))
                     {
-                        Console.WriteLine("Bot: ");
-                        foreach (string response in await bot.GetResponsesAsync(input))
-                        {
-                            Console.WriteLine(response);
-                        }
+                        Console.WriteLine(response);
                     }
-
-                    Console.WriteLine();
                 }
+
+                Console.WriteLine();
             }
         }
     }
