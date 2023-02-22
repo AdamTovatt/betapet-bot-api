@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace ChatBot.Models.Prediction
@@ -13,11 +14,14 @@ namespace ChatBot.Models.Prediction
     {
         public string Name { get; private set; }
         public string? ForwardState { get; set; }
+
+        [JsonIgnore]
         public int RecentVisits { get; private set; }
 
-        private Dictionary<int, List<string>> EnterResponses { get; set; }
-        private Dictionary<int, List<string>> ExitResponses { get; set; }
+        public Dictionary<int, List<string>> EnterResponses { get; set; }
+        public Dictionary<int, List<string>> ExitResponses { get; set; }
 
+        [JsonIgnore]
         public PredictionService? ConversationService { get; set; }
         private Bot owner;
 

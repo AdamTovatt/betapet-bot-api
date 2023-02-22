@@ -1,11 +1,8 @@
 ﻿using ChatBot.Helpers;
 using ChatBot.Models.Data;
 using ChatBot.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Newtonsoft.Json;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace ChatBot.Models.Prediction
 {
@@ -50,7 +47,7 @@ namespace ChatBot.Models.Prediction
 
                 while (CurrentState.ForwardState != null)
                 {
-                    if(CurrentState.ForwardState == "[previous]")
+                    if (CurrentState.ForwardState == "[previous]")
                     {
                         CurrentState = previousState;
                         break;
@@ -107,6 +104,67 @@ namespace ChatBot.Models.Prediction
         {
             Task trainingTask = Task.Run(() => { Train(trainingData, trainingService, progress); });
             await trainingTask;
+        }
+
+        public byte[] GetAsBytes()
+        {
+            BotBlobFile botBlobFile = new BotBlobFile(States);
+            string fileJson = JsonConvert.SerializeObject(botBlobFile);
+            byte[] fileJsonBytes = Encoding.UTF8.GetBytes(fileJson);
+
+            int initialOffset = 4 + fileJsonBytes.Length;
+            byte[] bytes = new byte[initialOffset + botBlobFile.LengthSum];
+
+            BitConverter.GetBytes(fileJsonBytes.Length).CopyTo(bytes, 0);
+            fileJsonBytes.CopyTo(bytes, 4);
+
+            foreach (BotBlobFile.ModelByteArrayPosition position in botBlobFile.ModelPositions)
+            {
+                if (position != null && position.Name != null && States != null)
+                {
+                    ConversationalState state = States[position.Name];
+                    if (state != null && state.ConversationService != null)
+                    {
+                        byte[] conversationBytes = state.ConversationService.GetBytes();
+                        conversationBytes.CopyTo(bytes, position.Start + initialOffset);
+                    }
+                }
+            }
+
+            return bytes;
+        }
+
+        public void Load(byte[] bytes)
+        {
+            int jsonLength = BitConverter.ToInt32(bytes);
+
+            using (MemoryStream memoryStream = new MemoryStream(bytes))
+            {
+                byte[] jsonBytes = new byte[jsonLength];
+                memoryStream.Seek(4, SeekOrigin.Begin);
+                memoryStream.Read(jsonBytes, 0, jsonLength);
+
+                string json = Encoding.UTF8.GetString(jsonBytes);
+                BotBlobFile? blobFile = JsonConvert.DeserializeObject<BotBlobFile>(json);
+
+                int initialOffset = jsonBytes.Length + 4;
+
+                if (blobFile != null)
+                {
+                    States = blobFile.States;
+
+                    foreach (BotBlobFile.ModelByteArrayPosition position in blobFile.ModelPositions)
+                    {
+                        byte[] modelBytes = new byte[position.Length];
+                        memoryStream.Seek(initialOffset + position.Start, SeekOrigin.Begin);
+                        memoryStream.Read(modelBytes, 0, position.Length);
+
+                        ConversationalState conversationalState = States[position.Name];
+                        if (conversationalState != null && conversationalState.ConversationService != null)
+                            conversationalState.ConversationService.LoadModel(modelBytes);
+                    }
+                }
+            }
         }
     }
 }
