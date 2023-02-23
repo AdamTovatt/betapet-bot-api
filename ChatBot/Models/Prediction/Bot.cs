@@ -9,7 +9,6 @@ namespace ChatBot.Models.Prediction
     public class Bot
     {
         public IPredictionServiceRepository PredictionServiceRepository { get; private set; }
-        public ConversationalState? CurrentState { get; set; }
         public Dictionary<string, ConversationalState> States { get; private set; }
 
         public Bot(IPredictionServiceRepository predictionServiceRepository)
@@ -18,46 +17,60 @@ namespace ChatBot.Models.Prediction
             States = new Dictionary<string, ConversationalState>();
         }
 
-        public string? Start(string startState = "default")
+        public Conversation CreateConversation(string startState = "default")
         {
-            if (CurrentState == null)
-            {
-                CurrentState = States[startState];
-            }
+            if (!States.ContainsKey(startState))
+                throw new Exception("The specified start state does not exist: " + startState);
 
-            return CurrentState.EnterState();
+            return new Conversation(States.Keys.ToList(), startState);
         }
 
-        public List<string> GetResponse(string input)
+        public ConversationalState GetCurrentState(Conversation conversation)
         {
-            if (CurrentState == null)
-                throw new Exception("The bot needs to be started with the Start() method before it can be used");
+            return States[conversation.CurrentStateName];
+        }
 
-            ConversationalState previousState = CurrentState;
+        /// <summary>
+        /// Starts a new conversation. Use the Bot.GetConversation() method to get a conversation instance to use if you do not have one already.
+        /// </summary>
+        /// <param name="conversation">The conversation instance</param>
+        /// <returns></returns>
+        public string? Start(Conversation conversation)
+        {
+            return GetCurrentState(conversation).EnterState(conversation);
+        }
+
+        public List<string> GetResponse(Conversation conversation, string input)
+        {
+            ConversationalState currentState = GetCurrentState(conversation);
+            ConversationalState previousState = currentState;
             List<string> result = new List<string>();
 
-            result!.AddIfNotNull(CurrentState.ExitState());
+            result!.AddIfNotNull(currentState.ExitState(conversation));
 
-            string newStateName = CurrentState.GetNextState(input);
+            string newStateName = currentState.GetNextState(input);
 
             if (States.TryGetValue(newStateName, out ConversationalState? newState))
             {
-                result!.AddIfNotNull(newState.EnterState());
-                CurrentState = newState;
+                result!.AddIfNotNull(newState.EnterState(conversation));
+                currentState = newState;
+                conversation.CurrentStateName = newStateName;
 
-                while (CurrentState.ForwardState != null)
+                while (currentState.ForwardState != null)
                 {
-                    if (CurrentState.ForwardState == "[previous]")
+                    if (currentState.ForwardState == "[previous]")
                     {
-                        CurrentState = previousState;
+                        currentState = previousState;
+                        conversation.CurrentStateName = previousState.Name;
                         break;
                     }
 
-                    if (States.TryGetValue(CurrentState.ForwardState, out ConversationalState? newForwardedState))
+                    if (States.TryGetValue(currentState.ForwardState, out ConversationalState? newForwardedState))
                     {
-                        result!.AddIfNotNull(CurrentState.ExitState());
-                        result!.AddIfNotNull(newForwardedState.EnterState());
-                        CurrentState = newForwardedState;
+                        result!.AddIfNotNull(currentState.ExitState(conversation));
+                        result!.AddIfNotNull(newForwardedState.EnterState(conversation));
+                        currentState = newForwardedState;
+                        conversation.CurrentStateName = newForwardedState.Name;
                     }
                     else
                     {

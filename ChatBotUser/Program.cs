@@ -49,7 +49,9 @@ namespace ChatBotUser
                 bot.Load(File.ReadAllBytes("model.bin"));
             }
 
-            Console.WriteLine(bot.Start());
+            Conversation conversation = bot.CreateConversation();
+
+            Console.WriteLine(bot.Start(conversation));
 
             while (true)
             {
@@ -59,7 +61,7 @@ namespace ChatBotUser
                 if (input != null)
                 {
                     Console.WriteLine("\nBot: ");
-                    foreach (string response in bot.GetResponse(input))
+                    foreach (string response in bot.GetResponse(conversation, input))
                     {
                         Console.WriteLine(response);
                     }

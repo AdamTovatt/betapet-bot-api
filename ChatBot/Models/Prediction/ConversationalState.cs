@@ -45,16 +45,16 @@ namespace ChatBot.Models.Prediction
             return responses.First().Text;
         }
 
-        public string? EnterState()
+        public string? EnterState(Conversation conversation)
         {
-            string? response = GetRightResponse(EnterResponses);
-            RecentVisits++;
+            string? response = GetRightResponse(EnterResponses, conversation);
+            conversation.AddToConversationalState(Name, 1);
             return response;
         }
 
-        public string? ExitState()
+        public string? ExitState(Conversation conversation)
         {
-            return GetRightResponse(ExitResponses);
+            return GetRightResponse(ExitResponses, conversation);
         }
 
         public void SetOwner(Bot owner)
@@ -70,11 +70,11 @@ namespace ChatBot.Models.Prediction
             ConversationService = owner.PredictionServiceRepository.GetPredictionServiceInstance();
         }
 
-        private string? GetRightResponse(Dictionary<int, List<string>> responseLists)
+        private string? GetRightResponse(Dictionary<int, List<string>> responseLists, Conversation conversation)
         {
             if (responseLists.Count == 0) return null;
 
-            if(responseLists.TryGetValue(RecentVisits, out List<string>? rightResponseList))
+            if(responseLists.TryGetValue(conversation.GetRecentVisits(Name), out List<string>? rightResponseList))
             {
                 return rightResponseList.TakeRandomElement();
             }
