@@ -25,7 +25,7 @@ namespace ChatBot.Models.Data.Parsing
 
         public override string ToString()
         {
-            return string.Format("Error at \"{0}\"({1}). Expected \"{2}\" but instead got \"{3}\".\n({4})", Token, TokenIndex, Expected.ToList().GetStringsWithOrBetween(), Got, Description);
+            return string.Format("Error at \"{0}\" ({1}). Expected \"{2}\" but instead got \"{3}\". \n({4})", Token, TokenIndex, Expected.ToList().GetStringsWithOrBetween(), Got, Description);
         }
     }
 }

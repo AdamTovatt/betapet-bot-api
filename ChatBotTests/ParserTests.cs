@@ -35,6 +35,66 @@ namespace ChatBotTests
             string input = "states{";
 
             ParseResult parseResult = Parser.ParseTrainingData(input);
+
+            Assert.IsTrue(parseResult.Error != null);
+            Assert.IsTrue(parseResult.Error.Expected.First() == "}");
+        }
+
+        [TestMethod]
+        public void AssertUnfinishedFileResultsInComprehensibleError2()
+        {
+            string input = "states{default{";
+
+            ParseResult parseResult = Parser.ParseTrainingData(input);
+
+            Assert.IsTrue(parseResult.Error != null);
+            Assert.IsTrue(parseResult.Error.Expected.First() == "}");
+        }
+
+        [TestMethod]
+        public void AssertUnfinishedStateStringReturnsComprehensibleError()
+        {
+            string input = "states{default{enter{0:\"hi how are";
+
+            ParseResult parseResult = Parser.ParseTrainingData(input);
+
+            Assert.IsTrue(parseResult.Error != null);
+            Assert.IsTrue(parseResult.Error.Expected.First() == "\"");
+        }
+
+        [TestMethod]
+        public void AssertEnterMessageWithoutProperVisitsCountReturnsComprehensibleError()
+        {
+            string input = "states{default{enter{:\"hi how are\"}}";
+
+            ParseResult parseResult = Parser.ParseTrainingData(input);
+
+            Assert.IsTrue(parseResult.Error != null);
+            Assert.IsTrue(parseResult.Error.Expected.First() == "integer");
+        }
+
+        [TestMethod]
+        public void AssertStateWithoutRouteReturnsComprehensibleError()
+        {
+            string input = "states{default{enter{0:\"hi how are\"}}";
+
+            ParseResult parseResult = Parser.ParseTrainingData(input);
+
+            Assert.IsTrue(parseResult.Error != null);
+            Assert.IsTrue(parseResult.Error.Expected.First() == "route for state");
+            Assert.IsTrue(parseResult.Error.Got == "no route");
+        }
+
+        [TestMethod]
+        public void AssertRouteToNonExistantErrerGivesComprehensibleError()
+        {
+            string input = "states{default{enter{0:\"hi how are\"}}routes{default{cancel insurance {\"hello\"}}}";
+
+            ParseResult parseResult = Parser.ParseTrainingData(input);
+
+            Assert.IsTrue(parseResult.Error != null);
+            Assert.IsTrue(parseResult.Error.Expected.First() == "valid state name");
+            Assert.IsTrue(parseResult.Error.Got == "routes");
         }
 
         [TestMethod]

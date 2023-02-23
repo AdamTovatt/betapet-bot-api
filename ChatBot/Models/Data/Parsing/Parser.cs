@@ -75,6 +75,9 @@ namespace ChatBot.Models.Data.Parsing
                             string stateName = tokens.ReadTokensUntill(i, out int stateNameOffset, out string? _, "{", ":");
                             i += stateNameOffset;
 
+                            if (stateName == "routes")
+                                return ParseResult.CreateError(tokens.Get(i), i, stateName, "valid state name").AddErrorDescription("A state can not be called \"routes\". If you did not intend on having a state called routes, maybe you didn't close the states section properly before trying to declare routes");
+
                             string forwardName = tokens.ReadTokensUntill(i, out int forwardNameOffset, out string? _, "{");
                             i += forwardNameOffset;
 
@@ -150,6 +153,9 @@ namespace ChatBot.Models.Data.Parsing
                                         i++;
                                         string answerText = tokens.ReadTokensUntill(i, out int answerTextOffset, out string? _, "\"");
                                         i += answerTextOffset;
+
+                                        if (i >= tokens.Count)
+                                            return ParseResult.CreateError(tokens.Get(i), i, "untermintated string", "\"").AddErrorDescription("String starting at specified token is not terminated correctly");
 
                                         currentState!.AddResponse(parserState == ParseState.EnterMessages ? State.ResponseType.Enter : State.ResponseType.Exit, recentVisits, answerText);
                                     }
@@ -234,7 +240,7 @@ namespace ChatBot.Models.Data.Parsing
                                     promptResponsePairs.Add(new PromptResponsePair(prompt) { Response = response });
                                 }
 
-                                if(tokens.Get(i) != "}")
+                                if (tokens.Get(i) != "}")
                                     return ParseResult.CreateError(tokens.Get(i), i, tokens.Get(i), "}").AddErrorDescription("A collection of possible prompts for a route should end with \"}\"");
                             }
                         }
@@ -244,7 +250,7 @@ namespace ChatBot.Models.Data.Parsing
 
             foreach (State state in parsedStates.Where(x => x.ForwardState == null && x.Routes.Count == 0))
             {
-                return ParseResult.CreateError(state.Name, -1, "no route", "routes for state").AddErrorDescription(state.Name + " is missing routes. Please provide routes for it or use the forward operator \":\" and then the state to forward to");
+                return ParseResult.CreateError(state.Name, -1, "no route", "route for state").AddErrorDescription(state.Name + " is missing routes. Please provide routes for it or use the forward operator \":\" and then the state to forward to");
             }
 
             foreach (State state in parsedStates)
@@ -255,6 +261,29 @@ namespace ChatBot.Models.Data.Parsing
                     {
                         return ParseResult.CreateError("route: " + state.Name + " / " + pair.Response, -1, pair.Prompt, parsedStates.GetNames().ToArray()).AddErrorDescription("The state \"" + pair.Response + "\" does not exist");
                     }
+                }
+            }
+
+            if (stateStack.Count > 0)
+            {
+                ParseState state = stateStack.Pop();
+
+                switch (state)
+                {
+                    case ParseState.States:
+                        return ParseResult.CreateError(tokens.Get(tokens.Count - 1), tokens.Count - 1, "end of file", "}").AddErrorDescription("States section not closed properly. Should be closed with }");
+                    case ParseState.SingleState:
+                        return ParseResult.CreateError(tokens.Get(tokens.Count - 1), tokens.Count - 1, "end of file", "}").AddErrorDescription("State section not closed properly. Should be closed with }");
+                    case ParseState.EnterMessages:
+                        return ParseResult.CreateError(tokens.Get(tokens.Count - 1), tokens.Count - 1, "end of file", "}").AddErrorDescription("Enter messages section not closed properly. Should be closed with }");
+                    case ParseState.ExitMessages:
+                        return ParseResult.CreateError(tokens.Get(tokens.Count - 1), tokens.Count - 1, "end of file", "}").AddErrorDescription("Exit messages section not closed properly. Should be closed with }");
+                    case ParseState.Routes:
+                        return ParseResult.CreateError(tokens.Get(tokens.Count - 1), tokens.Count - 1, "end of file", "}").AddErrorDescription("Routes section not closed properly. Should be closed with }");
+                    case ParseState.SingleRoute:
+                        return ParseResult.CreateError(tokens.Get(tokens.Count - 1), tokens.Count - 1, "end of file", "}").AddErrorDescription("Route section not closed properly. Should be closed with }");
+                    default:
+                        return ParseResult.CreateError(tokens.Get(tokens.Count - 1), tokens.Count - 1, "end of file", "}").AddErrorDescription("File not closed correctly. Should be closed with }");
                 }
             }
 
