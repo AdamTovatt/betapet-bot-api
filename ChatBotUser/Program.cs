@@ -19,7 +19,7 @@ namespace ChatBotUser
             FileTrainingDataProvider fileTrainingDataProvider = new FileTrainingDataProvider("c:\\users\\adam\\code\\betapet-bot-api\\chatbot\\Chapter1.txt");
             string trainingData = await fileTrainingDataProvider.GetTrainingDataAsync();
 
-            ParseResult parseResult = Parser.ParseTrainingData(trainingData);
+            ParseResult parseResult = Parser.Parse(trainingData);
 
             Bot bot = new Bot(new SdcaPredictionServiceRepository());
 

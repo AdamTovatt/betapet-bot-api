@@ -1,17 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ChatBot.Models.Data
+﻿namespace ChatBot.Models.Data
 {
+    /// <summary>
+    /// A class containing training data for a bot
+    /// </summary>
     public class TrainingData
     {
+        /// <summary>
+        /// A list of all declared states for the bot
+        /// </summary>
         public List<State> States { get; set; }
 
         private Dictionary<string, State> stateDictionary;
 
+        /// <summary>
+        /// Public constructor for creating a training data object
+        /// </summary>
+        /// <param name="states">The list of states that exist in this training data</param>
+        /// <exception cref="Exception"></exception>
         public TrainingData(List<State> states)
         {
             States = states;
@@ -27,6 +32,11 @@ namespace ChatBot.Models.Data
             }
         }
 
+        /// <summary>
+        /// Will return a name with from a specified name. Will return null if no state is found
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public State? GetState(string name)
         {
             if (stateDictionary.TryGetValue(name, out State? state))

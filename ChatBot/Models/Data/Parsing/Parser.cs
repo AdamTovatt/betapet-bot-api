@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace ChatBot.Models.Data.Parsing
 {
+    /// <summary>
+    /// Class containing the Parse method that can be used to convert from a training data file to a training data object that can be used with a bot
+    /// </summary>
     public static class Parser
     {
         private enum ParseState
@@ -14,7 +17,13 @@ namespace ChatBot.Models.Data.Parsing
             States, SingleState, EnterMessages, ExitMessages, Routes, SingleRoute
         }
 
-        public static ParseResult ParseTrainingData(string input)
+        /// <summary>
+        /// Function for parsing a training data file to a training data object that can be used with the a bot
+        /// </summary>
+        /// <param name="input">The training data file</param>
+        /// <returns>A ParseResult object that will contain information about the parsed data or any errors that occured during the parsing</returns>
+        /// <exception cref="Exception"></exception>
+        public static ParseResult Parse(string input)
         {
             List<State> parsedStates = new List<State>();
 
