@@ -16,7 +16,7 @@ namespace ChatBotUser
 
         public static async Task HandleBot(bool train)
         {
-            FileTrainingDataProvider fileTrainingDataProvider = new FileTrainingDataProvider("c:\\users\\adam\\code\\betapet-bot-api\\chatbot\\TrainingData.txt");
+            FileTrainingDataProvider fileTrainingDataProvider = new FileTrainingDataProvider("c:\\users\\adam\\code\\betapet-bot-api\\chatbot\\Chapter1.txt");
             string trainingData = await fileTrainingDataProvider.GetTrainingDataAsync();
 
             ParseResult parseResult = Parser.ParseTrainingData(trainingData);
@@ -51,11 +51,11 @@ namespace ChatBotUser
 
             Conversation conversation = bot.CreateConversation();
 
-            Console.WriteLine(bot.Start(conversation));
+            Console.WriteLine(bot.Start(conversation) + "\n");
 
             while (true)
             {
-                Console.WriteLine("You: ");
+                Console.WriteLine("\nYou: ");
                 string? input = Console.ReadLine();
 
                 if (input != null)

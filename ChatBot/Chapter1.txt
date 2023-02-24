@@ -1,0 +1,361 @@
+states
+{
+    default
+    {
+        enter
+        {
+            0: "Chapter 1: Waking up. You wake up on the ground, surrounded by trees. Your head is pounding and your body aches. You have no memory of how you got here, or even who you are."
+        }
+    }
+    sit up : [previous]
+    {
+        enter
+        {
+            0: "You sit up"
+            1: "You're already sitting"
+        }
+    }
+    stand up : [previous]
+    {
+        enter
+        {
+            0: "You stand up"
+            1: "You're already stand"
+        }
+    }
+    looking around 1
+    {
+        enter
+        {
+            0: "You look around and see nothing but forest in every direction. The trees tower over you, casting long shadows on the ground."
+            1: "The forest is dense in some parts and less dense in others. You are standing in a opening."
+            2: "While the forest is certainly dense it does not seem dense enough to prevent you from walking through it."
+        }
+    }
+    listening for sounds 1 : [previous]
+    {
+        enter
+        {
+            0: "You close your eyes and listen carefully. After a few moments, you hear the sound of running water in the distance."
+            1: "You hear the wind slowly moving over the trees"
+            2: "You focus on the sound of the water again. It sounds like a big river"
+        }
+    }
+    explore 1
+    {
+        enter
+        {
+            0: "You begin to walk through the dense forest, taking in the sights and sounds of the nature around you."
+        }
+    }
+    explore 2
+    {
+        enter
+        {
+            0: "You come across a clearing in the forest, the sun shining through the trees and lighting up the grassy area."
+        }
+    }
+    looking around 2 : [previous]
+    {
+        enter
+        {
+            0: "You look around but everything seems almost the same as before."
+            1: "The trees all look the same to you"
+        }
+    }
+    listening for sounds 2 : [previous]
+    {
+        enter
+        {
+            0: "You turn your attention towards listening. You can hear the sound of rushing water. It sounds like what you imagine a waterfall in a river would sound like."
+            1: "You definitely hear some sort of moving water"
+        }
+    }
+    getting to river
+    {
+        enter
+        {
+            0: "You push through the trees and make your way to the edge of the forest. As you step out into the open, you see a breathtaking waterfall, with water cascading down into a clear river below. It's a peaceful scene, with only the sound of the water to break the silence."
+        }
+    }
+    end : [previous]
+    {
+        enter
+        {
+            0: "You're wondering about what comes next"
+            1: "You are unsure what will happen now"
+            2: "Is this the end?"
+        }
+    }
+    can't do that : [previous]
+    {
+        enter
+        {
+            0: "You can't do that."
+        }
+    }
+}
+routes
+{
+    default
+    {
+        sit up
+        {
+            "sit up"
+            "sit"
+        }
+        stand up
+        {
+            "stand up"
+            "Stand"
+        }
+        looking around 1
+        {
+            "Look around"
+            "View the area"
+            "Take a look around"
+            "Look to the left"
+            "Look to the right"
+            "Look"
+            "View"
+            "Look for something"
+        }
+        listening for sounds 1
+        {
+            "listen for sound"
+            "Listen"
+            "hear something"
+            "Listen for any sounds"
+            "Do you hear anything?"
+            "Listen carefully for any noise"
+            "Pay attention to your surroundings, do you hear anything?"
+            "Try to hear any sounds around you"
+            "Listen closely, can you hear anything?"
+            "Is there any noise you can hear?"
+        }
+        can't do that
+        {
+            "Feed the cat"
+            "Water the plants"
+            "Brush teeth"
+            "Read a book"
+            "Call a friend"
+            "Take a nap"
+            "Organize closet"
+            "Go for a walk"
+            "Watch a movie"
+            "Bake cookies"
+        }
+    }
+    looking around 1
+    {
+        listening for sounds 1
+        {
+            "listen for sound"
+            "Listen"
+            "hear something"
+            "Listen for any sounds"
+            "Do you hear anything?"
+            "Listen carefully for any noise"
+            "Pay attention to your surroundings, do you hear anything?"
+            "Try to hear any sounds around you"
+            "Listen closely, can you hear anything?"
+            "Is there any noise you can hear?"
+        }
+        looking around 1
+        {
+            "Look around"
+            "View the area"
+            "Take a look around"
+            "Look to the left"
+            "Look to the right"
+            "Look"
+            "View"
+            "Look for something"
+        }
+        explore 1
+        {
+            "Explore"
+            "Explore the area"
+            "Take a walk in the woods"
+            "Look for clues"
+            "Investigate the forest"
+            "Wander through the forest"
+            "Search for answers"
+            "Scour the surroundings"
+            "Explore the woods"
+            "Hike through the forest"
+        }
+        can't do that
+        {
+            "Look at phone"
+            "Take a sip of the soup"
+            "Turn on computer"
+            "Working hands"
+            "These are some other things that are not possible"
+            "Make really weird pasta"
+            "LKosej IAjf jjask"
+            "Buttpoias masshin"
+            "Sibouple hole como estas"
+            "Run around"
+            "Blow up the area"
+            "Listen to a voice from the left"
+            "Take a stroll to the right"
+            "Rumble around in a circle for something"
+        }
+    }
+    explore 1
+    {
+        looking around 2
+        {
+            "Look around"
+            "View the area"
+            "Take a look around"
+            "Look to the left"
+            "Look to the right"
+            "Look"
+            "View"
+            "Look for something"
+        }
+        listening for sounds 2
+        {
+            "Listen"
+            "Listen for sounds"
+            "Listen for any sounds"
+            "Do you hear anything?"
+            "Listen carefully for any noise"
+            "Pay attention to your surroundings, do you hear anything?"
+            "Try to hear any sounds around you"
+            "Listen closely, can you hear anything?"
+            "Is there any noise you can hear?"
+        }
+        explore 2
+        {
+            "Keep walking forward"
+            "Continue exploring"
+            "Find out what's ahead"
+            "Go deeper into the forest"
+            "Follow the path"
+            "Keep moving forward"
+            "Investigate the surroundings"
+            "Look for signs of civilization"
+            "Search for a way out"
+            "Find a higher vantage point to survey the area"
+        }
+        can't do that
+        {
+            "Look at phone"
+            "Take a sip of the soup"
+            "Turn on computer"
+            "Working hands"
+            "These are some other things that are not possible"
+            "Make really weird pasta"
+            "LKosej IAjf jjask"
+            "Buttpoias masshin"
+            "Sibouple hole como estas"
+            "Run around"
+            "Blow up the area"
+            "Listen to a voice from the left"
+            "Take a stroll to the right"
+        }
+    }
+    explore 2
+    {
+        getting to river
+        {
+            "Continue walking"
+            "Follow the sound of water"
+            "Head towards the waterfall"
+            "Try to find the source of the river"
+            "Look for a body of water"
+            "See if you can find a river"
+            "Look for a stream"
+            "Search for a waterfall"
+            "Try to find a way out of the forest"
+            "Keep walking and hope to find something"
+            "Explore further and see where it leads"
+        }
+        listening for sounds 2
+        {
+            "Listen"
+            "Listen for sounds"
+            "Listen for any sounds"
+            "Do you hear anything?"
+            "Listen carefully for any noise"
+            "Pay attention to your surroundings, do you hear anything?"
+            "Try to hear any sounds around you"
+            "Listen closely, can you hear anything?"
+            "Is there any noise you can hear?"
+        }
+        looking around 2
+        {
+            "Look around"
+            "View the area"
+            "Take a look around"
+            "Look to the left"
+            "Look to the right"
+            "Look"
+            "View"
+            "Look for something"
+        }
+        can't do that
+        {
+            "Look at phone"
+            "Take a sip of the soup"
+            "Turn on computer"
+            "Working hands"
+            "These are some other things that are not possible"
+            "Make really weird pasta"
+            "LKosej IAjf jjask"
+            "Buttpoias masshin"
+            "Sibouple hole como estas"
+            "Run around"
+            "Blow up the area"
+            "Listen to a voice from the left"
+            "Take a stroll to the right"
+            "Feed the cat"
+            "Water the plants"
+            "Brush teeth"
+            "Read a book"
+            "Call a friend"
+            "Take a nap"
+            "Organize closet"
+            "Go for a walk"
+            "Watch a movie"
+            "Bake cookies"
+        }
+    }
+    getting to river
+    {
+        end
+        {
+            "anything really"
+        }
+        can't do that
+        {
+            "Look at phone"
+            "Take a sip of the soup"
+            "Turn on computer"
+            "Working hands"
+            "These are some other things that are not possible"
+            "Make really weird pasta"
+            "LKosej IAjf jjask"
+            "Buttpoias masshin"
+            "Sibouple hole como estas"
+            "Run around"
+            "Blow up the area"
+            "Listen to a voice from the left"
+            "Take a stroll to the right"
+            "Feed the cat"
+            "Water the plants"
+            "Brush teeth"
+            "Read a book"
+            "Call a friend"
+            "Take a nap"
+            "Organize closet"
+            "Go for a walk"
+            "Watch a movie"
+            "Bake cookies"
+        }
+    }
+}
