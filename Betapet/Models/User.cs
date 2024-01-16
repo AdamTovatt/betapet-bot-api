@@ -25,7 +25,7 @@ namespace Betapet.Models
         public string LastName { get; set; }
 
         [JsonProperty("age")]
-        public int Age { get; set; }
+        public int? Age { get; set; }
 
         [JsonProperty("rating")]
         public int Rating { get; set; }

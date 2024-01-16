@@ -19,7 +19,7 @@
 
             Opponent = new Opponent()
             {
-                CurrentAge = DateTime.Now.Year - them.Age,
+                CurrentAge = DateTime.Now.Year - (them.Age ?? 1970),
                 MatchesPlayed = them.Lost + them.Won + them.Dropped,
                 Name = them.Handle,
                 Rating = them.Rating
